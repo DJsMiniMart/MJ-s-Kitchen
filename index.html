@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MJ's Kitchen</title>
-<meta name="description" content="Homemade baby food for a 6-month-old: 23 simple recipes, what each one does for your baby, allergen introduction and safe storage.">
+<meta name="description" content="MJ's Kitchen: homemade baby food recipes that grow with her, a daily meal log, freezer list and batch-cooking planner.">
 <meta name="theme-color" content="#f6f8f3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#141a16" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -160,37 +160,211 @@ th:not(:first-child),td.big{width:24%;}
 footer{color:var(--dim);font-size:.85em;padding-block:28px 40px;border-top:1px solid var(--line);margin-top:28px;}
 footer ul{padding-left:18px;margin:8px 0 0;display:grid;gap:4px;}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;} }
+/* app shell: five tabs at the bottom */
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px));}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(5,1fr);background:var(--panel);border-top:1px solid var(--line);
+  padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));}
+.tabbar a{display:grid;justify-items:center;gap:2px;text-decoration:none;color:var(--dim);font:600 12.5px var(--body);padding:4px 0;border-radius:10px;}
+.tabbar svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.tabbar a.on{color:var(--pea);background:var(--pea-soft);}
+.hero{padding-block:22px 4px;}
+body:not([data-tab="today"]) .hero p, body:not([data-tab="today"]) .hero .size{display:none;}
+body:not([data-tab="today"]) .hero{padding-block:16px 0;}
+body:not([data-tab="today"]) .hero h1{font-size:clamp(28px,7vw,40px);}
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{text-decoration:none;color:var(--ink);font:600 15px var(--body);padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--panel);}
+.chip.later{color:var(--dim);border-style:dashed;}
+section{scroll-margin-top:16px;}
+/* birthday */
+.bday{background:var(--carrot-soft);border-radius:14px;padding:12px 14px;}
+.bday.set{background:var(--panel);border:1px solid var(--line);}
+/* what's next */
+.next{display:grid;gap:10px;}
+.nx{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--pea);border-radius:12px;padding:12px 14px;}
+.nx.t-carrot{border-left-color:var(--carrot);} .nx.t-berry{border-left-color:var(--berry);} .nx.t-warn{border-left-color:var(--warn);}
+.nx .tag{display:block;font:700 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);}
+.nx b{display:block;font:600 1.1em/1.25 var(--display);margin-top:2px;}
+.nx p{margin:4px 0 0;color:var(--dim);font-size:.92em;}
+.nx a{display:inline-block;margin-top:6px;font-weight:600;text-decoration:none;}
+/* meals */
+.dayhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+.daynav{display:flex;align-items:center;gap:6px;}
+.daynav input{max-width:170px;}
+.nav{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);font:600 22px/1 var(--body);cursor:pointer;padding:0;}
+.nav:disabled{opacity:.35;cursor:default;}
+.meals{display:grid;gap:10px;}
+.meal{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 14px;}
+.mh{display:flex;justify-content:space-between;align-items:center;}
+.mh b{font:600 1.1em var(--display);}
+.plus{width:36px;height:36px;border-radius:50%;border:0;background:var(--pea);color:var(--panel);font:600 24px/1 var(--body);cursor:pointer;padding:0;}
+.meal ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px;}
+.meal li{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--line);}
+.mnote{display:block;color:var(--dim);font-size:.85em;font-style:italic;}
+.x{border:0;background:none;color:var(--dim);font-size:16px;cursor:pointer;padding:6px;}
+.addf{display:grid;gap:12px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
+select,input[type=number],input[type=text]{font:400 16px var(--body);font-size:max(16px,.95em);color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;}
+select:focus,input:focus{outline:none;border-color:var(--pea);}
+.amts{display:flex;flex-wrap:wrap;gap:6px;}
+.amts label{cursor:pointer;} .amts input{position:absolute;opacity:0;pointer-events:none;}
+.amts span{display:inline-block;font:600 14px var(--body);padding:7px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);}
+.amts input:checked + span{background:var(--pea);border-color:var(--pea);color:var(--panel);}
+.amts input:focus-visible + span{outline:3px solid var(--carrot);}
+.chk{display:flex;gap:8px;align-items:center;font-size:.92em;cursor:pointer;}
+.chk input{width:20px;height:20px;accent-color:var(--pea);}
+.go{font:600 16px var(--body);color:var(--panel);background:var(--pea);border:0;border-radius:999px;padding:11px 20px;cursor:pointer;}
+.week{list-style:none;margin:0;padding:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+.week li + li{border-top:1px solid var(--line);}
+.week button{width:100%;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;text-align:left;background:none;border:0;color:var(--ink);font:inherit;padding:10px 14px;cursor:pointer;}
+.week button.on{background:var(--pea-soft);}
+.wd{font-weight:600;white-space:nowrap;font-size:.9em;} .wf{color:var(--dim);font-size:.88em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fe{font:700 11px var(--body);color:var(--carrot);background:var(--carrot-soft);border-radius:6px;padding:2px 6px;}
+.al{font:700 11px var(--body);color:var(--berry);background:var(--berry-soft);border-radius:6px;padding:1px 6px;}
+/* cookbook stages */
+.stagehead{margin-top:30px;padding:12px 14px;border-radius:14px;background:var(--pea);color:var(--panel);display:grid;gap:2px;}
+.stagehead span{font:700 12px var(--body);letter-spacing:.08em;text-transform:uppercase;opacity:.9;}
+.stagehead b{font:600 1.35em/1.2 var(--display);}
+.stagehead em{font-style:normal;font-size:.9em;opacity:.95;}
+.stagehead.later{background:var(--panel);color:var(--ink);border:1.5px dashed var(--dim);}
+section.later .card{opacity:.92;}
+/* freezer */
+.frz{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:8px;}
+.frz li{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--pea);border-radius:12px;padding:10px 12px;}
+.frz li.soon{border-left-color:var(--carrot);} .frz li.bad{border-left-color:var(--warn);background:var(--warn-soft);}
+.frz li > div:first-child{min-width:0;} .frz li b{display:block;}
+.frz .rlabel{display:block;}
+.cnt{display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.cnt span{min-width:64px;text-align:center;font-size:.9em;} .cnt span b{font:600 1.3em var(--display);display:inline;}
+.warnb{grid-column:1/-1;justify-self:start;color:var(--warn);background:var(--warn-soft);}
+details.add{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px 14px;}
+details.add summary{cursor:pointer;font:600 1em var(--body);color:var(--pea);padding:10px 0;list-style:none;}
+details.add summary::-webkit-details-marker{display:none;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.pick{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.pk{display:inline-flex;align-items:center;gap:6px;cursor:pointer;border:1.5px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 12px;font:600 14px var(--body);}
+.pk input{position:absolute;opacity:0;pointer-events:none;}
+.pk small{color:var(--dim);font-weight:400;}
+.pk.on{background:var(--pea);border-color:var(--pea);color:var(--panel);} .pk.on small{color:var(--panel);opacity:.85;}
+.pk:focus-within{outline:3px solid var(--carrot);}
+.planbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;}
+.shop{list-style:none;margin:0;padding:0;display:grid;gap:6px;}
+.shop label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;}
+.shop input{width:20px;height:20px;margin-top:4px;accent-color:var(--pea);flex:none;}
+.shop input:checked + span{text-decoration:line-through;color:var(--dim);}
+/* guide stages */
+.stages{display:grid;gap:10px;}
+.stage{display:grid;grid-template-columns:40px 1fr;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px;}
+.stage.now{border-color:var(--pea);box-shadow:0 0 0 2px var(--pea-soft);}
+.sn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font:600 20px var(--display);background:var(--pea-soft);color:var(--pea);}
+.stage.now .sn{background:var(--pea);color:var(--panel);}
+.stage p{margin:4px 0 0;font-size:.92em;}
+.log .lnote{white-space:pre-line;}
+.toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--ink);color:var(--bg);font:600 15px var(--body);padding:10px 16px;border-radius:999px;max-width:calc(100% - 32px);text-align:center;transition:opacity .2s,transform .2s;z-index:30;}
+.toast.on{opacity:1;transform:translate(-50%,0);}
 </style>
-
 </head>
 <body>
 <header class="wrap hero">
-  <div class="kicker">Homemade baby food · from 6 months</div>
+  <div class="kicker">Homemade baby food · grows with her</div>
   <h1>MJ's <span>Kitchen</span></h1>
-  <p>Simple single-ingredient purees, what each one does for your baby, and how to store them safely. Tap any recipe to open it.</p>
-  <div class="spoons"><span>23 recipes</span><span>Freezer-friendly</span><span>Allergen guide</span></div>
+  <p id="ageLine">Recipes, a meal log and a freezer list for MJ, from first purees to family meals.</p>
   <button class="size" id="size" type="button" aria-label="Change text size">Text size: <b id="sizeLbl">Normal</b></button>
 </header>
 
-<nav class="jump" aria-label="Jump to a section"><div class="wrap in" id="jump">
-  <a href="#log">Food log</a><a href="#start">Start here</a><a href="#method">Method</a><a href="#veggies">Veggies</a><a href="#fruits">Fruits</a>
-  <a href="#iron">Iron &amp; protein</a><a href="#allergens">Allergens</a><a href="#storage">Storage</a>
-</div></nav>
-
 <main class="wrap">
 
-<section id="log">
-  <h2>MJ's food log</h2>
-  <p class="lead" id="logSum"></p>
-  <ul class="log" id="logList"></ul>
-  <div class="bk">
-    <button type="button" class="mini" id="backup">Save a backup</button>
-    <label class="mini" for="restore">Restore a backup<input type="file" id="restore" accept="application/json,.json" hidden></label>
-  </div>
-  <p class="store" id="bkMsg">Dates, ratings and notes are saved on this phone only. Save a backup now and then, and use Restore on a new phone.</p>
-</section>
+<!-- ============ TODAY ============ -->
+<div class="view" id="v-today" data-view="today">
+  <section>
+    <div class="bday" id="bdayBox">
+      <label class="fld" for="bday">MJ's birthday <span class="rlabel">so the site knows her stage and what's next</span>
+        <span class="row"><input type="date" id="bday"><span class="rlabel" id="bdayOut"></span></span></label>
+    </div>
+  </section>
 
-<section id="start">
+  <section>
+    <h2>What's next</h2>
+    <p class="lead">Ideas for her next meals, based on what she's had and what she's ready for.</p>
+    <div class="next" id="next"></div>
+  </section>
+
+  <section>
+    <div class="dayhead">
+      <h2>Meals</h2>
+      <div class="daynav"><button type="button" class="nav" id="dPrev" aria-label="Previous day">&#8249;</button>
+        <input type="date" id="mealDate" aria-label="Day"><button type="button" class="nav" id="dNext" aria-label="Next day">&#8250;</button></div>
+    </div>
+    <p class="lead" id="daySum"></p>
+    <div class="meals" id="meals"></div>
+    <div class="sub">Last 7 days</div>
+    <ul class="week" id="week"></ul>
+  </section>
+</div>
+
+<!-- ============ COOKBOOK ============ -->
+<div class="view" id="v-cookbook" data-view="cookbook" hidden>
+  <section>
+    <h2>Cookbook</h2>
+    <p class="lead" id="cbLead">Recipes by stage. New stages open up as MJ grows; you can always peek ahead.</p>
+    <div class="chips" id="cbJump"></div>
+  </section>
+  <div id="book"></div>
+</div>
+
+<!-- ============ FREEZER ============ -->
+<div class="view" id="v-freezer" data-view="freezer" hidden>
+  <section>
+    <h2>Freezer</h2>
+    <p class="lead" id="frzSum">Every batch you freeze, with the date it was made and how many cubes are left. Purees keep 1 month.</p>
+    <ul class="frz" id="frz"></ul>
+    <details class="add" id="addBatch">
+      <summary>+ Add a batch</summary>
+      <form class="addf" id="batchForm">
+        <label class="fld" for="bFood">Food<select id="bFood" required></select></label>
+        <div class="row2">
+          <label class="fld" for="bCubes">Cubes / pieces<input type="number" id="bCubes" min="1" max="99" value="8" inputmode="numeric" required></label>
+          <label class="fld" for="bMade">Date made<input type="date" id="bMade" required></label>
+        </div>
+        <button class="go" type="submit">Add to freezer</button>
+      </form>
+    </details>
+  </section>
+
+  <section>
+    <h2>Batch-cooking planner</h2>
+    <p class="lead">Pick what to cook in one session. You get a shopping list, a cooking order, and one tap to add it all to the freezer.</p>
+    <div class="plan" id="planPick"></div>
+    <div id="planOut"></div>
+  </section>
+</div>
+
+<!-- ============ LOG ============ -->
+<div class="view" id="v-log" data-view="log" hidden>
+  <section>
+    <h2>MJ's food log</h2>
+    <p class="lead" id="logSum"></p>
+    <ul class="log" id="logList"></ul>
+  </section>
+  <section>
+    <h2>Reaction log</h2>
+    <p class="lead">Every reaction you've noted, newest first. Add one from any recipe card, or from a meal on the Today tab.</p>
+    <ul class="log" id="rxList"></ul>
+  </section>
+  <section>
+    <h2>Backup</h2>
+    <p class="store" style="margin-top:0">Everything you log is saved on this phone only. Save a backup now and then, and use Restore on a new phone.</p>
+    <div class="bk">
+      <button type="button" class="mini" id="backup">Save a backup</button>
+      <label class="mini" for="restore">Restore a backup<input type="file" id="restore" accept="application/json,.json" hidden></label>
+    </div>
+    <p class="store" id="bkMsg"></p>
+  </section>
+</div>
+
+<!-- ============ GUIDE ============ -->
+<div class="view" id="v-guide" data-view="guide" hidden>
+  <div class="chips" style="margin-top:22px"><a class="chip" href="#g-start">Start here</a><a class="chip" href="#g-method">Method</a><a class="chip" href="#g-stages">Texture stages</a><a class="chip" href="#g-allergens">Allergens</a><a class="chip" href="#g-choke">Choking safety</a><a class="chip" href="#g-storage">Storage</a></div>
+
+<section id="g-start">
   <h2>Start here</h2>
   <p class="lead">Start solids once your baby shows all of these signs, and run your plan by your pediatrician, especially if food allergies run in the family.</p>
   <div class="sub">Signs your baby is ready</div>
@@ -203,10 +377,9 @@ footer ul{padding-left:18px;margin:8px 0 0;display:grid;gap:4px;}
   <div class="sub">First-year rules</div>
   <div class="rules">
     <div class="rule no"><b>No honey before 12 months</b><p>Not even baked in. It can cause infant botulism, a severe food poisoning.</p></div>
-    <div class="rule no"><b>No cow's milk as a drink, and no juice</b><p>Breast milk or formula stays the main food until 12 months.</p></div>
+    <div class="rule no"><b>No cow's milk as a drink, and no juice</b><p>Breast milk or formula stays the main food until 12 months. Yogurt and cheese are fine.</p></div>
     <div class="rule no"><b>No added salt or sugar</b><p>Babies don't need either, and their kidneys can't handle much salt.</p></div>
     <div class="rule"><b>Cook meat to a safe temperature</b><p>Ground beef 160°F, chicken and turkey 165°F, fish 145°F. Use a thermometer.</p></div>
-    <div class="rule"><b>Smooth and thin at first</b><p>Runny purees now, thicker and lumpier over the next few months. No whole nuts, whole grapes, popcorn or hard raw vegetables.</p></div>
     <div class="rule"><b>Vary the grains</b><p>Rice cereal can carry arsenic. Oat, barley and mixed-grain infant cereals give iron too.</p></div>
     <div class="rule"><b>Carrots, beets and spinach are fine now</b><p>The nitrate warning for homemade vegetable purees is for babies under 3 months.</p></div>
   </div>
@@ -217,109 +390,87 @@ footer ul{padding-left:18px;margin:8px 0 0;display:grid;gap:4px;}
     <li>Silicone ice cube trays with lids (1-ounce cubes)</li>
     <li>Freezer bags or small freezer-safe containers</li>
     <li>Masking tape and a marker for labels</li>
-    <li>A fine strainer for skins (peas, blueberries)</li>
   </ul>
 </section>
 
-<section id="method">
+<section id="g-method">
   <h2>The basic method</h2>
-  <p class="lead">Almost every recipe follows these five steps. The recipe cards give the cooking time and anything different.</p>
+  <p class="lead">Almost every puree follows these five steps. The recipe cards give the cooking time and anything different.</p>
   <ol class="steps">
     <li><div><b>Prep.</b> Wash, peel and remove seeds, pits or tough skins. Cut into 1-inch pieces so they cook evenly.</div></li>
-    <li><div><b>Steam.</b> Put 1 to 2 inches of water in a pot, set the basket over it, cover, and cook until a fork slides through easily. Steaming keeps more vitamins than boiling. Save the water in the pot.</div></li>
-    <li><div><b>Blend.</b> Blend until completely smooth, adding liquid 1 tablespoon at a time: the saved steaming water, breast milk, formula or plain water.</div></li>
-    <li><div><b>Check the texture.</b> For a first-time eater it should drip slowly off a spoon, like thin yogurt. Over the next 2 to 3 months, add less liquid, then mash with a fork instead of blending.</div></li>
-    <li><div><b>Cool and portion.</b> Serve what you need and freeze the rest within 2 hours (see Storage).</div></li>
+    <li><div><b>Steam.</b> Put 1 to 2 inches of water in a pot, set the basket over it, cover, and cook until a fork slides through easily. Save the water in the pot.</div></li>
+    <li><div><b>Blend.</b> Blend until smooth, adding liquid 1 tablespoon at a time: the saved steaming water, breast milk, formula or plain water.</div></li>
+    <li><div><b>Match her stage.</b> See Texture stages below: runny at first, thicker and lumpier as she grows.</div></li>
+    <li><div><b>Cool and portion.</b> Serve what you need and freeze the rest within 2 hours. Log it on the Freezer tab.</div></li>
   </ol>
-  <div class="note"><b>How much:</b> start with 1 to 2 teaspoons once a day and let your baby lead. Stop when they turn away or close their mouth. Most babies work up to a few tablespoons, 2 to 3 times a day, over the next few months.</div>
+  <div class="note"><b>How much:</b> start with 1 to 2 teaspoons once a day and let her lead. Stop when she turns away or closes her mouth. Most babies work up to a few tablespoons, 2 to 3 times a day, over the next few months.</div>
   <div class="note"><b>One new food at a time:</b> give each new food for 2 to 3 days before adding the next, so you can spot a reaction. Once a food is tolerated, mix it with others freely.</div>
 </section>
 
-<section id="veggies">
-  <h2>Vegetables</h2>
-  <p class="lead">A great place to start: mild, a little sweet, and packed with vitamins.</p>
-  <div class="progress" data-group="veggies"></div>
-  <div class="cards" data-group="veggies"></div>
-  <div class="note"><b>Combos once each is tolerated:</b> sweet potato + apple, squash + pear, peas + zucchini, carrot + mango.</div>
+<section id="g-stages">
+  <h2>Texture stages</h2>
+  <p class="lead">Moving through textures on time helps her learn to chew and keeps mealtimes interesting. Ages are a guide; follow her signs.</p>
+  <div class="stages" id="stages"></div>
 </section>
 
-<section id="fruits">
-  <h2>Fruits</h2>
-  <p class="lead">Naturally sweet, so they're easy wins. Pair them with iron foods: vitamin C helps your baby absorb iron.</p>
-  <div class="progress" data-group="fruits"></div>
-  <div class="cards" data-group="fruits"></div>
-</section>
-
-<section id="iron">
-  <h2>Iron &amp; protein</h2>
-  <p class="lead">The iron your baby was born with runs low around 6 months, and breast milk has little of it. Offer an iron-rich food every day.</p>
-  <div class="progress" data-group="iron"></div>
-  <div class="cards" data-group="iron"></div>
-</section>
-
-<section id="allergens">
+<section id="g-allergens">
   <h2>Introducing allergens</h2>
-  <p class="lead">Giving common allergens early, around 4 to 6 months and once your baby has handled a few other foods, can lower the chance of a food allergy. If your baby has severe eczema or an egg allergy, talk to your pediatrician first; they may want an allergy test.</p>
-  <div class="progress" data-group="allergens"></div>
-  <div class="cards" data-group="allergens"></div>
+  <p class="lead">Giving common allergens early, around 4 to 6 months and once she has handled a few other foods, can lower the chance of a food allergy. With severe eczema or an egg allergy, talk to your pediatrician first.</p>
   <div class="sub">Every first taste of an allergen</div>
   <ol class="steps">
-    <li><div>Pick a day your baby is healthy (no cold, vomiting or diarrhea), at home, with one adult watching closely.</div></li>
+    <li><div>Pick a day she's healthy (no cold, vomiting or diarrhea), at home, with one adult watching closely.</div></li>
     <li><div>Offer a small taste on the tip of a spoon, then wait 10 minutes.</div></li>
-    <li><div>No reaction? Give the rest of the portion slowly, at your baby's usual pace.</div></li>
-    <li><div>Stay with your baby for 2 hours afterward.</div></li>
+    <li><div>No reaction? Give the rest of the portion slowly, at her usual pace.</div></li>
+    <li><div>Stay with her for 2 hours afterward.</div></li>
   </ol>
   <div class="note warn"><b>Mild reaction:</b> a new rash or a few hives around the mouth. Stop and call your pediatrician.<br>
   <b>Call 911:</b> swelling of the lips, face or tongue, vomiting, hives all over, trouble breathing, wheezing, repeated coughing, pale or blue skin, or sudden floppiness.</div>
-  <div class="note"><b>Keep it up:</b> once a food is tolerated, keep it in your baby's diet regularly, a few times a week. Never give whole nuts or spoonfuls of thick nut butter; both are choking hazards.</div>
+  <div class="note"><b>Keep it up:</b> once an allergen is tolerated, keep it in her diet a few times a week. What's next reminds you when one hasn't come up in a week.</div>
 </section>
 
-<section id="storage">
+<section id="g-choke">
+  <h2>Choking safety</h2>
+  <p class="lead">Gagging is normal while she learns; it's noisy and she works it out herself. Choking is silent. Learn infant CPR and keep these rules.</p>
+  <ul class="ticks">
+    <li>Always seated upright, always watched. No eating in the car seat or while crawling.</li>
+    <li>Finger foods should squish between your thumb and finger and be about the size of an adult finger.</li>
+    <li>Quarter grapes and cherry tomatoes lengthwise; flatten blueberries.</li>
+    <li>No whole nuts, popcorn, hard raw vegetables or apple chunks, hot dog coins, chunks of meat or spoonfuls of thick nut butter.</li>
+  </ul>
+</section>
+
+<section id="g-storage">
   <h2>Storing baby food</h2>
   <p class="lead">Cook in batches, freeze in 1-ounce cubes, and thaw one or two at a time. Baby food keeps a much shorter time than adult leftovers.</p>
   <div class="tw"><table>
     <thead><tr><th>Food</th><th>Fridge</th><th>Freezer</th></tr></thead>
     <tbody>
       <tr><td>Fruit and vegetable purees</td><td class="big">2 days</td><td class="big">1 month</td></tr>
-      <tr><td>Meat, poultry, fish and egg purees</td><td class="big">1 day</td><td class="big">1 month</td></tr>
+      <tr><td>Meat, poultry, fish and egg</td><td class="big">1 day</td><td class="big">1 month</td></tr>
       <tr><td>Thawed food (any)</td><td class="big">1 day</td><td class="big">Don't refreeze</td></tr>
-      <tr><td>Out at room temperature (1 hour if over 90°F); leftovers in baby's bowl get tossed</td><td class="big">2 hours max</td><td class="big">Toss it</td></tr>
+      <tr><td>Out at room temperature (1 hour if over 90°F); leftovers in her bowl get tossed</td><td class="big">2 hours max</td><td class="big">Toss it</td></tr>
     </tbody>
   </table></div>
-  <p class="store" style="margin-top:8px">Some blogs say frozen purees last 3 months or more. This guide uses the 1-month limit from FDA and university food-safety guidance: safer, and the flavor is better too.</p>
-
   <div class="sub">The ice cube tray method</div>
   <div class="trays" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <ol class="steps">
-    <li><div>Cool the puree quickly: spread it in a shallow dish or set the bowl in ice water. Get it into the freezer within 2 hours of cooking.</div></li>
-    <li><div>Spoon it into a clean ice cube tray. One standard cube holds about 1 ounce (2 tablespoons), a good first-meal portion.</div></li>
-    <li><div>Cover with the lid, foil or plastic wrap, and freeze flat until solid, usually overnight.</div></li>
-    <li><div>Pop the cubes into a freezer bag or container, squeeze out the air, and keep one food per bag.</div></li>
-    <li><div>Label every bag with the food and the date it was made.<br><span class="label">Sweet potato · made Nov 9 · use by Dec 9</span></div></li>
+    <li><div>Cool the puree quickly (a shallow dish, or the bowl set in ice water) and get it in the freezer within 2 hours.</div></li>
+    <li><div>Spoon it into a clean ice cube tray. One cube holds about 1 ounce (2 tablespoons).</div></li>
+    <li><div>Cover and freeze flat until solid, usually overnight.</div></li>
+    <li><div>Pop the cubes into a freezer bag, squeeze out the air, one food per bag.</div></li>
+    <li><div>Label it with the food and date, and add it on the Freezer tab.<br><span class="label">Sweet potato · made Nov 9 · use by Dec 9</span></div></li>
   </ol>
-  <p class="store">No trays? Drop 1 to 2 tablespoon mounds onto a lined cookie sheet, freeze, then bag them the same way.</p>
-
-  <div class="sub">Thawing and reheating</div>
+  <div class="sub">Thawing and serving</div>
   <div class="rules">
-    <div class="rule"><b>Thaw in the fridge overnight</b><p>Or warm the frozen cubes straight from the freezer on the stove or in the microwave.</p></div>
-    <div class="rule no"><b>Never thaw on the counter</b><p>Or in standing water. Bacteria grow fast at room temperature.</p></div>
-    <div class="rule"><b>Reheat until steaming, then cool</b><p>Heat to 165°F (steaming all the way through), stir well, and let it cool. Microwaves leave hot spots, so stir and test a bit on your wrist before serving.</p></div>
+    <div class="rule"><b>Thaw in the fridge overnight</b><p>Or warm frozen cubes straight from the freezer on the stove or in the microwave. Never on the counter or in standing water.</p></div>
+    <div class="rule"><b>Reheat until steaming, then cool</b><p>Heat to 165°F all the way through, stir well, let it cool, and test a bit on your wrist.</p></div>
     <div class="rule no"><b>Never refreeze thawed food</b><p>Use thawed cubes within a day.</p></div>
+    <div class="rule no"><b>Don't feed from the storage container</b><p>Spoon a portion into a bowl and toss whatever's left in the bowl after the meal.</p></div>
   </div>
-
-  <div class="sub">Serving</div>
-  <ul class="ticks">
-    <li>Spoon a portion into a bowl. Don't feed straight from the storage container or jar: saliva on the spoon spoils what's left.</li>
-    <li>Throw out whatever is left in the bowl after the meal.</li>
-    <li>Never chew food before giving it to your baby.</li>
-    <li>Wash trays, containers and blender parts in hot, soapy water (or the dishwasher) between batches.</li>
-  </ul>
 </section>
 
-</main>
-
-<footer class="wrap">
-  <b>Not medical advice.</b> Ask your pediatrician about your baby's needs, especially with allergies, eczema, reflux or a premature birth.
+<footer>
+  <b>Not medical advice.</b> Ask your pediatrician about MJ's needs, especially with allergies, eczema, reflux or a premature birth.
   <ul>
     <li><a href="https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/foods-and-drinks-to-avoid-or-limit.html" target="_blank" rel="noopener">CDC: Foods and drinks to avoid or limit</a></li>
     <li><a href="https://www.canr.msu.edu/news/homemade_baby_food_is_healthy_and_cost-effective" target="_blank" rel="noopener">MSU Extension: Tips for safely making homemade baby food</a></li>
@@ -330,172 +481,434 @@ footer ul{padding-left:18px;margin:8px 0 0;display:grid;gap:4px;}
     <li><a href="https://drgreene.com/mythbusting-carrots-nitrates-homemade-baby-food" target="_blank" rel="noopener">Dr. Greene: Nitrates and homemade baby food (AAP guidance)</a></li>
   </ul>
 </footer>
+</div>
+
+</main>
+
+<nav class="tabbar" aria-label="Sections">
+  <a href="#today" data-tab="today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>Today</a>
+  <a href="#cookbook" data-tab="cookbook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h7a2 2 0 0 1 2 2V20a1.5 1.5 0 0 0-1.5-1.5H4zM20 4.5h-5a2 2 0 0 0-2 2V20a1.5 1.5 0 0 1 1.5-1.5H20z"/></svg>Cookbook</a>
+  <a href="#freezer" data-tab="freezer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5v19M4 7l16 10M20 7L4 17M9.5 4 12 6.5 14.5 4M9.5 20l2.5-2.5 2.5 2.5"/></svg>Freezer</a>
+  <a href="#log" data-tab="log"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17H6zM9 8h6M9 12h6M9 16h3"/></svg>Log</a>
+  <a href="#guide" data-tab="guide"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Guide</a>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
 "use strict";
-/* [name, color token, time, freezes?, steps[], why, storage note] */
-const R = {
-  veggies: [
-    ["Sweet potato", "carrot", "15 min", true, ["Peel and cut into 1-inch cubes.", "Steam 12 to 15 minutes until very soft (or bake whole at 400°F for 45 minutes and scoop out the flesh).", "Blend with steaming water, breast milk or formula until smooth."], "Beta-carotene (vitamin A) for healthy eyes, skin and immunity, plus fiber for regular digestion.", "1 medium sweet potato makes about 1 cup, or 8 cubes."],
-    ["Butternut squash", "carrot", "12 min", true, ["Peel, scoop out the seeds and cube.", "Steam 10 to 12 minutes (or roast halves cut side down at 400°F for 40 minutes).", "Blend until smooth."], "Vitamins A and C plus potassium. Smooth and naturally sweet, a very easy first food.", ""],
-    ["Carrots", "carrot", "12 min", true, ["Peel and slice into thin coins.", "Steam 10 to 12 minutes until very soft.", "Blend with plenty of liquid; carrots need more than most."], "Beta-carotene for vision and immunity.", ""],
-    ["Peas", "pea", "5 min", true, ["Use frozen peas, no need to thaw.", "Steam 3 to 5 minutes.", "Blend, then push through a fine strainer to remove the skins."], "Plant protein, fiber, vitamin K and some iron. Builds a taste for green vegetables.", ""],
-    ["Green beans", "pea", "10 min", true, ["Trim the ends and cut in half.", "Steam 8 to 10 minutes.", "Blend well; strain if stringy."], "Vitamins K and C, folate and fiber. Gets your baby used to a less sweet, \"green\" taste.", ""],
-    ["Zucchini", "pea", "5 min", true, ["Peel if you like and slice.", "Steam 4 to 5 minutes.", "Blend. It's watery, so you usually won't need extra liquid."], "Gentle on the stomach, with vitamin C and potassium.", ""],
-    ["Avocado", "pea", "No cook", false, ["Cut a ripe avocado in half and scoop out the flesh.", "Mash with a fork or blend, adding breast milk or formula to thin."], "Healthy fats for brain growth, plus folate and potassium.", "Best made fresh. It browns and turns watery in the freezer."],
-  ],
-  fruits: [
-    ["Banana", "carrot", "No cook", false, ["Peel a ripe banana (brown spots are good).", "Mash with a fork, thinning with breast milk or formula."], "Potassium and easy-to-digest carbohydrates for energy.", "Best made fresh; it browns once mashed."],
-    ["Apple", "pea", "10 min", true, ["Peel, core and cut into chunks.", "Steam 8 to 10 minutes until soft.", "Blend with a little steaming water."], "Vitamin C and fiber. Mixes well with almost anything.", ""],
-    ["Pear", "pea", "6 min", true, ["Peel and core. Very ripe pears can be blended raw.", "Otherwise steam 4 to 6 minutes.", "Blend; it's juicy, so add little or no liquid."], "Gentle fiber that can help with constipation.", ""],
-    ["Mango", "carrot", "No cook", true, ["Use a ripe mango, or frozen chunks steamed 2 to 3 minutes.", "Peel and cut the flesh off the pit.", "Blend until smooth."], "Vitamins A and C. The vitamin C helps your baby absorb iron from other foods.", ""],
-    ["Blueberries", "berry", "5 min", true, ["Simmer 1 cup fresh or frozen berries with 1 to 2 tablespoons of water for 5 minutes.", "Blend, then strain out the skins.", "Stir into oatmeal or pear to balance the tartness."], "Antioxidants, vitamin C and fiber.", ""],
-    ["Prunes", "berry", "10 min", true, ["Simmer 10 pitted dried prunes in 1 cup of water for 10 minutes.", "Blend with the cooking water until smooth."], "Natural sorbitol and fiber to ease constipation.", "Serve just 1 to 2 teaspoons at a time, mixed into another puree."],
-  ],
-  iron: [
-    ["Iron-fortified oat cereal", "pea", "1 min", false, ["Stir 1 tablespoon of infant oat (or barley or mixed-grain) cereal into 4 to 5 tablespoons of breast milk or formula.", "Thicken gradually as your baby gets used to it."], "Iron and zinc in an easy first food. Choose oat, barley or mixed grains over rice to limit arsenic.", "Make it fresh at each meal; it doesn't need storing."],
-    ["Chicken", "carrot", "20 min", true, ["Cut boneless, skinless chicken thighs into chunks.", "Simmer in water (no salt) about 20 minutes, until it reaches 165°F.", "Blend with the cooking liquid until very smooth, with no stringy bits."], "Protein, plus easily absorbed iron and zinc. Thighs have more iron than breast meat.", "Meat purees keep just 1 day in the fridge."],
-    ["Beef", "carrot", "20 min", true, ["Brown lean ground beef, or simmer stew cubes in water until tender.", "Cook to 160°F, then drain the fat.", "Blend with water or cooking liquid until very smooth."], "The best food source of iron and zinc your baby can absorb.", "Meat purees keep just 1 day in the fridge."],
-    ["Red lentils", "berry", "20 min", true, ["Rinse 1/2 cup red lentils.", "Simmer in 1 1/2 cups water for 15 to 20 minutes, until mushy.", "Blend until smooth."], "Plant iron, protein and fiber. Serve with mango, apple or blueberries; vitamin C boosts how much iron gets absorbed.", ""],
-    ["Salmon", "carrot", "15 min", true, ["Bake a skinless fillet at 400°F for 12 to 15 minutes, to 145°F.", "Flake it and check carefully for bones.", "Blend with water, breast milk or formula."], "Omega-3 fats (DHA) for brain and eye development, plus protein. Low in mercury.", "Fish is also an allergen: follow the first-taste steps below."],
-  ],
-  allergens: [
-    ["Peanut", "carrot", "2 min", false, ["Stir 2 teaspoons of smooth peanut butter with 2 to 3 teaspoons of hot water until smooth, then let it cool.", "Or mix 2 teaspoons of peanut butter into 2 to 3 tablespoons of a fruit or vegetable puree your baby already eats.", "Follow the first-taste steps below."], "Early, regular peanut can lower the chance of a peanut allergy.", "Never whole peanuts or a lump of thick peanut butter."],
-    ["Egg", "pea", "12 min", true, ["Hard-boil an egg for 12 minutes, then cool and peel.", "Mash the whole egg (yolk and white) with breast milk or formula until smooth.", "Or scramble until fully set and blend."], "Protein and choline for brain development; also an early allergen.", "Egg purees keep 1 day in the fridge. Always fully cook eggs."],
-    ["Dairy (yogurt)", "berry", "No cook", false, ["Use plain, whole-milk yogurt with no added sugar.", "Serve as is, or swirl in a fruit puree."], "Protein, calcium and an early dairy exposure. Yogurt is fine before 12 months; cow's milk as a drink is not.", ""],
-    ["Wheat", "pea", "1 min", false, ["Mix infant wheat or mixed-grain cereal with breast milk or formula, like the oat cereal."], "An early wheat exposure, plus iron from the fortified cereal.", ""],
-    ["Sesame", "berry", "2 min", false, ["Thin 1 teaspoon of tahini with warm water, or stir it into a puree your baby already eats."], "Sesame is now one of the most common food allergens; early tastes may help.", ""],
-  ],
+/* ---------- recipes ----------
+   g: group (saved logs key on "g:id", so keep these), st: texture stage, m: minutes, fz: freezes well,
+   y: a batch makes y units (u), shop: what one batch needs, iron/allergen flags drive What's next. */
+const STAGES = [
+  null,
+  {n: 1, name: "Smooth purees", ages: "6 months", from: 6, texture: "Thin and completely smooth; it drips slowly off a spoon, like thin yogurt.",
+   how: "Blend well and thin with steaming water, breast milk or formula.", next: "She swallows easily, opens wide for more and has had a few weeks of purees."},
+  {n: 2, name: "Thicker purees & combos", ages: "7 to 8 months", from: 7, texture: "Thicker, like mashed potatoes, with tiny soft lumps. Two or three foods mixed together.",
+   how: "Blend for less time and add less liquid, or mash well with a fork.", next: "She moves food around her mouth, makes chewing motions and sits steadily on her own."},
+  {n: 3, name: "Mashed & finger foods", ages: "9 to 11 months", from: 9, texture: "Lumpy mashes plus soft finger foods she feeds herself.",
+   how: "Mash with a fork. Finger foods soft enough to squish between your fingers, cut the size of an adult finger.", next: "She picks up small pieces with thumb and finger (pincer grasp) and chews soft lumps well."},
+  {n: 4, name: "Family foods", ages: "12 months and up", from: 12, texture: "Small, soft pieces of what the family eats, cooked with little or no salt.",
+   how: "Cut into small bites. Keep the choking rules: quarter grapes, no whole nuts or popcorn.", next: "Whole cow's milk and honey are now OK; ask your pediatrician how much milk."},
+];
+const GROUPS = {
+  veggies: {st: 1, title: "Vegetables", lead: "A great place to start: mild, a little sweet, and packed with vitamins."},
+  fruits: {st: 1, title: "Fruits", lead: "Naturally sweet. Pair them with iron foods: vitamin C helps her absorb iron."},
+  iron: {st: 1, title: "Iron & protein", lead: "The iron babies are born with runs low around 6 months. Offer an iron-rich food every day."},
+  allergens: {st: 1, title: "Allergens", lead: "Early, regular tastes can lower the chance of a food allergy. Follow the first-taste steps in the Guide."},
+  combos: {st: 2, title: "Thicker purees & combos", lead: "Thicker textures and two or three foods together, for 7 to 8 months."},
+  finger: {st: 3, title: "Mashed & finger foods", lead: "Soft pieces she can pick up herself, for 9 to 11 months. Always seated and watched."},
+  toddler: {st: 4, title: "Family foods", lead: "Small bites of real meals, for 12 months and up."},
 };
-/* MJ's log, saved on this phone: {"group:food": {date:"YYYY-MM-DD", rating:1-5, notes:"..."}}. A food counts as tried once it has a date. */
-const KEY = "mjskitchen.log";
-let LOG = {};
-try{ LOG = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }catch(_){ LOG = {}; }
-try{ const old = JSON.parse(localStorage.getItem("mjskitchen.tried") || "{}") || {};   // earlier "Mark as tried" taps
-  Object.keys(old).forEach(k => { if(!LOG[k]) LOG[k] = {date: today()}; }); localStorage.removeItem("mjskitchen.tried"); }catch(_){}
-function today(){ const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
-const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(LOG)); }catch(_){} };
-const entry = k => LOG[k] || {};
-const setEntry = (k, patch) => { const e = Object.assign({}, LOG[k], patch); Object.keys(e).forEach(x => { if(e[x] === "" || e[x] == null || e[x] === 0) delete e[x]; }); if(Object.keys(e).length) LOG[k] = e; else delete LOG[k]; save(); };
-const RATES = ["", "Spat it out", "Not a fan", "It's okay", "Liked it", "Loved it"];
-const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+const R = [
+  // ---- stage 1: vegetables
+  {g: "veggies", name: "Sweet potato", c: "carrot", m: 15, fz: true, y: 16, u: "cubes", shop: ["2 medium sweet potatoes"], steps: ["Peel and cut into 1-inch cubes.", "Steam 12 to 15 minutes until very soft (or bake whole at 400°F for 45 minutes and scoop out the flesh).", "Blend with steaming water, breast milk or formula until smooth."], why: "Beta-carotene (vitamin A) for healthy eyes, skin and immunity, plus fiber for regular digestion.", note: "1 medium sweet potato makes about 1 cup, or 8 cubes."},
+  {g: "veggies", name: "Butternut squash", c: "carrot", m: 12, fz: true, y: 16, u: "cubes", shop: ["1 small butternut squash (about 2 lb)"], steps: ["Peel, scoop out the seeds and cube.", "Steam 10 to 12 minutes (or roast halves cut side down at 400°F for 40 minutes).", "Blend until smooth."], why: "Vitamins A and C plus potassium. Smooth and naturally sweet, a very easy first food."},
+  {g: "veggies", name: "Carrots", c: "carrot", m: 12, fz: true, y: 12, u: "cubes", shop: ["1 lb carrots"], steps: ["Peel and slice into thin coins.", "Steam 10 to 12 minutes until very soft.", "Blend with plenty of liquid; carrots need more than most."], why: "Beta-carotene for vision and immunity."},
+  {g: "veggies", name: "Peas", c: "pea", m: 5, fz: true, y: 10, u: "cubes", shop: ["1 bag (12 oz) frozen peas"], steps: ["Use frozen peas, no need to thaw.", "Steam 3 to 5 minutes.", "Blend, then push through a fine strainer to remove the skins."], why: "Plant protein, fiber, vitamin K and some iron. Builds a taste for green vegetables."},
+  {g: "veggies", name: "Green beans", c: "pea", m: 10, fz: true, y: 10, u: "cubes", shop: ["1 lb green beans (or a 12 oz frozen bag)"], steps: ["Trim the ends and cut in half.", "Steam 8 to 10 minutes.", "Blend well; strain if stringy."], why: "Vitamins K and C, folate and fiber. Gets her used to a less sweet, \"green\" taste."},
+  {g: "veggies", name: "Zucchini", c: "pea", m: 5, fz: true, y: 8, u: "cubes", shop: ["2 medium zucchini"], steps: ["Peel if you like and slice.", "Steam 4 to 5 minutes.", "Blend. It's watery, so you usually won't need extra liquid."], why: "Gentle on the stomach, with vitamin C and potassium."},
+  {g: "veggies", name: "Avocado", c: "pea", m: 0, fz: false, y: 0, u: "", shop: ["1 ripe avocado"], steps: ["Cut a ripe avocado in half and scoop out the flesh.", "Mash with a fork or blend, adding breast milk or formula to thin."], why: "Healthy fats for brain growth, plus folate and potassium.", note: "Best made fresh. It browns and turns watery in the freezer."},
+  // ---- stage 1: fruits
+  {g: "fruits", name: "Banana", c: "carrot", m: 0, fz: false, y: 0, u: "", shop: ["1 ripe banana"], steps: ["Peel a ripe banana (brown spots are good).", "Mash with a fork, thinning with breast milk or formula."], why: "Potassium and easy-to-digest carbohydrates for energy.", note: "Best made fresh; it browns once mashed."},
+  {g: "fruits", name: "Apple", c: "pea", m: 10, fz: true, y: 12, u: "cubes", shop: ["4 sweet apples (Gala or Fuji)"], steps: ["Peel, core and cut into chunks.", "Steam 8 to 10 minutes until soft.", "Blend with a little steaming water."], why: "Vitamin C and fiber. Mixes well with almost anything."},
+  {g: "fruits", name: "Pear", c: "pea", m: 6, fz: true, y: 12, u: "cubes", shop: ["4 ripe pears"], steps: ["Peel and core. Very ripe pears can be blended raw.", "Otherwise steam 4 to 6 minutes.", "Blend; it's juicy, so add little or no liquid."], why: "Gentle fiber that can help with constipation."},
+  {g: "fruits", name: "Mango", c: "carrot", m: 3, fz: true, y: 10, u: "cubes", shop: ["2 ripe mangoes (or a 16 oz frozen bag)"], steps: ["Use a ripe mango, or frozen chunks steamed 2 to 3 minutes.", "Peel and cut the flesh off the pit.", "Blend until smooth."], why: "Vitamins A and C. The vitamin C helps her absorb iron from other foods."},
+  {g: "fruits", name: "Blueberries", c: "berry", m: 5, fz: true, y: 8, u: "cubes", shop: ["2 cups blueberries (fresh or frozen)"], steps: ["Simmer 2 cups fresh or frozen berries with 2 to 3 tablespoons of water for 5 minutes.", "Blend, then strain out the skins.", "Stir into oatmeal or pear to balance the tartness."], why: "Antioxidants, vitamin C and fiber."},
+  {g: "fruits", name: "Prunes", c: "berry", m: 10, fz: true, y: 8, u: "cubes", shop: ["10 pitted dried prunes"], steps: ["Simmer 10 pitted dried prunes in 1 cup of water for 10 minutes.", "Blend with the cooking water until smooth."], why: "Natural sorbitol and fiber to ease constipation.", note: "Serve just 1 to 2 teaspoons at a time, mixed into another puree."},
+  // ---- stage 1: iron & protein
+  {g: "iron", name: "Iron-fortified oat cereal", iron: true, c: "pea", m: 1, fz: false, y: 0, u: "", shop: ["1 box infant oat (or barley or multigrain) cereal"], steps: ["Stir 1 tablespoon of infant oat (or barley or mixed-grain) cereal into 4 to 5 tablespoons of breast milk or formula.", "Thicken gradually as she gets used to it."], why: "Iron and zinc in an easy first food. Choose oat, barley or mixed grains over rice to limit arsenic.", note: "Make it fresh at each meal; it doesn't need storing."},
+  {g: "iron", name: "Chicken", iron: true, meat: true, c: "carrot", m: 20, fz: true, y: 12, u: "cubes", shop: ["1 lb boneless, skinless chicken thighs"], steps: ["Cut boneless, skinless chicken thighs into chunks.", "Simmer in water (no salt) about 20 minutes, until it reaches 165°F.", "Blend with the cooking liquid until very smooth, with no stringy bits."], why: "Protein, plus easily absorbed iron and zinc. Thighs have more iron than breast meat.", note: "Meat purees keep just 1 day in the fridge."},
+  {g: "iron", name: "Beef", iron: true, meat: true, c: "carrot", m: 20, fz: true, y: 12, u: "cubes", shop: ["1 lb lean ground beef or stew meat"], steps: ["Brown lean ground beef, or simmer stew cubes in water until tender.", "Cook to 160°F, then drain the fat.", "Blend with water or cooking liquid until very smooth."], why: "The best food source of iron and zinc she can absorb.", note: "Meat purees keep just 1 day in the fridge."},
+  {g: "iron", name: "Red lentils", iron: true, c: "berry", m: 20, fz: true, y: 12, u: "cubes", shop: ["1/2 cup red lentils"], steps: ["Rinse 1/2 cup red lentils.", "Simmer in 1 1/2 cups water for 15 to 20 minutes, until mushy.", "Blend until smooth."], why: "Plant iron, protein and fiber. Serve with mango, apple or blueberries; vitamin C boosts how much iron gets absorbed."},
+  {g: "iron", name: "Salmon", iron: true, meat: true, allergen: "Fish", c: "carrot", m: 15, fz: true, y: 8, u: "cubes", shop: ["1 skinless salmon fillet (about 8 oz)"], steps: ["Bake a skinless fillet at 400°F for 12 to 15 minutes, to 145°F.", "Flake it and check carefully for bones.", "Blend with water, breast milk or formula."], why: "Omega-3 fats (DHA) for brain and eye development, plus protein. Low in mercury.", note: "Fish is also an allergen: use the first-taste steps in the Guide."},
+  // ---- stage 1: allergens
+  {g: "allergens", name: "Peanut", allergen: "Peanut", c: "carrot", m: 2, fz: false, y: 0, u: "", shop: ["1 jar smooth peanut butter (just peanuts, or peanuts and salt)"], steps: ["Stir 2 teaspoons of smooth peanut butter with 2 to 3 teaspoons of hot water until smooth, then let it cool.", "Or mix 2 teaspoons of peanut butter into 2 to 3 tablespoons of a puree she already eats.", "Follow the first-taste steps in the Guide."], why: "Early, regular peanut can lower the chance of a peanut allergy.", note: "Never whole peanuts or a lump of thick peanut butter."},
+  {g: "allergens", name: "Egg", allergen: "Egg", iron: true, meat: true, c: "pea", m: 12, fz: true, y: 4, u: "cubes", shop: ["2 eggs"], steps: ["Hard-boil an egg for 12 minutes, then cool and peel.", "Mash the whole egg (yolk and white) with breast milk or formula until smooth.", "Or scramble until fully set and blend."], why: "Protein and choline for brain development; also an early allergen.", note: "Egg purees keep 1 day in the fridge. Always fully cook eggs."},
+  {g: "allergens", name: "Dairy (yogurt)", allergen: "Dairy", c: "berry", m: 0, fz: false, y: 0, u: "", shop: ["1 tub plain whole-milk yogurt"], steps: ["Use plain, whole-milk yogurt with no added sugar.", "Serve as is, or swirl in a fruit puree."], why: "Protein, calcium and an early dairy exposure. Yogurt is fine before 12 months; cow's milk as a drink is not."},
+  {g: "allergens", name: "Wheat", allergen: "Wheat", iron: true, c: "pea", m: 1, fz: false, y: 0, u: "", shop: ["1 box infant wheat or multigrain cereal"], steps: ["Mix infant wheat or mixed-grain cereal with breast milk or formula, like the oat cereal."], why: "An early wheat exposure, plus iron from the fortified cereal."},
+  {g: "allergens", name: "Sesame", allergen: "Sesame", c: "berry", m: 2, fz: false, y: 0, u: "", shop: ["1 jar tahini"], steps: ["Thin 1 teaspoon of tahini with warm water, or stir it into a puree she already eats."], why: "Sesame is now one of the most common food allergens; early tastes may help."},
+  // ---- stage 2: thicker purees & combos (7-8 months)
+  {g: "combos", name: "Spinach & pear", iron: true, c: "pea", m: 8, fz: true, y: 10, u: "cubes", shop: ["2 cups baby spinach", "2 ripe pears"], steps: ["Peel and chop the pears; steam 4 minutes.", "Add the spinach to the steamer for the last 2 minutes, until wilted.", "Blend briefly so it stays thick."], why: "Iron, folate and vitamin K from spinach; the pear's vitamin C helps her absorb that iron, and it tames the bitterness."},
+  {g: "combos", name: "Broccoli", c: "pea", m: 8, fz: true, y: 8, u: "cubes", shop: ["1 head broccoli"], steps: ["Cut into small florets.", "Steam 6 to 8 minutes until very tender.", "Blend with a little water, or mash well with a fork."], why: "Vitamins C and K plus fiber. Early tastes of bitter greens make her more likely to eat them later."},
+  {g: "combos", name: "Chicken & sweet potato", iron: true, meat: true, c: "carrot", m: 25, fz: true, y: 14, u: "cubes", shop: ["1/2 lb boneless chicken thighs", "1 medium sweet potato"], steps: ["Simmer chicken chunks in water 20 minutes, to 165°F.", "Steam cubed sweet potato 12 to 15 minutes at the same time.", "Blend together with some cooking liquid, leaving it thick."], why: "Iron and zinc from the chicken, vitamin A from the sweet potato, and a texture step up.", note: "Keeps 1 day in the fridge."},
+  {g: "combos", name: "Lentils & carrot", iron: true, c: "berry", m: 20, fz: true, y: 14, u: "cubes", shop: ["1/2 cup red lentils", "2 carrots"], steps: ["Rinse the lentils; peel and dice the carrots.", "Simmer both in 2 cups water for 20 minutes, until very soft. Add a pinch of cumin if you like.", "Mash or blend briefly."], why: "Plant iron and protein with beta-carotene. A first taste of gentle spice is fine now."},
+  {g: "combos", name: "Quinoa & apple", iron: true, c: "pea", m: 20, fz: true, y: 10, u: "cubes", shop: ["1/2 cup quinoa", "2 apples"], steps: ["Rinse the quinoa and simmer in 1 1/4 cups water about 20 minutes, until extra soft.", "Steam peeled, chopped apple 8 to 10 minutes.", "Blend together, keeping it thick."], why: "Protein, iron and fiber from quinoa, sweetened naturally with apple."},
+  {g: "combos", name: "Black beans", iron: true, c: "berry", m: 5, fz: true, y: 8, u: "cubes", shop: ["1 can no-salt-added black beans"], steps: ["Rinse the beans well.", "Simmer 5 minutes in fresh water.", "Blend or mash, and strain out tough skins if needed."], why: "Plant iron, protein and fiber. Mix with mango or sweet potato."},
+  {g: "combos", name: "Beets & blueberries", c: "berry", m: 25, fz: true, y: 10, u: "cubes", shop: ["2 medium beets", "1 cup blueberries"], steps: ["Peel and cube the beets; steam 20 to 25 minutes until tender.", "Add the blueberries for the last 3 minutes.", "Blend until thick and smooth."], why: "Folate and potassium plus antioxidants. It will turn her diaper pink; that's normal."},
+  {g: "combos", name: "Tofu & mango", allergen: "Soy", c: "carrot", m: 0, fz: false, y: 0, u: "", shop: ["1 block soft or silken tofu", "1 ripe mango"], steps: ["Mash 2 tablespoons of soft tofu with a fork.", "Mix in an equal amount of mashed mango."], why: "Protein and calcium, and an early exposure to soy, a common allergen.", note: "Soy is an allergen: use the first-taste steps the first time."},
+  {g: "combos", name: "Oatmeal with banana", c: "carrot", m: 5, fz: false, y: 0, u: "", shop: ["Quick oats", "1 ripe banana"], steps: ["Cook 1/4 cup quick oats in 1/2 cup water for 3 to 5 minutes.", "Mash in half a ripe banana and a pinch of cinnamon.", "Thin with breast milk or formula as needed."], why: "Fiber and steady energy for breakfast. Keep using fortified infant cereal some days for iron."},
+  // ---- stage 3: mashed & finger foods (9-11 months)
+  {g: "finger", name: "Soft carrot sticks", c: "carrot", m: 15, fz: false, y: 0, u: "", shop: ["3 large carrots"], steps: ["Peel and cut into sticks the size of an adult finger.", "Steam 12 to 15 minutes, until they squish easily between your fingers.", "Cool before serving."], why: "Practice picking up and gumming food, with plenty of vitamin A."},
+  {g: "finger", name: "Banana spears", c: "carrot", m: 0, fz: false, y: 0, u: "", shop: ["1 ripe banana", "Infant oat cereal (optional, for grip)"], steps: ["Cut a peeled banana in half, then press a finger into the top to split it into 3 natural spears.", "Roll in a little infant cereal to make it less slippery."], why: "An easy first self-feeding food that's soft enough for gums."},
+  {g: "finger", name: "Egg strips", allergen: "Egg", iron: true, c: "pea", m: 5, fz: false, y: 0, u: "", shop: ["2 eggs"], steps: ["Whisk 1 egg and cook it flat in a nonstick pan until fully set, like a thin omelet.", "Cut into finger-size strips."], why: "Protein, choline and iron, and keeps egg in her diet regularly."},
+  {g: "finger", name: "Shredded chicken", iron: true, meat: true, c: "carrot", m: 30, fz: true, y: 10, u: "portions", shop: ["1 lb boneless chicken thighs"], steps: ["Simmer thighs in water 25 to 30 minutes, to 165°F.", "Shred very finely with two forks and keep it moist with a little cooking liquid.", "Serve on its own or stirred into a mash."], why: "Iron, zinc and protein in a texture that teaches chewing.", note: "Keeps 1 day in the fridge."},
+  {g: "finger", name: "Veggie pasta", allergen: "Wheat", c: "pea", m: 12, fz: true, y: 8, u: "portions", shop: ["Small pasta (orzo, stars or small shells)", "Frozen butternut squash or any veggie puree cubes"], steps: ["Cook small pasta 2 to 3 minutes longer than the package says, so it's very soft.", "Toss with a thawed veggie puree cube as the sauce."], why: "Lets her practice soft lumps, and turns her purees into a meal."},
+  {g: "finger", name: "Banana oat pancakes", allergen: "Egg", c: "carrot", m: 15, fz: true, y: 10, u: "pancakes", shop: ["1 ripe banana", "1 egg", "1/4 cup quick oats"], steps: ["Blend 1 ripe banana, 1 egg and 1/4 cup oats until smooth.", "Cook silver-dollar pancakes on a lightly oiled pan, 2 minutes a side, until cooked through.", "Cut into strips."], why: "No added sugar, easy to hold, and a sneaky way to keep egg in her diet. Freeze between parchment."},
+  {g: "finger", name: "Soft broccoli trees", c: "pea", m: 10, fz: false, y: 0, u: "", shop: ["1 head broccoli"], steps: ["Cut florets with a long stem for a handle.", "Steam 8 to 10 minutes until very soft."], why: "Vitamin C and fiber, and the stem makes a perfect handle."},
+  {g: "finger", name: "Toast with peanut butter", allergen: "Peanut", c: "carrot", m: 3, fz: false, y: 0, u: "", shop: ["Whole-wheat bread", "Smooth peanut butter"], steps: ["Lightly toast a slice of bread and cut off the crust.", "Spread a very thin layer of peanut butter thinned with a little warm water.", "Cut into finger-size strips."], why: "Keeps peanut and wheat in her diet a few times a week."},
+  {g: "finger", name: "Mild cheese", allergen: "Dairy", c: "berry", m: 0, fz: false, y: 0, u: "", shop: ["Low-sodium mozzarella or mild cheddar"], steps: ["Shred, or cut thin strips of a soft, mild, pasteurized cheese."], why: "Calcium and protein. Pick lower-sodium cheeses like mozzarella and Swiss."},
+  // ---- stage 4: family foods (12 months+)
+  {g: "toddler", name: "Mini veggie egg muffins", allergen: "Egg", iron: true, c: "pea", m: 20, fz: true, y: 24, u: "muffins", shop: ["6 eggs", "1 cup finely chopped vegetables (spinach, peppers, zucchini)", "1/4 cup shredded cheese"], steps: ["Heat the oven to 350°F and grease a mini muffin tin.", "Whisk the eggs, stir in the vegetables and cheese, and fill the cups.", "Bake 15 to 18 minutes until set in the middle. Cool and cut in halves."], why: "A grab-and-go breakfast with protein, iron and vegetables built in."},
+  {g: "toddler", name: "Turkey zucchini meatballs", iron: true, meat: true, allergen: "Egg", c: "carrot", m: 20, fz: true, y: 30, u: "meatballs", shop: ["1 lb ground turkey", "1 small zucchini", "1/4 cup quick oats", "1 egg"], steps: ["Heat the oven to 400°F.", "Grate the zucchini and squeeze out the water. Mix with the turkey, oats and egg.", "Roll into 1-inch balls and bake 15 to 18 minutes, to 165°F. Quarter them for serving."], why: "Iron and protein with a hidden vegetable, soft enough to chew."},
+  {g: "toddler", name: "Hidden-veggie pasta sauce", c: "carrot", m: 30, fz: true, y: 12, u: "portions", shop: ["1 can no-salt-added crushed tomatoes", "2 carrots", "1 cup butternut squash", "1 small onion"], steps: ["Dice the onion, carrots and squash; soften in a little olive oil for 5 minutes.", "Add the tomatoes and simmer 20 to 25 minutes until everything is soft.", "Blend smooth. Serve over very soft pasta."], why: "A family sauce with three vegetables and no added salt."},
+];
 const id = n => n.toLowerCase().replace(/[^a-z]+/g, "-");
-const nice = d => d ? new Date(d + "T12:00:00").toLocaleDateString("en-US", {month: "short", day: "numeric", year: "numeric"}) : "";
-const stars = n => n ? `<span class="stars" aria-label="${n} of 5: ${RATES[n]}">${"★".repeat(n)}<span class="off">${"★".repeat(5 - n)}</span></span>` : "";
-function badges(k){
-  const e = entry(k);
-  return e.date ? `<span class="done">Tried ${esc(nice(e.date))}</span>${stars(e.rating)}` : "";
+R.forEach(r => { r.id = id(r.name); r.k = r.g + ":" + r.id; r.st = GROUPS[r.g].st; });
+const BYK = Object.fromEntries(R.map(r => [r.k, r]));
+const ALLERGENS = ["Peanut", "Egg", "Dairy", "Wheat", "Soy", "Fish", "Sesame"];
+
+/* ---------- saved data (this phone only) ---------- */
+const S = {get(k, d){ try{ const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; }catch(_){ return d; } }, set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(_){} }};
+let LOG = S.get("mjskitchen.log", {});            // {k: {date, rating, notes}}
+let MEALS = S.get("mjskitchen.meals", []);        // [{id, d, meal, k, amt, note, fz}]
+let FRZ = S.get("mjskitchen.freezer", []);        // [{id, k, made, cubes, left}]
+let BDAY = S.get("mjskitchen.bday", "");
+try{ const old = JSON.parse(localStorage.getItem("mjskitchen.tried") || "{}") || {}; Object.keys(old).forEach(k => { if(!LOG[k]) LOG[k] = {date: today()}; }); localStorage.removeItem("mjskitchen.tried"); }catch(_){}
+const saveLog = () => S.set("mjskitchen.log", LOG), saveMeals = () => S.set("mjskitchen.meals", MEALS), saveFrz = () => S.set("mjskitchen.freezer", FRZ);
+
+/* ---------- helpers ---------- */
+function today(){ return iso(new Date()); }
+function iso(d){ return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
+const D = s => new Date(s + "T12:00:00");
+const addDays = (s, n) => { const d = D(s); d.setDate(d.getDate() + n); return iso(d); };
+const addMonths = (s, n) => { const d = D(s), day = d.getDate(); d.setDate(1); d.setMonth(d.getMonth() + n); d.setDate(Math.min(day, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate())); return iso(d); };
+const daysBetween = (a, b) => Math.round((D(b) - D(a)) / 864e5);
+const nice = s => s ? D(s).toLocaleDateString("en-US", {month: "short", day: "numeric", year: D(s).getFullYear() === new Date().getFullYear() ? undefined : "numeric"}) : "";
+const weekday = s => D(s).toLocaleDateString("en-US", {weekday: "short", month: "short", day: "numeric"});
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+const $ = i => document.getElementById(i);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const entry = k => LOG[k] || {};
+function setEntry(k, patch){ const e = Object.assign({}, LOG[k], patch); Object.keys(e).forEach(x => { if(e[x] === "" || e[x] == null || e[x] === 0) delete e[x]; }); if(Object.keys(e).length) LOG[k] = e; else delete LOG[k]; saveLog(); }
+const RATES = ["", "Spat it out", "Not a fan", "It's okay", "Liked it", "Loved it"];
+const stars = n => n ? `<span class="stars" role="img" aria-label="${n} of 5: ${RATES[n]}">${"★".repeat(n)}<span class="off">${"★".repeat(5 - n)}</span></span>` : "";
+const AMTS = ["A taste", "A few spoons", "Half a cube", "A whole cube", "More than a cube"];
+const MEALNAMES = ["Breakfast", "Lunch", "Dinner", "Snack"];
+function toast(t){ const el = $("toast"); el.textContent = t; el.classList.add("on"); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("on"), 2200); }
+function ageMonths(){ if(!BDAY) return null; const b = D(BDAY), n = new Date(); let m = (n.getFullYear() - b.getFullYear()) * 12 + n.getMonth() - b.getMonth(); if(n.getDate() < b.getDate()) m--; return Math.max(0, m); }
+function stageNow(){ const a = ageMonths(); if(a == null) return 1; return a >= 12 ? 4 : a >= 9 ? 3 : a >= 7 ? 2 : 1; }
+const useBy = b => addDays(b.made, 30);
+const lastHad = k => { const m = MEALS.filter(x => x.k === k).map(x => x.d).sort().pop(); const e = entry(k).date; return [m, e].filter(Boolean).sort().pop() || null; };
+const tried = k => !!entry(k).date;
+const foodOptions = (sel, onlyFreeze) => {
+  const cur = stageNow();
+  return [1, 2, 3, 4].map(st => { const list = R.filter(r => r.st === st && (!onlyFreeze || r.fz));
+    return list.length ? `<optgroup label="${esc(STAGES[st].name)}${st > cur ? " (later)" : ""}">${list.map(r => `<option value="${r.k}"${r.k === sel ? " selected" : ""}>${esc(r.name)}${tried(r.k) ? " ✓" : ""}</option>`).join("")}</optgroup>` : ""; }).join("");
+};
+
+/* ---------- age & birthday ---------- */
+function drawAge(){
+  const a = ageMonths(), st = stageNow();
+  $("bday").value = BDAY || ""; $("bday").max = today();
+  $("bdayOut").textContent = a == null ? "" : `${a} month${a === 1 ? "" : "s"} old`;
+  $("bdayBox").classList.toggle("set", !!BDAY);
+  $("ageLine").textContent = a == null ? "Recipes, a meal log and a freezer list for MJ, from first purees to family meals. Add her birthday on the Today tab."
+    : `MJ is ${a} month${a === 1 ? "" : "s"} old: ${STAGES[st].name.toLowerCase()} stage. ${st < 4 ? `Next stage at ${STAGES[st + 1].from} months.` : ""}`;
 }
-function card(g, r){
-  const [name, color, time, freezes, steps, why, note] = r, k = g + ":" + id(name), e = entry(k);
-  return `<details class="card" id="${id(name)}" data-k="${k}">
-    <summary><span class="dot" style="background:var(--${color})" aria-hidden="true">${esc(name[0])}</span>
-      <span><h3>${esc(name)}</h3><span class="meta"><span>${esc(time)}</span><span>${freezes ? "Freezes well" : "Best fresh"}</span></span><span class="badges">${badges(k)}</span></span>
+$("bday").addEventListener("change", e => { BDAY = e.target.value; S.set("mjskitchen.bday", BDAY); drawAll(); toast("Birthday saved"); });
+
+/* ---------- what's next ---------- */
+function drawNext(){
+  const t = today(), st = stageNow(), out = [];
+  const recentNew = R.filter(r => entry(r.k).date && daysBetween(entry(r.k).date, t) < 3 && daysBetween(entry(r.k).date, t) >= 0).sort((a, b) => entry(b.k).date.localeCompare(entry(a.k).date))[0];
+  const ready = R.filter(r => r.st <= st && !tried(r.k));
+  // 1) new food, respecting the 2-3 day spacing
+  if(recentNew){
+    const when = addDays(entry(recentNew.k).date, 3);
+    out.push({tag: "New food", tone: "berry", title: `Next new food after ${nice(when)}`, text: `She first tried ${recentNew.name} on ${nice(entry(recentNew.k).date)}. Give each new food 2 to 3 days before the next, so you can spot a reaction. Until then, repeat foods she knows.`});
+  } else if(ready.length){
+    const order = ["veggies", "iron", "combos", "finger", "toddler", "fruits", "allergens"];
+    const pick = ready.slice().sort((a, b) => order.indexOf(a.g) - order.indexOf(b.g) || R.indexOf(a) - R.indexOf(b))[0];
+    out.push({tag: "Try something new", tone: "pea", title: pick.name, k: pick.k, text: `${pick.why} ${ready.length - 1 ? `${ready.length - 1} more new food${ready.length - 1 === 1 ? "" : "s"} ready at her stage.` : ""}`});
+  }
+  // 2) iron: anything iron-rich in the last 2 days?
+  const recentIron = MEALS.some(m => BYK[m.k] && BYK[m.k].iron && daysBetween(m.d, t) <= 1 && daysBetween(m.d, t) >= 0);
+  if(!recentIron){
+    const ironOk = R.filter(r => r.iron && r.st <= st && tried(r.k));
+    const p = ironOk.sort((a, b) => (entry(b.k).rating || 0) - (entry(a.k).rating || 0))[0];
+    out.push({tag: "Iron today", tone: "carrot", title: p ? `${p.name}${entry(p.k).rating ? " " + "★".repeat(entry(p.k).rating) : ""}` : "Add an iron-rich food", k: p && p.k,
+      text: p ? "No iron-rich food logged yesterday or today. Babies need iron every day from about 6 months; pair it with a fruit for vitamin C." : "Iron runs low around 6 months. Start with iron-fortified oat cereal, chicken, beef or lentils."});
+  }
+  // 3) allergens to keep up (tried, but nothing in 7+ days)
+  ALLERGENS.forEach(a => {
+    const foods = R.filter(r => r.allergen === a && r.st <= st);
+    const had = foods.map(r => lastHad(r.k)).filter(Boolean).sort().pop();
+    if(had && daysBetween(had, t) >= 7){
+      const f = foods.filter(r => tried(r.k))[0] || foods[0];
+      out.push({tag: "Keep it up", tone: "berry", title: `${a}: last had ${nice(had)}`, k: f.k, text: `Once an allergen is tolerated, keep it in her diet a few times a week. ${f.name} is an easy way.`});
+    }
+  });
+  // 4) freezer: use what's expiring
+  const soon = FRZ.filter(b => b.left > 0 && daysBetween(t, useBy(b)) <= 7).sort((a, b) => useBy(a).localeCompare(useBy(b)))[0];
+  if(soon){ const r = BYK[soon.k], d = daysBetween(t, useBy(soon));
+    out.push({tag: "From the freezer", tone: d < 0 ? "warn" : "carrot", title: `${r ? r.name : "Batch"}: ${soon.left} left`, text: d < 0 ? `Past its 1-month use-by (${nice(useBy(soon))}). Throw these out.` : `Use by ${nice(useBy(soon))}${d === 0 ? " (today)" : ` (${d} day${d === 1 ? "" : "s"})`}.`}); }
+  // 5) a favorite
+  const fav = R.filter(r => entry(r.k).rating === 5).sort((a, b) => (lastHad(a.k) || "").localeCompare(lastHad(b.k) || ""))[0];
+  if(fav) out.push({tag: "She loves", tone: "pea", title: fav.name, k: fav.k, text: `Rated 5 stars${lastHad(fav.k) ? `; last had ${nice(lastHad(fav.k))}` : ""}. Mix in a newer food to make it more interesting.`});
+  // 6) stage ahead
+  const a = ageMonths();
+  if(a != null && st < 4 && STAGES[st + 1].from - a <= 1) out.push({tag: "Coming up", tone: "berry", title: `${STAGES[st + 1].name} at ${STAGES[st + 1].from} months`, text: `Ready when: ${STAGES[st].next} Peek at the recipes in the Cookbook.`});
+  if(!out.length) out.push({tag: "All set", tone: "pea", title: "She's tried everything at her stage", text: "Keep variety going with combos, and check the Cookbook for what opens up next."});
+  $("next").innerHTML = out.slice(0, 5).map(o => `<div class="nx t-${o.tone}"><span class="tag">${esc(o.tag)}</span><b>${esc(o.title)}</b><p>${esc(o.text)}</p>${o.k ? `<a href="#cookbook" data-go="${o.k}">Open recipe ›</a>` : ""}</div>`).join("");
+}
+
+/* ---------- meal log ---------- */
+let DAY = today(), ADDING = null;
+function drawMeals(){
+  $("mealDate").value = DAY; $("mealDate").max = today(); $("dNext").disabled = DAY >= today();
+  const dayM = MEALS.filter(m => m.d === DAY);
+  const iron = dayM.some(m => BYK[m.k] && BYK[m.k].iron), newF = R.filter(r => entry(r.k).date === DAY);
+  $("daySum").textContent = (DAY === today() ? "Today" : weekday(DAY)) + ": " + (dayM.length ? `${dayM.length} food${dayM.length === 1 ? "" : "s"} logged${iron ? " · iron ✓" : " · no iron yet"}${newF.length ? ` · new: ${newF.map(r => r.name).join(", ")}` : ""}` : "nothing logged yet. Tap + on a meal to add what she ate.");
+  $("meals").innerHTML = MEALNAMES.map(meal => {
+    const list = dayM.filter(m => m.meal === meal);
+    const form = ADDING === meal ? `<form class="addf mealf" data-meal="${meal}">
+        <label class="fld" for="mf-food">Food<select id="mf-food" required><option value="">Pick a food…</option>${foodOptions()}</select></label>
+        <div class="fld"><span>How much</span><div class="amts">${AMTS.map((a, i) => `<label><input type="radio" name="mf-amt" value="${i}"${i === 1 ? " checked" : ""}><span>${a}</span></label>`).join("")}</div></div>
+        <label class="chk"><input type="checkbox" id="mf-frz"> From the freezer (take 1 cube off)</label>
+        <label class="fld" for="mf-note">Reaction or note <span class="rlabel">(optional)</span><input type="text" id="mf-note" placeholder="e.g. loved it, rash on cheek, gassy"></label>
+        <div class="row"><button class="go" type="submit">Save</button><button class="mini" type="button" data-cancel>Cancel</button></div></form>` : "";
+    return `<div class="meal"><div class="mh"><b>${meal}</b><button type="button" class="plus" data-add="${meal}" aria-label="Add to ${meal}">+</button></div>
+      ${list.length ? `<ul>${list.map(m => { const r = BYK[m.k]; return `<li><span><b>${esc(r ? r.name : "Food")}</b> <span class="rlabel">${esc(AMTS[m.amt] || "")}${m.fz ? " · from freezer" : ""}</span>${m.note ? `<span class="mnote">${esc(m.note)}</span>` : ""}</span><button type="button" class="x" data-del="${m.id}" aria-label="Remove">✕</button></li>`; }).join("")}</ul>` : ""}${form}</div>`;
+  }).join("");
+  // last 7 days
+  $("week").innerHTML = Array.from({length: 7}, (_, i) => addDays(today(), -i)).map(d => {
+    const m = MEALS.filter(x => x.d === d), names = [...new Set(m.map(x => BYK[x.k] && BYK[x.k].name).filter(Boolean))];
+    return `<li><button type="button" data-day="${d}" class="${d === DAY ? "on" : ""}"><span class="wd">${d === today() ? "Today" : weekday(d)}</span><span class="wf">${names.length ? esc(names.join(", ")) : "—"}</span>${m.some(x => BYK[x.k] && BYK[x.k].iron) ? `<span class="fe" title="Had an iron-rich food">Fe</span>` : ""}</button></li>`;
+  }).join("");
+}
+$("meals").addEventListener("click", e => {
+  const add = e.target.closest("[data-add]"); if(add){ ADDING = ADDING === add.dataset.add ? null : add.dataset.add; drawMeals(); const s = $("mf-food"); if(s) s.focus(); return; }
+  if(e.target.closest("[data-cancel]")){ ADDING = null; drawMeals(); return; }
+  const del = e.target.closest("[data-del]"); if(del){ MEALS = MEALS.filter(m => m.id !== del.dataset.del); saveMeals(); drawMeals(); drawNext(); toast("Removed"); }
+});
+$("meals").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target, k = $("mf-food").value; if(!k) return;
+  const amt = +(f.querySelector('input[name="mf-amt"]:checked') || {value: 1}).value, fz = $("mf-frz").checked, note = $("mf-note").value.trim();
+  MEALS.push({id: uid(), d: DAY, meal: f.dataset.meal, k, amt, note, fz}); saveMeals();
+  let msg = `${BYK[k].name} added to ${f.dataset.meal.toLowerCase()}`;
+  if(!tried(k) || entry(k).date > DAY){ setEntry(k, {date: DAY}); msg += " · first try logged"; }
+  if(note) setEntry(k, {notes: [entry(k).notes, `${nice(DAY)}: ${note}`].filter(Boolean).join("\n")});
+  if(fz){ const b = FRZ.filter(x => x.k === k && x.left > 0).sort((a, c) => a.made.localeCompare(c.made))[0]; if(b){ b.left--; saveFrz(); msg += ` · ${b.left} left in freezer`; } else msg += " · none in the freezer list"; }
+  ADDING = null; drawAll(); toast(msg);
+});
+$("mealDate").addEventListener("change", e => { DAY = e.target.value || today(); ADDING = null; drawMeals(); });
+$("dPrev").onclick = () => { DAY = addDays(DAY, -1); ADDING = null; drawMeals(); };
+$("dNext").onclick = () => { if(DAY < today()){ DAY = addDays(DAY, 1); ADDING = null; drawMeals(); } };
+$("week").addEventListener("click", e => { const b = e.target.closest("[data-day]"); if(b){ DAY = b.dataset.day; ADDING = null; drawMeals(); $("meals").scrollIntoView({behavior: "smooth", block: "start"}); } });
+
+/* ---------- cookbook ---------- */
+function badges(k){ const e = entry(k); return e.date ? `<span class="done">Tried ${esc(nice(e.date))}</span>${stars(e.rating)}` : ""; }
+function card(r){
+  const e = entry(r.k), k = r.k;
+  return `<details class="card" id="${r.id}" data-k="${k}">
+    <summary><span class="dot" style="background:var(--${r.c})" aria-hidden="true">${esc(r.name[0])}</span>
+      <span><h3>${esc(r.name)}</h3><span class="meta"><span>${r.m ? r.m + " min" : "No cook"}</span><span>${r.fz ? "Freezes well" : "Best fresh"}</span>${r.allergen ? `<span class="al">${esc(r.allergen)}</span>` : ""}${r.iron ? `<span class="fe" title="Iron-rich">Fe</span>` : ""}</span><span class="badges">${badges(k)}</span></span>
       <span class="chev" aria-hidden="true">&#9662;</span></summary>
     <div class="body">
-      <div><h4>How to make it</h4><ol>${steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol></div>
-      <div class="why"><h4>Why it's good</h4><p>${esc(why)}</p></div>
-      ${note ? `<p class="store" style="margin:0">${esc(note)}</p>` : ""}
+      <div><h4>You'll need</h4><p class="store" style="margin:0">${r.shop.map(esc).join(" · ")}${r.y ? ` · makes about ${r.y} ${esc(r.u)}` : ""}</p></div>
+      <div><h4>How to make it</h4><ol>${r.steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol></div>
+      <div class="why"><h4>Why it's good</h4><p>${esc(r.why)}</p></div>
+      ${r.st < stageNow() && r.st === 1 ? `<p class="store" style="margin:0"><b>At her stage now:</b> ${esc(STAGES[stageNow()].how)}</p>` : ""}
+      ${r.note ? `<p class="store" style="margin:0">${esc(r.note)}</p>` : ""}
       <div class="mj">
-        <h4>MJ's notes</h4>
         <label class="fld" for="d-${k}">First tried
           <span class="row"><input type="date" id="d-${k}" data-f="date" value="${esc(e.date || "")}" max="${today()}"><button type="button" class="mini" data-today>Today</button></span></label>
         <div class="fld"><span id="r-${k}">How much she liked it</span>
           <span class="rate" role="radiogroup" aria-labelledby="r-${k}">${[1, 2, 3, 4, 5].map(n => `<button type="button" role="radio" aria-checked="${e.rating === n}" data-rate="${n}" title="${RATES[n]}" class="${e.rating >= n ? "on" : ""}">★</button>`).join("")}</span>
           <span class="rlabel">${e.rating ? RATES[e.rating] : "Tap a star"}</span></div>
-        <label class="fld" for="n-${k}">Notes
-          <textarea id="n-${k}" data-f="notes" rows="3" placeholder="Texture, how much she ate, any reaction, what to try next…">${esc(e.notes || "")}</textarea></label>
-        <span class="saved" aria-live="polite"></span>
+        <label class="fld" for="n-${k}">Reaction log
+          <textarea id="n-${k}" data-f="notes" rows="3" placeholder="Any reaction? Rash, hives, vomiting, fussiness, gas, constipation… or none. Plus how much she ate.">${esc(e.notes || "")}</textarea></label>
+        <div class="row">${r.fz ? `<button type="button" class="mini" data-tofreezer>Add a batch to the freezer</button>` : ""}<span class="saved" aria-live="polite"></span></div>
       </div>
     </div></details>`;
 }
-function progress(g){
-  const el = document.querySelector(`.progress[data-group="${g}"]`), n = R[g].length, d = R[g].filter(r => entry(g + ":" + id(r[0])).date).length;
-  el.innerHTML = `<span>${d} of ${n} tried</span><span class="bar"><i style="width:${n ? d / n * 100 : 0}%"></i></span>`;
+function drawBook(){
+  const cur = stageNow(), a = ageMonths();
+  $("cbLead").textContent = a == null ? "Recipes by stage. Add MJ's birthday on the Today tab and the cookbook follows her age." : `MJ is in stage ${cur}: ${STAGES[cur].name.toLowerCase()}. Later stages open up as she grows; you can always peek ahead.`;
+  const groups = Object.keys(GROUPS);
+  $("cbJump").innerHTML = groups.map(g => `<a class="chip${GROUPS[g].st > cur ? " later" : ""}" href="#grp-${g}" data-jumpto="grp-${g}">${esc(GROUPS[g].title)}</a>`).join("");
+  let html = "", lastSt = 0;
+  groups.forEach(g => {
+    const G = GROUPS[g], list = R.filter(r => r.g === g), st = G.st, later = st > cur;
+    if(st !== lastSt){ lastSt = st; const S2 = STAGES[st];
+      html += `<div class="stagehead${later ? " later" : ""}${st === cur ? " now" : ""}"><span>Stage ${st} · ${esc(S2.ages)}</span><b>${esc(S2.name)}</b>${later && a != null ? `<em>Opens at ${S2.from} months${BDAY ? ` (${nice(addMonths(BDAY, S2.from))})` : ""}</em>` : st === cur && a != null ? `<em>Her stage now</em>` : ""}</div>`; }
+    const d = list.filter(r => tried(r.k)).length;
+    html += `<section id="grp-${g}" class="${later ? "later" : ""}"><h2>${esc(G.title)}</h2><p class="lead">${esc(G.lead)}</p>
+      <div class="progress"><span>${d} of ${list.length} tried</span><span class="bar"><i style="width:${d / list.length * 100}%"></i></span></div>
+      <div class="cards">${list.map(card).join("")}</div></section>`;
+  });
+  $("book").innerHTML = html;
 }
-function refresh(card){
-  const k = card.dataset.k, e = entry(k);
-  card.querySelector(".badges").innerHTML = badges(k);
-  card.querySelectorAll("[data-rate]").forEach(b => { const n = +b.dataset.rate; b.classList.toggle("on", (e.rating || 0) >= n); b.setAttribute("aria-checked", e.rating === n); });
-  card.querySelector(".rlabel").textContent = e.rating ? RATES[e.rating] : "Tap a star";
-  const s = card.querySelector(".saved"); s.textContent = "Saved"; clearTimeout(s._t); s._t = setTimeout(() => s.textContent = "", 1500);
-  progress(k.split(":")[0]); drawLog();
+function refreshCard(c){
+  const k = c.dataset.k, e = entry(k);
+  c.querySelector(".badges").innerHTML = badges(k);
+  c.querySelectorAll("[data-rate]").forEach(b => { const n = +b.dataset.rate; b.classList.toggle("on", (e.rating || 0) >= n); b.setAttribute("aria-checked", e.rating === n); });
+  c.querySelector(".rlabel").textContent = e.rating ? RATES[e.rating] : "Tap a star";
+  const s = c.querySelector(".saved"); s.textContent = "Saved"; clearTimeout(s._t); s._t = setTimeout(() => s.textContent = "", 1500);
+  const sec = c.closest("section"), list = R.filter(r => r.g === BYK[k].g), d = list.filter(r => tried(r.k)).length;
+  sec.querySelector(".progress").innerHTML = `<span>${d} of ${list.length} tried</span><span class="bar"><i style="width:${d / list.length * 100}%"></i></span>`;
+  drawLog(); drawNext();
 }
+$("book").addEventListener("click", ev => {
+  const c = ev.target.closest("details.card"); if(!c) return;
+  const k = c.dataset.k;
+  const rb = ev.target.closest("[data-rate]");
+  if(rb){ const n = +rb.dataset.rate; setEntry(k, {rating: entry(k).rating === n ? 0 : n, date: entry(k).date || today()}); c.querySelector('[data-f="date"]').value = entry(k).date || ""; refreshCard(c); return; }
+  if(ev.target.closest("[data-today]")){ setEntry(k, {date: today()}); c.querySelector('[data-f="date"]').value = today(); refreshCard(c); return; }
+  if(ev.target.closest("[data-tofreezer]")){ location.hash = "freezer"; $("addBatch").open = true; $("bFood").value = k; $("bCubes").value = BYK[k].y || 8; $("bMade").value = today(); setTimeout(() => $("addBatch").scrollIntoView({behavior: "smooth", block: "center"}), 60); }
+});
 const timers = {};
-Object.keys(R).forEach(g => {
-  const box = document.querySelector(`.cards[data-group="${g}"]`);
-  box.innerHTML = R[g].map(r => card(g, r)).join("");
-  progress(g);
-  box.addEventListener("click", ev => {
-    const c = ev.target.closest("details.card"); if(!c) return;
-    const k = c.dataset.k;
-    const rb = ev.target.closest("[data-rate]");
-    if(rb){ const n = +rb.dataset.rate; setEntry(k, {rating: entry(k).rating === n ? 0 : n, date: entry(k).date || today()});
-      c.querySelector('[data-f="date"]').value = entry(k).date || ""; refresh(c); return; }
-    if(ev.target.closest("[data-today]")){ setEntry(k, {date: today()}); c.querySelector('[data-f="date"]').value = today(); refresh(c); }
-  });
-  box.addEventListener("input", ev => {
-    const f = ev.target.dataset && ev.target.dataset.f; if(!f) return;
-    const c = ev.target.closest("details.card"), k = c.dataset.k, v = ev.target.value;
-    clearTimeout(timers[k + f]);
-    timers[k + f] = setTimeout(() => { setEntry(k, {[f]: f === "notes" ? v : v}); refresh(c); }, f === "notes" ? 500 : 0);
-  });
+$("book").addEventListener("input", ev => {
+  const f = ev.target.dataset && ev.target.dataset.f; if(!f) return;
+  const c = ev.target.closest("details.card"), k = c.dataset.k, v = ev.target.value;
+  clearTimeout(timers[k + f]);
+  timers[k + f] = setTimeout(() => { setEntry(k, {[f]: v}); refreshCard(c); }, f === "notes" ? 500 : 0);
 });
-/* MJ's food log: everything she's tried, newest first */
-function drawLog(){
-  const all = [];
-  Object.keys(R).forEach(g => R[g].forEach(r => { const k = g + ":" + id(r[0]), e = entry(k); if(e.date) all.push({k, name: r[0], ...e}); }));
-  all.sort((a, b) => b.date.localeCompare(a.date) || a.name.localeCompare(b.name));
-  const total = Object.values(R).reduce((s, l) => s + l.length, 0);
-  const loved = all.filter(x => x.rating === 5).map(x => x.name);
-  document.getElementById("logSum").innerHTML = `<b>${all.length}</b> of ${total} foods tried${loved.length ? ` · Loves: ${loved.map(esc).join(", ")}` : ""}`;
-  document.getElementById("logList").innerHTML = all.length ? all.map(x => `<li><a href="#${id(x.name)}" data-open="${id(x.name)}"><span class="ld">${esc(nice(x.date))}</span><span class="ln">${esc(x.name)}</span>${stars(x.rating)}${x.notes ? `<span class="lnote">${esc(x.notes.length > 90 ? x.notes.slice(0, 88) + "…" : x.notes)}</span>` : ""}</a></li>`).join("")
-    : `<li class="empty">Nothing yet. Open any recipe below and set the date MJ first tried it; it shows up here with her rating and your notes.</li>`;
+$("cbJump").addEventListener("click", e => { const a = e.target.closest("[data-jumpto]"); if(!a) return; e.preventDefault(); $(a.dataset.jumpto).scrollIntoView({behavior: "smooth", block: "start"}); });
+function openRecipe(k){ const r = BYK[k]; if(!r) return; location.hash = "cookbook"; setTimeout(() => { const d = $(r.id); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); } }, 60); }
+document.addEventListener("click", e => { const a = e.target.closest("[data-go]"); if(a){ e.preventDefault(); openRecipe(a.dataset.go); } });
+
+/* ---------- freezer ---------- */
+function drawFreezer(){
+  const t = today();
+  $("bFood").innerHTML = foodOptions($("bFood").value || "", true);
+  if(!$("bMade").value) $("bMade").value = t;
+  $("bMade").max = t;
+  const list = FRZ.filter(b => b.left > 0).sort((a, b) => useBy(a).localeCompare(useBy(b)));
+  const cubes = list.reduce((s, b) => s + b.left, 0), expired = list.filter(b => useBy(b) < t).length;
+  $("frzSum").textContent = list.length ? `${cubes} cube${cubes === 1 ? "" : "s"} in ${list.length} batch${list.length === 1 ? "" : "es"}${expired ? ` · ${expired} past use-by` : ""}. Purees keep 1 month; oldest first.` : "Nothing logged yet. Add a batch when you freeze one, or plan a cooking session below.";
+  $("frz").innerHTML = list.map(b => {
+    const r = BYK[b.k], d = daysBetween(t, useBy(b)), cls = d < 0 ? "bad" : d <= 7 ? "soon" : "";
+    return `<li class="${cls}"><div><b>${esc(r ? r.name : "Food")}</b><span class="rlabel">Made ${nice(b.made)} · ${d < 0 ? `past use-by (${nice(useBy(b))}), throw out` : `use by ${nice(useBy(b))}${d <= 7 ? ` (${d} day${d === 1 ? "" : "s"})` : ""}`}</span></div>
+      <div class="cnt"><button type="button" class="nav" data-cube="-1" data-b="${b.id}" aria-label="Use one">−</button><span><b>${b.left}</b> ${esc(r ? r.u || "cubes" : "cubes")}</span><button type="button" class="nav" data-cube="1" data-b="${b.id}" aria-label="Add one">+</button></div>
+      ${d < 0 ? `<button type="button" class="mini warnb" data-toss="${b.id}">Toss</button>` : ""}</li>`;
+  }).join("");
 }
-document.getElementById("logList").addEventListener("click", ev => {
-  const a = ev.target.closest("[data-open]"); if(!a) return; ev.preventDefault();
-  const d = document.getElementById(a.dataset.open); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); }
+$("frz").addEventListener("click", e => {
+  const c = e.target.closest("[data-cube]"); if(c){ const b = FRZ.find(x => x.id === c.dataset.b); if(b){ b.left = Math.max(0, b.left + +c.dataset.cube); b.cubes = Math.max(b.cubes, b.left); saveFrz(); drawFreezer(); drawNext(); if(!b.left) toast(`${BYK[b.k] ? BYK[b.k].name : "Batch"} used up`); } return; }
+  const tz = e.target.closest("[data-toss]"); if(tz){ FRZ = FRZ.filter(x => x.id !== tz.dataset.toss); saveFrz(); drawFreezer(); drawNext(); toast("Tossed"); }
 });
-drawLog();
-/* backup: save the log as a file, or restore one (e.g. on a new phone) */
-document.getElementById("backup").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify({app: "mjs-kitchen", saved: new Date().toISOString(), log: LOG}, null, 2)], {type: "application/json"});
+$("batchForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const k = $("bFood").value, n = Math.max(1, +$("bCubes").value || 1), made = $("bMade").value || today();
+  FRZ.push({id: uid(), k, made, cubes: n, left: n}); saveFrz();
+  $("addBatch").open = false; drawFreezer(); drawNext(); toast(`${BYK[k].name}: ${n} added, use by ${nice(addDays(made, 30))}`);
+});
+
+/* ---------- batch-cooking planner ---------- */
+let PLAN = S.get("mjskitchen.plan", []);
+function drawPlan(){
+  const cur = stageNow();
+  const opts = R.filter(r => r.fz && r.st <= Math.min(4, cur + 0));
+  $("planPick").innerHTML = `<div class="pick">${opts.map(r => `<label class="pk${PLAN.includes(r.k) ? " on" : ""}"><input type="checkbox" value="${r.k}"${PLAN.includes(r.k) ? " checked" : ""}><span>${esc(r.name)}</span><small>${r.m} min</small></label>`).join("")}</div>`;
+  const sel = PLAN.map(k => BYK[k]).filter(Boolean);
+  if(!sel.length){ $("planOut").innerHTML = `<p class="store">Tick 2 to 4 foods to plan a session.</p>`; return; }
+  const order = sel.slice().sort((a, b) => b.m - a.m);
+  const longest = order[0].m, total = longest + 10 + sel.length * 5;
+  const shop = sel.flatMap(r => r.shop.map(s => [s, r.name]));
+  $("planOut").innerHTML = `<div class="planbox">
+    <div class="sub" style="margin-top:0">Shopping list</div>
+    <ul class="shop">${shop.map(([s, n], i) => `<li><label><input type="checkbox" id="sh-${i}"><span>${esc(s)} <span class="rlabel">· ${esc(n)}</span></span></label></li>`).join("")}</ul>
+    <div class="sub">Cooking order <span class="rlabel" style="text-transform:none;letter-spacing:0">about ${total} minutes, start to finish</span></div>
+    <ol class="steps">
+      <li><div><b>Set up.</b> Fill a pot with 1 to 2 inches of water for steaming and start it heating. Get out trays, bags and labels.</div></li>
+      ${order.map((r, i) => `<li><div><b>${i === 0 ? "Start" : "Then"} ${esc(r.name)}</b> (${r.m} min). ${esc(r.steps[0])} ${i === 0 && order.length > 1 ? "While it cooks, prep the next one." : ""}${r.meat ? " Cook to a safe temperature; use separate boards for raw meat." : ""}</div></li>`).join("")}
+      <li><div><b>Blend in order, mildest first.</b> Blend each food, rinsing the blender between, then spoon into trays.</div></li>
+      <li><div><b>Cool and freeze within 2 hours.</b> Label each bag, then tap below to add every batch to your freezer list.</div></li>
+    </ol>
+    <div class="row" style="margin-top:12px"><button type="button" class="go" id="planAdd">Add all to freezer (made today)</button><button type="button" class="mini" id="planClear">Clear</button></div>
+    <p class="store">Yields are estimates: ${sel.map(r => `${r.name} about ${r.y} ${r.u}`).join(", ")}. Adjust counts on the freezer list if you get more or fewer.</p></div>`;
+  $("planAdd").onclick = () => { sel.forEach(r => FRZ.push({id: uid(), k: r.k, made: today(), cubes: r.y, left: r.y})); saveFrz(); PLAN = []; S.set("mjskitchen.plan", PLAN); drawFreezer(); drawPlan(); drawNext(); toast(`${sel.length} batch${sel.length === 1 ? "" : "es"} added to the freezer`); window.scrollTo({top: 0, behavior: "smooth"}); };
+  $("planClear").onclick = () => { PLAN = []; S.set("mjskitchen.plan", PLAN); drawPlan(); };
+}
+$("planPick").addEventListener("change", e => { const v = e.target.value; if(!v) return; PLAN = e.target.checked ? [...new Set(PLAN.concat(v))] : PLAN.filter(k => k !== v); S.set("mjskitchen.plan", PLAN); drawPlan(); });
+
+/* ---------- log tab ---------- */
+function drawLog(){
+  const all = R.filter(r => entry(r.k).date).map(r => ({r, ...entry(r.k)})).sort((a, b) => b.date.localeCompare(a.date) || a.r.name.localeCompare(b.r.name));
+  const loved = all.filter(x => x.rating === 5).map(x => x.r.name);
+  const al = ALLERGENS.filter(a => R.some(r => r.allergen === a && tried(r.k)));
+  $("logSum").innerHTML = `<b>${all.length}</b> of ${R.length} foods tried · allergens: ${al.length} of ${ALLERGENS.length}${al.length ? ` (${al.join(", ")})` : ""}${loved.length ? `<br>Loves: ${loved.map(esc).join(", ")}` : ""}`;
+  $("logList").innerHTML = all.length ? all.map(x => `<li><a href="#cookbook" data-go="${x.r.k}"><span class="ld">${esc(nice(x.date))}</span><span class="ln">${esc(x.r.name)}</span>${stars(x.rating)}</a></li>`).join("")
+    : `<li class="empty">Nothing yet. Log a meal on the Today tab, or set the first-tried date in any recipe.</li>`;
+  const rx = all.filter(x => x.notes).sort((a, b) => b.date.localeCompare(a.date));
+  $("rxList").innerHTML = rx.length ? rx.map(x => `<li><a href="#cookbook" data-go="${x.r.k}"><span class="ld">${esc(nice(x.date))}</span><span class="ln">${esc(x.r.name)}</span>${stars(x.rating)}<span class="lnote">${esc(x.notes)}</span></a></li>`).join("")
+    : `<li class="empty">No reactions noted. Write in the Reaction log box on any recipe, or add a note when you log a meal.</li>`;
+}
+$("backup").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify({app: "mjs-kitchen", v: 2, saved: new Date().toISOString(), log: LOG, meals: MEALS, freezer: FRZ, bday: BDAY}, null, 2)], {type: "application/json"});
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `mjs-kitchen-backup-${today()}.json`; document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-  document.getElementById("bkMsg").textContent = "Backup saved to your downloads.";
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000); $("bkMsg").textContent = "Backup saved to your downloads.";
 });
-document.getElementById("restore").addEventListener("change", async ev => {
+$("restore").addEventListener("change", async ev => {
   const f = ev.target.files[0]; if(!f) return;
-  const msg = document.getElementById("bkMsg");
   try{ const d = JSON.parse(await f.text()); if(!d || typeof d.log !== "object") throw 0;
-    LOG = d.log; save(); location.reload(); }
-  catch(_){ msg.textContent = "That file isn't an MJ's Kitchen backup. Pick the .json file the Save a backup button made."; }
+    S.set("mjskitchen.log", d.log); S.set("mjskitchen.meals", d.meals || []); S.set("mjskitchen.freezer", d.freezer || []); if(d.bday) S.set("mjskitchen.bday", d.bday); location.reload(); }
+  catch(_){ $("bkMsg").textContent = "That file isn't an MJ's Kitchen backup. Pick the .json file the Save a backup button made."; }
   ev.target.value = "";
 });
-/* text size: Normal / Large / Extra large, remembered on this phone */
-const SIZES = ["Normal", "Large", "Extra large"];
-let size = 0;
-try{ size = +localStorage.getItem("mjskitchen.size") || 0; }catch(_){}
-const setSize = n => { size = n % 3; document.documentElement.dataset.size = size; document.getElementById("sizeLbl").textContent = SIZES[size]; try{ localStorage.setItem("mjskitchen.size", size); }catch(_){} };
-setSize(size);
-document.getElementById("size").addEventListener("click", () => setSize(size + 1));
-/* jump bar: highlight the section in view */
-const links = [...document.querySelectorAll("#jump a")], secs = links.map(a => document.querySelector(a.getAttribute("href")));
-function mark(){
-  let cur = 0; secs.forEach((s, i) => { if(s.getBoundingClientRect().top < 120) cur = i; });
-  if(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) cur = secs.length - 1;
-  const bar = document.getElementById("jump");
-  links.forEach((a, i) => { const on = i === cur; if(on && !a.classList.contains("on")) bar.scrollTo({left: Math.max(0, a.offsetLeft - 16), behavior: "smooth"}); a.classList.toggle("on", on); });
+
+/* ---------- guide: stages ---------- */
+function drawStages(){
+  const cur = stageNow();
+  $("stages").innerHTML = [1, 2, 3, 4].map(n => { const s = STAGES[n];
+    return `<div class="stage${n === cur ? " now" : ""}"><span class="sn">${n}</span><div><b>${esc(s.name)}</b> <span class="rlabel">${esc(s.ages)}${n === cur && ageMonths() != null ? " · her stage now" : ""}</span>
+      <p><b>Texture:</b> ${esc(s.texture)}</p><p><b>How:</b> ${esc(s.how)}</p><p><b>${n < 4 ? "Ready to move on when" : "Also"}:</b> ${esc(s.next)}</p></div></div>`; }).join("");
 }
-links.forEach((a, i) => a.addEventListener("click", e => { e.preventDefault(); secs[i].scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }));
-window.addEventListener("scroll", () => requestAnimationFrame(mark), {passive: true});
-mark();
-/* open a recipe named in the link (#sweet-potato) */
-const h = location.hash.slice(1), t = h && document.getElementById(h);
-if(t && t.tagName === "DETAILS"){ t.open = true; setTimeout(() => t.scrollIntoView(), 50); }
+
+/* ---------- tabs ---------- */
+const TABS = ["today", "cookbook", "freezer", "log", "guide"];
+function route(){
+  let h = location.hash.slice(1);
+  const g = h.startsWith("g-") ? h : null;
+  if(g) h = "guide";
+  const recipe = !TABS.includes(h) && R.find(r => r.id === h);
+  if(recipe){ h = "cookbook"; }
+  if(!TABS.includes(h)) h = "today";
+  document.querySelectorAll(".view").forEach(v => v.hidden = v.dataset.view !== h);
+  document.querySelectorAll(".tabbar a").forEach(a => a.classList.toggle("on", a.dataset.tab === h));
+  if(recipe){ const d = $(recipe.id); d.open = true; setTimeout(() => d.scrollIntoView({block: "start"}), 30); }
+  else if(g){ setTimeout(() => $(g).scrollIntoView({behavior: "smooth", block: "start"}), 30); }
+  else window.scrollTo(0, 0);
+  document.body.dataset.tab = h;
+  try{ localStorage.setItem("mjskitchen.tab", h); }catch(_){}
+}
+window.addEventListener("hashchange", route);
+document.querySelectorAll('#v-guide .chip').forEach(a => a.addEventListener("click", e => { e.preventDefault(); $(a.getAttribute("href").slice(1)).scrollIntoView({behavior: "smooth", block: "start"}); }));
+
+/* ---------- text size ---------- */
+const SIZES = ["Normal", "Large", "Extra large"];
+let size = +S.get("mjskitchen.size", 0) || 0;
+const setSize = n => { size = n % 3; document.documentElement.dataset.size = size; $("sizeLbl").textContent = SIZES[size]; S.set("mjskitchen.size", size); };
+setSize(size); $("size").addEventListener("click", () => setSize(size + 1));
+
+function drawAll(){ drawAge(); drawNext(); drawMeals(); drawBook(); drawFreezer(); drawPlan(); drawLog(); drawStages(); }
+drawAll();
+if(!location.hash){ let t = null; try{ t = localStorage.getItem("mjskitchen.tab"); }catch(_){} if(t && TABS.includes(t) && t !== "today") history.replaceState(null, "", "#" + t); }
+route();
 })();
 </script>
-
 </body>
 </html>
