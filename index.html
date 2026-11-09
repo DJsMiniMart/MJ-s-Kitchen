@@ -188,6 +188,20 @@ body:not([data-tab="today"]) .hero h1{font-size:clamp(28px,7vw,40px);}
 .cbtab.on{background:var(--pea);border-color:var(--pea);color:#fff;} .cbtab.on small{color:#fff;opacity:.9;}
 #book section{scroll-margin-top:72px;} #book .stagehead{scroll-margin-top:72px;}
 .jobs{display:grid;gap:10px;}
+.minehead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+.cbtab.mine{border-color:var(--pea);color:var(--pea);} .cbtab.mine.on{color:#fff;}
+.imp{display:grid;gap:12px;background:var(--panel);border:2px solid var(--pea);border-radius:14px;padding:14px;margin-bottom:12px;}
+.imp input[type=url]{font:400 16px var(--body);color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;}
+.imp textarea{font-size:16px;}
+.imp-msg{color:var(--warn);margin:0;}
+.go:disabled{opacity:.6;cursor:wait;}
+.paste summary{cursor:pointer;font-weight:600;color:var(--pea);margin-bottom:8px;}
+.paste .mini{margin:8px 8px 0 0;}
+.ghostb{background:transparent;color:var(--dim);border:1px solid var(--line);font-size:13px;padding:6px 12px;}
+.safe{list-style:none;margin:0;padding:0;display:grid;gap:6px;}
+.safe li{border-radius:10px;padding:8px 12px;font-size:.88em;background:var(--berry-soft);}
+.safe li.s-bad{background:var(--warn-soft);color:var(--warn);font-weight:600;}
+.safe li.s-warn{background:var(--carrot-soft);}
 .job{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--berry);border-radius:12px;padding:12px 14px;}
 .job b{font:600 1.1em var(--display);} .job p{margin:2px 0 8px;color:var(--dim);font-size:.9em;}
 .job ul{margin:0;padding-left:20px;display:grid;gap:4px;}
@@ -288,7 +302,7 @@ details.add summary::-webkit-details-marker{display:none;}
 <body>
 <header class="wrap hero">
   <div class="brand"><img src="logo.png" alt="" width="110" height="110" class="logo"><div>
-  <div class="kicker">From first bites to age 5 · grows with her</div>
+  <div class="kicker">From first bites to family dinners · grows with her</div>
   <h1>MJ's <span>Kitchen</span></h1></div></div>
   <p id="ageLine">Recipes, a meal log and a freezer list for MJ, from first purees to preschool meals.</p>
   <button class="size" id="size" type="button" aria-label="Change text size">Text size: <b id="sizeLbl">Normal</b></button>
@@ -561,6 +575,8 @@ const STAGES = [
    how: "Same meals as the family, with a small portion of something she already likes on the plate. Switch to low-fat or skim milk after age 2. Juice: no more than 4 ounces a day.", next: "Toddlers often refuse new foods; offering a food 10 to 15 times is normal before they accept it. Keep putting it on the plate without pressure."},
   {n: 6, name: "Kid-friendly meals", ages: "3 to 5 years", from: 36, texture: "Regular family textures. Still no whole nuts, popcorn or hard candy until at least age 4.",
    how: "Let her help: washing produce, stirring, tearing lettuce, spreading with a butter knife. Kids eat more of what they make. Juice: 4 to 6 ounces a day at most, from age 4.", next: "Aim for about 2 to 2 1/2 cups of milk or other dairy a day, a fruit or vegetable at every meal, and whole grains most days."},
+  {n: 7, name: "Family meals", ages: "5 years and up", from: 60, texture: "The same meal for everyone. Whole nuts and popcorn are fine now, eaten sitting down.",
+   how: "One dinner for the whole table, with a familiar side for her. Give her a real job in every meal; by 5 she can measure, mix, assemble and help plan the menu.", next: "Half the plate fruits and vegetables, a quarter whole grains, a quarter protein. Water and milk as everyday drinks; keep juice to a small glass."},
 ];
 const GROUPS = {
   veggies: {st: 1, tab: "Veggies", title: "Vegetables", lead: "A great place to start: mild, a little sweet, and packed with vitamins."},
@@ -574,6 +590,7 @@ const GROUPS = {
   jobs: {st: 6, tab: "Kitchen jobs", title: "Kitchen jobs by age", lead: "Jobs she can do in the kitchen at 3, 4 and 5. Helping builds hand strength, counting and words, and kids eat more of what they make. Always with a grown-up right there.", info: true},
   kids: {st: 6, tab: "Kid meals", title: "Kid-friendly meals", lead: "Easy meals for 3 to 5 years that she can help make. Each recipe marks the Kid job."},
   faves: {st: 6, tab: "Kid favorites", title: "Kid favorites, made at home", lead: "The meals kids ask for (nuggets, fries, pancakes, tacos), made at home with whole grains, real chicken and veggies tucked in, and a Kid job in every one."},
+  family: {st: 7, tab: "Family meals", title: "Family meals", lead: "Dinners the whole family eats together, with a Kid job in every recipe. See Kitchen jobs by age for what she can do as she grows."},
 };
 const R = [
   // ---- stage 1: vegetables
@@ -644,6 +661,19 @@ const R = [
   {g: "kids", name: "Lentil veggie soup", iron: true, c: "berry", m: 35, fz: true, y: 8, u: "portions", shop: ["1 cup red lentils", "2 carrots", "2 celery stalks", "1 small onion", "1 can no-salt-added diced tomatoes", "4 cups low-sodium broth"], steps: ["Soften the diced onion, carrots and celery in a little oil, 5 minutes.", "Add the rinsed lentils, tomatoes and broth; simmer 25 to 30 minutes.", "Blend part of it for a thicker soup. Serve with whole-grain toast."], why: "Iron, protein and fiber in one bowl; pair with an orange or strawberries for vitamin C to help absorb the iron."},
   {g: "kids", name: "No-bake oat energy bites", allergen: "Peanut", c: "berry", m: 10, fz: true, y: 16, u: "bites", shop: ["1 cup oats", "1/2 cup smooth peanut butter (or sunflower butter)", "2 tablespoons ground flaxseed", "2 tablespoons honey or maple syrup", "2 tablespoons mini chocolate chips (optional)"], steps: ["Kid job: stir everything together in a bowl.", "Chill 15 minutes, then roll into 1-inch balls.", "Keep in the fridge up to a week, or freeze."], why: "Fiber, healthy fats and omega-3s (from flax) for steady energy. Rolling balls builds fine motor skills. Smooth nut butter only; no whole nuts before age 4."},
   {g: "kids", name: "Apple \"donuts\"", allergen: "Peanut", c: "pea", m: 5, fz: false, y: 0, u: "", shop: ["1 crisp apple", "Smooth peanut or sunflower butter", "Plain yogurt", "Toppings: hemp seeds, shredded coconut, crushed whole-grain cereal"], steps: ["Core the apple and slice into thin rings (about 1/4 inch).", "Kid job: spread with nut butter or yogurt and sprinkle on toppings."], why: "Fiber and vitamin C from the apple, protein from the spread, and a fun snack she can decorate herself. Thin slices only for younger kids."},
+  // ---- stage 7: family meals (5+)
+  {g: "family", name: "Sheet-pan salmon & potatoes", iron: true, meat: true, allergen: "Fish", c: "carrot", m: 30, fz: false, y: 0, u: "", shop: ["4 salmon fillets", "1 1/2 lb baby potatoes", "1 lb green beans", "2 tablespoons olive oil", "1 lemon", "Garlic powder, dried dill"], steps: ["Heat the oven to 425°F. Halve the potatoes and roast with 1 tablespoon oil for 15 minutes.", "Kid job: trim the green bean ends by snapping them, and squeeze the lemon.", "Add the salmon and green beans to the pan, season, and roast 12 to 15 more minutes, until the salmon reaches 145°F."], why: "Omega-3s for brain and eyes, protein, and potassium from potatoes. One pan for the whole family."},
+  {g: "family", name: "Build-your-own burrito bowls", iron: true, allergen: "Dairy", c: "pea", m: 25, fz: false, y: 0, u: "", shop: ["2 cups brown rice", "1 lb chicken thighs or 2 cans black beans", "1 cup corn", "Tomatoes, lettuce, avocado, shredded cheese, plain yogurt", "1 lime"], steps: ["Cook the rice. Season and cook the chicken to 165°F (or warm the beans), then slice.", "Kid job: set up the topping bar: tear lettuce, scoop corn and beans into bowls, mash the avocado with lime.", "Everyone builds their own bowl."], why: "Protein, iron and fiber with lots of color. Building their own bowl gives kids choice, which means less fighting over dinner."},
+  {g: "family", name: "One-pot chicken veggie pasta", iron: true, meat: true, allergen: "Wheat", c: "carrot", m: 25, fz: true, y: 6, u: "portions", shop: ["12 oz whole-wheat penne", "1 lb chicken breast", "2 cups broccoli florets", "1 red bell pepper", "3 cups low-sodium broth", "1/2 cup Parmesan"], steps: ["Brown bite-size chicken pieces in a large pot, to 165°F; set aside.", "Add the pasta and broth, simmer 8 minutes, then add the vegetables for the last 4 minutes.", "Kid job: grate or sprinkle the Parmesan and stir the chicken back in (with you at the stove)."], why: "Iron and protein, vitamin C from pepper and broccoli, whole grains. Only one pot to wash."},
+  {g: "family", name: "Beef & broccoli stir-fry", iron: true, meat: true, allergen: "Soy", c: "pea", m: 25, fz: true, y: 4, u: "portions", shop: ["1 lb flank steak, thinly sliced", "4 cups broccoli florets", "3 tablespoons low-sodium soy sauce", "1 tablespoon cornstarch", "1 tablespoon honey", "Garlic, ginger", "Brown rice"], steps: ["Kid job: whisk the soy sauce, cornstarch, honey and 1/4 cup water into a sauce.", "Stir-fry the beef in a hot pan until browned (160°F); set aside. Stir-fry the broccoli with garlic and ginger 4 minutes.", "Add the beef and sauce and stir until glossy. Serve over brown rice."], why: "The best food source of iron and zinc for growing kids, with vitamin C from broccoli to help absorb it."},
+  {g: "family", name: "Homemade pizza night", allergen: "Dairy", c: "carrot", m: 35, fz: true, y: 2, u: "pizzas", shop: ["1 lb whole-wheat pizza dough", "1 cup pizza sauce", "2 cups shredded mozzarella", "Toppings: peppers, mushrooms, spinach, chicken, pineapple"], steps: ["Heat the oven to 450°F.", "Kid job: stretch and press the dough onto the pan, spread the sauce, and arrange the toppings.", "Bake 12 to 15 minutes until golden and bubbling."], why: "Calcium and protein, whole grains and whatever veggies she picks. Making the dough by hand is great for hand strength."},
+  {g: "family", name: "Meatloaf muffins", iron: true, meat: true, allergen: "Egg", c: "carrot", m: 30, fz: true, y: 12, u: "muffins", shop: ["1 1/2 lb lean ground beef or turkey", "1 egg", "1/2 cup oats", "1 grated carrot", "1/2 cup finely chopped onion", "1/3 cup ketchup"], steps: ["Heat the oven to 375°F and grease a muffin tin.", "Kid job: squish everything except the ketchup together with clean hands and fill the cups; spread a little ketchup on top.", "Bake 20 to 25 minutes, to 160°F for beef or 165°F for turkey."], why: "Iron, zinc and protein with a hidden vegetable, in kid-size portions that freeze well."},
+  {g: "family", name: "Baked ziti with spinach", allergen: "Dairy", c: "pea", m: 40, fz: true, y: 8, u: "portions", shop: ["1 lb whole-wheat ziti or penne", "1 jar low-sodium marinara", "1 cup ricotta", "2 cups baby spinach", "1 1/2 cups shredded mozzarella"], steps: ["Heat the oven to 375°F. Cook the pasta 2 minutes short of the package time.", "Kid job: stir the ricotta, spinach and sauce into the pasta, then sprinkle the mozzarella on top.", "Bake covered 20 minutes, then uncovered 10 minutes."], why: "Calcium and protein for bones, iron and folate from spinach. Makes extra for a second night."},
+  {g: "family", name: "Chicken souvlaki & tzatziki", iron: true, meat: true, allergen: "Dairy", c: "berry", m: 30, fz: false, y: 0, u: "", shop: ["1 1/2 lb chicken breast", "1 lemon", "2 tablespoons olive oil", "Oregano, garlic", "1 cup plain Greek yogurt", "1 cucumber", "Whole-wheat pita", "Tomatoes"], steps: ["Cut the chicken into cubes and marinate in lemon, oil, oregano and garlic for 15 minutes.", "Kid job: grate the cucumber (with a grown-up) into the yogurt for tzatziki, and thread chicken onto skewers, pointy end away.", "Grill or bake at 425°F for 15 to 18 minutes, to 165°F. Serve in pitas with tomatoes and tzatziki."], why: "Lean protein and iron, calcium and probiotics from yogurt. Threading skewers takes focus and fine motor control."},
+  {g: "family", name: "Veggie frittata", iron: true, allergen: "Egg", c: "carrot", m: 25, fz: true, y: 6, u: "slices", shop: ["8 eggs", "1/2 cup milk", "2 cups chopped vegetables (spinach, peppers, zucchini)", "1/2 cup shredded cheese"], steps: ["Heat the oven to 375°F.", "Kid job: crack the eggs into a bowl, whisk with the milk, and stir in the cheese.", "Soften the vegetables in an oven-safe pan, pour in the eggs, cook 3 minutes, then bake 12 to 15 minutes until set."], why: "Protein, choline and vitamins for a quick breakfast-for-dinner; slices make great next-day lunches."},
+  {g: "family", name: "Minestrone soup", iron: true, c: "pea", m: 40, fz: true, y: 8, u: "portions", shop: ["1 onion, 2 carrots, 2 celery stalks", "1 zucchini", "1 can no-salt-added diced tomatoes", "1 can no-salt-added white beans", "6 cups low-sodium broth", "1 cup small whole-wheat pasta", "2 cups spinach"], steps: ["Soften the diced onion, carrots and celery in olive oil, 5 minutes.", "Add the tomatoes, broth, beans and zucchini; simmer 20 minutes. Add the pasta for the last 10.", "Kid job: tear the spinach and drop it in at the end; top bowls with grated Parmesan."], why: "Fiber, plant iron and a whole garden of vegetables in one bowl."},
+  {g: "family", name: "Stuffed sweet potatoes", iron: true, allergen: "Dairy", c: "carrot", m: 50, fz: false, y: 0, u: "", shop: ["4 sweet potatoes", "1 can no-salt-added black beans", "1 cup corn", "1/2 cup shredded cheese", "Plain yogurt, salsa, avocado"], steps: ["Bake the sweet potatoes at 400°F for 45 minutes until soft (or microwave 8 to 10 minutes).", "Warm the beans and corn together.", "Kid job: split each potato and stuff it with beans, corn, cheese and toppings."], why: "Vitamin A, fiber, plant protein and iron; a filling meatless night."},
+  {g: "family", name: "Turkey taco skillet", iron: true, meat: true, c: "carrot", m: 25, fz: true, y: 6, u: "portions", shop: ["1 lb ground turkey", "1 can no-salt-added black beans", "1 cup corn", "1 can no-salt-added diced tomatoes", "1 cup brown rice (uncooked)", "2 teaspoons mild taco seasoning", "Cheese, avocado for topping"], steps: ["Brown the turkey in a large skillet to 165°F.", "Add the rice, tomatoes, beans, corn, seasoning and 1 1/2 cups water; cover and simmer 25 to 30 minutes until the rice is tender.", "Kid job: scoop toppings into bowls and sprinkle cheese over the skillet."], why: "Protein, iron and fiber in one pan, with milder seasoning everyone can share."},
   // ---- stage 6: kid favorites, made at home
   {g: "faves", name: "Baked chicken nuggets", iron: true, meat: true, allergen: "Egg", c: "carrot", m: 25, fz: true, y: 24, u: "pieces", shop: ["1 lb boneless chicken breast or thighs", "1 egg", "1 cup whole-wheat panko breadcrumbs", "2 tablespoons grated Parmesan", "1/2 teaspoon paprika"], steps: ["Heat the oven to 425°F and line a baking sheet. Cut the chicken into nugget-size pieces.", "Kid job: dip each piece in beaten egg, then roll it in the crumbs mixed with Parmesan and paprika (wash hands after).", "Bake 15 to 18 minutes, flipping halfway, until golden and 165°F inside. Serve with plain yogurt ranch or ketchup."], why: "Real chicken for iron, zinc and protein, and a crunchy coating without the fryer. Freeze cooked nuggets for quick lunches; reheat at 400°F for 8 minutes.", note: "Quick yogurt ranch: 1/2 cup plain yogurt, a pinch of garlic powder and dried dill."},
   {g: "faves", name: "Sweet potato fries", c: "carrot", m: 30, fz: false, y: 0, u: "", shop: ["2 medium sweet potatoes", "1 tablespoon olive oil", "Pinch of paprika"], steps: ["Heat the oven to 425°F. Cut the sweet potatoes into thin sticks.", "Kid job: toss the sticks with the oil and paprika in a big bowl, then lay them out on the pan in one layer.", "Bake 25 to 30 minutes, turning once, until crisp at the edges."], why: "Vitamin A for eyes and immunity, plus fiber. The perfect side for nuggets or sliders."},
@@ -662,12 +692,18 @@ const R = [
 
 ];
 const id = n => n.toLowerCase().replace(/[^a-z]+/g, "-");
-R.forEach(r => { r.id = id(r.name); r.k = r.g + ":" + r.id; r.st = GROUPS[r.g].st; });
+let HIDDEN = []; try{ HIDDEN = JSON.parse(localStorage.getItem("mjskitchen.hidden") || "[]") || []; }catch(_){ HIDDEN = []; }
+const shown = r => !HIDDEN.includes(r.k);
+let MINE = []; try{ MINE = JSON.parse(localStorage.getItem("mjskitchen.mine") || "[]") || []; }catch(_){ MINE = []; }
+MINE.forEach(m => R.push(Object.assign({g: "mine", custom: true, y: 0, u: ""}, m)));
+R.forEach(r => { r.id = r.custom ? r.cid : id(r.name); r.k = r.g + ":" + r.id; if(!r.custom) r.st = GROUPS[r.g].st; });
 const BYK = Object.fromEntries(R.map(r => [r.k, r]));
+GROUPS.mine = {st: 0, tab: "My recipes", title: "My recipes", lead: "Recipes you've added from the web or typed in, fitted to MJ's Kitchen."};
 const JOBS = [
   {age: "Age 3", note: "Big movements and simple steps. Pre-measure ingredients and let her dump them in.", list: ["Wash fruits and vegetables in a bowl of water", "Tear lettuce, spinach and herbs", "Stir cold ingredients in a big bowl", "Pour pre-measured ingredients into the bowl", "Mash bananas, avocado or beans with a fork or masher", "Sprinkle cheese, seeds and toppings", "Put muffin liners in the tin", "Wipe the table and carry unbreakable dishes"]},
   {age: "Age 4", note: "Everything at 3, plus jobs that need more control.", list: ["Crack eggs into a separate small bowl (fish out any shell together)", "Measure dry ingredients with measuring cups", "Spread with a butter knife (peanut butter, cream cheese, sauce)", "Peel bananas, clementines and hard-boiled eggs", "Cut soft foods (banana, strawberries, cooked potato) with a kid-safe nylon knife", "Shape meatballs, patties and dough balls", "Use cookie cutters on sandwiches, pancakes or cheese", "Squeeze lemons and oranges with a hand juicer"]},
   {age: "Age 5", note: "Everything at 4, plus small steps on their own while you watch.", list: ["Whisk eggs and batter", "Use measuring spoons and level them off", "Roll out dough with a rolling pin", "Cut cucumbers, zucchini and cheese with a kid-safe knife", "Assemble wraps, sandwiches and tacos", "Follow a picture recipe one step at a time", "Dip and bread nuggets or fish sticks", "Toss a salad and set the table"]},
+  {age: "Ages 6 to 8", note: "Real tools with you right beside her. Teach the claw grip (fingertips tucked) before any knife work.", list: ["Peel carrots and potatoes with a vegetable peeler", "Grate cheese, keeping fingers well away from the grater", "Cut soft vegetables with a small real knife and the claw grip", "Measure liquids at eye level", "Crack eggs and separate yolks", "Read the recipe aloud and gather the ingredients", "Stir a pot on the stove with you right there, using a long spoon", "Plan one family dinner a week and help make the shopping list"]},
 ];
 const JOB_RULES = "Always supervised. Grown-ups handle the stove, oven, sharp knives and hot liquids. Use a sturdy step stool or learning tower. Wash hands before cooking and again after touching raw meat or eggs.";
 const ALLERGENS = ["Peanut", "Egg", "Dairy", "Wheat", "Soy", "Fish", "Sesame"];
@@ -677,7 +713,7 @@ const S = {get(k, d){ try{ const v = JSON.parse(localStorage.getItem(k)); return
 let LOG = S.get("mjskitchen.log", {});            // {k: {date, rating, notes}}
 let MEALS = S.get("mjskitchen.meals", []);        // [{id, d, meal, k, amt, note, fz}]
 let FRZ = S.get("mjskitchen.freezer", []);        // [{id, k, made, cubes, left, unit: cube|bag|jar|piece, loc: freezer|fridge, inFridge, thawed}]
-FRZ.forEach(b => { if(!b.loc) b.loc = "freezer"; if(!b.unit) b.unit = BYK[b.k] && /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge|patt|burrito|pop/.test(BYK[b.k].u) ? "piece" : "cube"; });
+FRZ.forEach(b => { if(!b.loc) b.loc = "freezer"; if(!b.unit) b.unit = BYK[b.k] && /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge|patt|burrito|pop|slice|pizza/.test(BYK[b.k].u) ? "piece" : "cube"; });
 let BDAY = S.get("mjskitchen.bday", "");
 try{ const old = JSON.parse(localStorage.getItem("mjskitchen.tried") || "{}") || {}; Object.keys(old).forEach(k => { if(!LOG[k]) LOG[k] = {date: today()}; }); localStorage.removeItem("mjskitchen.tried"); }catch(_){}
 const saveLog = () => S.set("mjskitchen.log", LOG), saveMeals = () => S.set("mjskitchen.meals", MEALS), saveFrz = () => S.set("mjskitchen.freezer", FRZ);
@@ -702,9 +738,9 @@ const AMTS = ["A taste", "A few spoons", "Half a cube", "A whole cube", "More th
 const MEALNAMES = ["Breakfast", "Lunch", "Dinner", "Snack"];
 function toast(t){ const el = $("toast"); el.textContent = t; el.classList.add("on"); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("on"), 2200); }
 function ageMonths(){ if(!BDAY) return null; const b = D(BDAY), n = new Date(); let m = (n.getFullYear() - b.getFullYear()) * 12 + n.getMonth() - b.getMonth(); if(n.getDate() < b.getDate()) m--; return Math.max(0, m); }
-function stageNow(){ const a = ageMonths(); if(a == null) return 1; return a >= 36 ? 6 : a >= 24 ? 5 : a >= 12 ? 4 : a >= 9 ? 3 : a >= 7 ? 2 : 1; }
+function stageNow(){ const a = ageMonths(); if(a == null) return 1; return a >= 60 ? 7 : a >= 36 ? 6 : a >= 24 ? 5 : a >= 12 ? 4 : a >= 9 ? 3 : a >= 7 ? 2 : 1; }
 const atAge = m => m >= 24 ? `${m / 12} years` : `${m} months`;
-const LAST = 6;
+const LAST = 7;
 /* use-by: freezer 1 month from made; fridge 1 day for thawed food or meat/egg/fish, 2 days for fruit and veg */
 const isMeat = k => !!(BYK[k] && (BYK[k].meat || BYK[k].allergen === "Egg" || BYK[k].allergen === "Fish"));
 const useBy = b => b.loc === "fridge" ? addDays(b.thawed ? b.inFridge : b.made, (b.thawed || isMeat(b.k)) ? 1 : 2) : addDays(b.made, 30);
@@ -715,7 +751,7 @@ const lastHad = k => { const m = MEALS.filter(x => x.k === k).map(x => x.d).sort
 const tried = k => !!entry(k).date;
 const foodOptions = (sel, onlyFreeze) => {
   const cur = stageNow();
-  return [1, 2, 3, 4, 5, 6].map(st => { const list = R.filter(r => r.st === st && (!onlyFreeze || r.fz));
+  return [1, 2, 3, 4, 5, 6, 7].map(st => { const list = R.filter(r => r.st === st && (!onlyFreeze || r.fz) && shown(r));
     return list.length ? `<optgroup label="${esc(STAGES[st].name)}${st > cur ? " (later)" : ""}">${list.map(r => `<option value="${r.k}"${r.k === sel ? " selected" : ""}>${esc(r.name)}${tried(r.k) ? " ✓" : ""}</option>`).join("")}</optgroup>` : ""; }).join("");
 };
 
@@ -734,7 +770,7 @@ $("bday").addEventListener("change", e => { BDAY = e.target.value; S.set("mjskit
 function drawNext(){
   const t = today(), st = stageNow(), out = [];
   const recentNew = R.filter(r => entry(r.k).date && daysBetween(entry(r.k).date, t) < 3 && daysBetween(entry(r.k).date, t) >= 0).sort((a, b) => entry(b.k).date.localeCompare(entry(a.k).date))[0];
-  const ready = R.filter(r => r.st <= st && !tried(r.k));
+  const ready = R.filter(r => r.st <= st && !tried(r.k) && shown(r));
   // 1) new food, respecting the 2-3 day spacing
   if(recentNew){
     const when = addDays(entry(recentNew.k).date, 3);
@@ -835,6 +871,9 @@ function card(r){
       <div class="why"><h4>Why it's good</h4><p>${esc(r.why)}</p></div>
       ${r.st < stageNow() && r.st === 1 ? `<p class="store" style="margin:0"><b>At her stage now:</b> ${esc(STAGES[stageNow()].how)}</p>` : ""}
       ${r.note ? `<p class="store" style="margin:0">${esc(r.note)}</p>` : ""}
+      ${!r.custom ? `<div class="row"><button type="button" class="mini ghostb" data-hide="${esc(r.k)}">Hide this recipe</button></div>` : ""}
+      ${r.custom ? `${safetyHtml(r)}<p class="store" style="margin:0">For ${esc(STAGES[r.st].ages)}${r.src ? ` · <a href="${esc(r.src)}" target="_blank" rel="noopener">Original recipe ›</a>` : ""}</p>
+        <div class="row"><button type="button" class="mini" data-edit="${esc(r.cid)}">Edit</button><button type="button" class="mini warnb" data-del-recipe="${esc(r.cid)}">Delete</button></div>` : ""}
       <div class="mj">
         <label class="fld" for="d-${k}">First tried
           <span class="row"><input type="date" id="d-${k}" data-f="date" value="${esc(e.date || "")}" max="${today()}"><button type="button" class="mini" data-today>Today</button></span></label>
@@ -851,11 +890,15 @@ function drawBook(){
   const cur = stageNow(), a = ageMonths();
   $("cbLead").textContent = a == null ? "Recipes by stage. Add MJ's birthday on the Today tab and the cookbook follows her age." : `MJ is in stage ${cur}: ${STAGES[cur].name.toLowerCase()}. Later stages open up as she grows; you can always peek ahead.`;
   const groups = Object.keys(GROUPS);
-  const STAGE_TAB = {1: "6 mo", 2: "7–8 mo", 3: "9–11 mo", 4: "1 yr", 5: "2–3 yrs", 6: "3–5 yrs"};
-  $("cbJump").innerHTML = groups.map(g => `<a class="cbtab${GROUPS[g].st > cur ? " later" : ""}" href="#grp-${g}" data-jumpto="grp-${g}"><span>${esc(GROUPS[g].tab)}</span><small>${STAGE_TAB[GROUPS[g].st]}</small></a>`).join("");
-  let html = "", lastSt = 0;
+  const STAGE_TAB = {1: "6 mo", 2: "7–8 mo", 3: "9–11 mo", 4: "1 yr", 5: "2–3 yrs", 6: "3–5 yrs", 7: "5+ yrs"};
+  $("cbJump").innerHTML = `<a class="cbtab mine" href="#grp-mine" data-jumpto="grp-mine"><span>My recipes</span><small>${MINE.length ? MINE.length + " added" : "+ Add"}</small></a>` + groups.filter(g => g !== "mine").map(g => `<a class="cbtab${GROUPS[g].st > cur ? " later" : ""}" href="#grp-${g}" data-jumpto="grp-${g}"><span>${esc(GROUPS[g].tab)}</span><small>${STAGE_TAB[GROUPS[g].st]}</small></a>`).join("");
+  const mine = R.filter(r => r.g === "mine");
+  let html = `<section id="grp-mine"><div class="minehead"><h2>My recipes</h2><button type="button" class="go" id="addRecipeBtn">+ Add a recipe</button></div>
+    <p class="lead">${mine.length ? "Recipes you've added, fitted to MJ's Kitchen." : "Found a recipe online? Paste its web address and MJ's Kitchen pulls out just the recipe and fits it to this cookbook, with checks for her age."}</p>
+    <div id="importer"></div>${mine.length ? `<div class="cards">${mine.map(card).join("")}</div>` : ""}</section>`, lastSt = 0;
   groups.forEach(g => {
-    const G = GROUPS[g], list = R.filter(r => r.g === g), st = G.st, later = st > cur;
+    if(g === "mine") return;
+    const G = GROUPS[g], list = R.filter(r => r.g === g && shown(r)), st = G.st, later = st > cur;
     if(G.info){
       if(st !== lastSt){ lastSt = st; const S2 = STAGES[st];
         html += `<div class="stagehead${later ? " later" : ""}${st === cur ? " now" : ""}" id="stage-${st}"><span>Stage ${st} · ${esc(S2.ages)}</span><b>${esc(S2.name)}</b>${later && a != null ? `<em>Opens at ${atAge(S2.from)}${BDAY ? ` (${nice(addMonths(BDAY, S2.from))})` : ""}</em>` : st === cur && a != null ? `<em>Her stage now</em>` : ""}</div>`; }
@@ -871,8 +914,183 @@ function drawBook(){
       <div class="progress"><span>${d} of ${list.length} tried</span><span class="bar"><i style="width:${d / list.length * 100}%"></i></span></div>
       <div class="cards">${list.map(card).join("")}</div></section>`;
   });
+  if(HIDDEN.length) html += `<section id="grp-hidden"><h2>Hidden recipes</h2><p class="lead">Recipes you've hidden. Tap Show to put one back.</p>
+    <ul class="frz">${HIDDEN.map(k => BYK[k]).filter(Boolean).map(r => `<li><div><b>${esc(r.name)}</b><span class="rlabel">${esc(GROUPS[r.g].title)} · ${esc(STAGES[r.st].ages)}</span></div><button type="button" class="mini" data-unhide="${esc(r.k)}">Show</button></li>`).join("")}</ul></section>`;
   $("book").innerHTML = html;
+  drawImporter();
 }
+/* ---------- add a recipe from a web page (or pasted text) ---------- */
+let IMP = {open: false, busy: false, msg: "", draft: null, editing: null};
+const PROXIES = [u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`, u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`, u => `https://r.jina.ai/${u}`];
+async function fetchPage(url){
+  let last = "";
+  for(const p of PROXIES){
+    try{ const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 15000);
+      const res = await fetch(p(url), {signal: ctl.signal}); clearTimeout(t);
+      if(res.ok){ const txt = await res.text(); if(txt && txt.length > 200) return txt; } last = `HTTP ${res.status}`; }
+    catch(e){ last = e.name === "AbortError" ? "timed out" : "couldn't connect"; }
+  }
+  throw new Error(last || "couldn't reach the page");
+}
+const clean = t => { const d = document.createElement("textarea"); d.innerHTML = String(t ?? "").replace(/<[^>]+>/g, " "); return d.value.replace(/\s+/g, " ").trim(); };
+const isoMin = d => { const m = String(d || "").match(/P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?/); return m ? (+m[1] || 0) * 1440 + (+m[2] || 0) * 60 + (+m[3] || 0) : 0; };
+function findRecipeLD(doc){
+  const out = [];
+  doc.querySelectorAll('script[type="application/ld+json"]').forEach(sc => { try{ out.push(JSON.parse(sc.textContent.trim())); }catch(_){} });
+  const walk = o => { if(!o || typeof o !== "object") return null; if(Array.isArray(o)){ for(const x of o){ const r = walk(x); if(r) return r; } return null; }
+    const t = o["@type"]; if(t === "Recipe" || (Array.isArray(t) && t.includes("Recipe"))) return o;
+    return walk(o["@graph"]) || walk(o.mainEntity) || null; };
+  return walk(out);
+}
+function stepsFrom(ins){
+  const out = [];
+  const add = x => { if(!x) return; if(typeof x === "string"){ x.split(/\n+|(?<=\.)\s{2,}/).map(clean).filter(Boolean).forEach(t => out.push(t)); return; }
+    if(Array.isArray(x)) return x.forEach(add);
+    if(x.itemListElement) return add(x.itemListElement);
+    if(x.text || x.name) out.push(clean(x.text || x.name)); };
+  add(ins); return out;
+}
+function parseRecipe(raw, url){
+  let r = {src: url};
+  if(/<html|<script|<body/i.test(raw)){
+    const doc = new DOMParser().parseFromString(raw, "text/html");
+    const ld = findRecipeLD(doc);
+    if(ld){
+      r.name = clean(ld.name); r.shop = (ld.recipeIngredient || ld.ingredients || []).map(clean).filter(Boolean); r.steps = stepsFrom(ld.recipeInstructions);
+      r.m = isoMin(ld.totalTime) || (isoMin(ld.prepTime) + isoMin(ld.cookTime)); r.yield = clean(Array.isArray(ld.recipeYield) ? ld.recipeYield[0] : ld.recipeYield);
+    } else {
+      const pick = sel => [...doc.querySelectorAll(sel)].map(e => clean(e.textContent)).filter(t => t && t.length < 400);
+      r.name = clean((doc.querySelector("h1") || doc.querySelector("title") || {}).textContent);
+      r.shop = pick('[class*="ingredient"] li, li[class*="ingredient"], [itemprop="recipeIngredient"], [itemprop="ingredients"]');
+      r.steps = pick('[class*="instruction"] li, li[class*="instruction"], [class*="direction"] li, [itemprop="recipeInstructions"] li, [class*="step"] p');
+    }
+    if(!r.shop.length || !r.steps.length){ const t = parseText(doc.body ? doc.body.innerText || doc.body.textContent : raw); r.shop = r.shop.length ? r.shop : t.shop; r.steps = r.steps.length ? r.steps : t.steps; r.name = r.name || t.name; }
+  } else { const t = parseText(raw); r = Object.assign(r, t); }
+  r.shop = [...new Set((r.shop || []).map(x => x.replace(/^[\-*•▢☐\d.)\s]+(?=[A-Za-z½¼¾⅓\d])/, m => /^\d/.test(m) && !/[.)]\s*$/.test(m.trim()) ? m : "").trim()))].slice(0, 30);
+  r.steps = (r.steps || []).map(x => x.replace(/^(step\s*)?\d+[.):]?\s*/i, "").trim()).filter(x => x.length > 3).slice(0, 25);
+  r.name = (r.name || "").replace(/\s*[|–—-]\s*[^|–—-]{0,40}$/, "").replace(/\s*recipe\s*$/i, "").trim().slice(0, 70);
+  return r;
+}
+function parseText(text){
+  const lines = String(text).split(/\r?\n/).map(l => l.replace(/^[#>*\-•\s]+/, "").trim()).filter(Boolean);
+  let mode = null, name = "", shop = [], steps = [];
+  for(const l of lines){
+    if(!name && l.length < 80 && !/ingredient|instruction|direction|method/i.test(l)) name = l.replace(/^Title:\s*/i, "");
+    if(/^(ingredients?)\b[:\s]*$/i.test(l) || /^ingredients?$/i.test(l)){ mode = "i"; continue; }
+    if(/^(instructions|directions|method|steps|preparation|how to make( it)?)\b[:\s]*$/i.test(l)){ mode = "s"; continue; }
+    if(/^(notes?|nutrition|video|equipment|reviews?|comments?|tips?)\b[:\s]*$/i.test(l)){ mode = null; continue; }
+    if(mode === "i" && l.length < 160) shop.push(l);
+    else if(mode === "s" && l.length > 8) steps.push(l);
+  }
+  return {name, shop, steps};
+}
+/* nutrients, allergens and age checks from the ingredient list */
+const NUTR = [[/\b(beef|steak|lamb)\b/i, "iron and zinc from the red meat", "iron"], [/\b(chicken|turkey)\b/i, "protein, iron and zinc from the poultry", "iron"],
+  [/\b(salmon|sardine|trout|tuna|cod|fish)\b/i, "protein and omega-3s for brain development", "iron"], [/\b(lentil|bean|chickpea|tofu)\b/i, "plant protein, iron and fiber", "iron"],
+  [/\begg/i, "protein and choline for brain development", "iron"], [/\b(spinach|kale|broccoli)\b/i, "folate, vitamin K and some iron from the greens", ""],
+  [/\b(sweet potato|carrot|squash|pumpkin|mango)\b/i, "vitamin A for eyes and immunity", ""], [/\b(berr|orange|kiwi|strawberr|pepper|tomato)/i, "vitamin C, which helps her absorb iron", ""],
+  [/\b(yogurt|cheese|milk)\b/i, "calcium and protein for growing bones", ""], [/\b(oat|whole[- ]wheat|whole grain|quinoa|brown rice|barley)/i, "whole grains for fiber and steady energy", ""],
+  [/\b(avocado|olive oil|nut butter|peanut butter|chia|flax)/i, "healthy fats for the brain", ""]];
+const ALG = [[/peanut/i, "Peanut"], [/\begg/i, "Egg"], [/\b(milk|cheese|yogurt|butter|cream)\b/i, "Dairy"], [/\b(flour|wheat|bread|pasta|noodle|panko|couscous|tortilla)/i, "Wheat"], [/\b(soy|tofu|edamame)/i, "Soy"], [/\b(fish|salmon|cod|tuna|trout|sardine)/i, "Fish"], [/\b(shrimp|crab|lobster|scallop)/i, "Shellfish"], [/\b(almond|walnut|cashew|pecan|pistachio|hazelnut)/i, "Tree nut"], [/\b(sesame|tahini)/i, "Sesame"]];
+function analyze(r){
+  const txt = (r.shop || []).join(" ") + " " + (r.name || "");
+  const why = [...new Set(NUTR.filter(([re]) => re.test(txt)).map(([, w]) => w))].slice(0, 3);
+  return {why: why.length ? why.join("; ").replace(/^./, c => c.toUpperCase()) + "." : "",
+    iron: NUTR.some(([re, , f]) => f === "iron" && re.test(txt)), meat: /\b(beef|steak|lamb|chicken|turkey|pork|salmon|fish|cod|tuna|egg)/i.test(txt),
+    allergens: ALG.filter(([re]) => re.test(txt)).map(([, a]) => a)};
+}
+function safety(r){
+  const txt = ((r.shop || []).join(" ") + " " + (r.steps || []).join(" ")).toLowerCase(), st = +r.st || 1, w = [];
+  if(st < 4 && /\bhoney\b/.test(txt)) w.push(["bad", "Honey: not before 12 months (infant botulism risk). Leave it out or save this recipe for later."]);
+  if(st < 4 && /\b(salt|soy sauce|bouillon|stock cube)\b/.test(txt)) w.push(["warn", "Salt: babies under 12 months shouldn't have added salt. Leave it out and use low-sodium broth."]);
+  if(st < 5 && /\b(sugar|maple syrup|brown sugar|syrup|chocolate)\b/.test(txt)) w.push(["warn", "Added sugar: none is recommended before age 2. Use mashed banana or fruit instead."]);
+  if(st < 4 && /\b(cow'?s )?milk\b/.test(txt) && !/breast ?milk|formula/.test(txt)) w.push(["info", "Milk: fine cooked into food, but no cow's milk as a drink before 12 months."]);
+  if(st < 6 && /\b(whole )?(peanuts|almonds|walnuts|cashews|pecans|pistachios|hazelnuts)\b/.test(txt)) w.push(["bad", "Whole or chopped nuts are a choking hazard under 4. Use smooth nut butter or finely ground nuts."]);
+  if(st < 6 && /\b(popcorn|whole grapes?|hot dogs?|marshmallows?|hard candy)\b/.test(txt)) w.push(["bad", "Choking hazard under 4: skip it, or quarter grapes and cut hot dogs lengthwise into thin strips."]);
+  if(st < 3 && /\b(raw (carrot|apple)|apple slices|carrot sticks)\b/.test(txt)) w.push(["warn", "Hard raw fruit and vegetables: steam until soft, or grate, for babies."]);
+  if(/\b(raw egg|runny|sunny side|soft-boiled|rare)\b/.test(txt)) w.push(["warn", "Cook eggs and meat all the way through for young children."]);
+  if(st === 1) w.push(["info", "For 6 months, blend the finished dish smooth and thin it with breast milk or formula."]);
+  else if(st === 2) w.push(["info", "For 7 to 8 months, blend or mash it thick, with tiny soft lumps."]);
+  else if(st === 3) w.push(["info", "For 9 to 11 months, mash it or cut it into soft, finger-size pieces."]);
+  return w;
+}
+const safetyHtml = r => { const w = safety(r); return w.length ? `<ul class="safe">${w.map(([lvl, t]) => `<li class="s-${lvl}">${esc(t)}</li>`).join("")}</ul>` : ""; };
+function drawImporter(){
+  const el = $("importer"); if(!el) return;
+  if(!IMP.open){ el.innerHTML = ""; return; }
+  const d = IMP.draft;
+  if(!d){
+    el.innerHTML = `<div class="imp"><label class="fld" for="impUrl">Recipe web address<input type="url" id="impUrl" inputmode="url" placeholder="https://www.example.com/chicken-nuggets" value="${esc(IMP.url || "")}"></label>
+      <div class="row"><button type="button" class="go" id="impGo"${IMP.busy ? " disabled" : ""}>${IMP.busy ? "Getting the recipe…" : "Get recipe"}</button><button type="button" class="mini" id="impCancel">Cancel</button></div>
+      ${IMP.msg ? `<p class="store imp-msg">${esc(IMP.msg)}</p>` : ""}
+      <details class="paste"><summary>Or paste the recipe text</summary>
+        <textarea id="impText" rows="7" placeholder="Paste the recipe: the name, then an Ingredients list and an Instructions list."></textarea>
+        <button type="button" class="mini" id="impParse">Use this text</button><button type="button" class="mini" id="impBlank">Type it in myself</button></details>
+      <p class="store" style="margin:0">Pages are fetched through a free public service, since this site has no server. A few sites block it; if so, copy the recipe text from the page and paste it here.</p></div>`;
+    $("impGo").onclick = doImport; $("impUrl").onkeydown = e => { if(e.key === "Enter"){ e.preventDefault(); doImport(); } };
+    $("impCancel").onclick = () => { IMP = {open: false}; drawImporter(); };
+    $("impParse").onclick = () => { const t = $("impText").value.trim(); if(!t) return; startDraft(parseRecipe(t, "")); };
+    $("impBlank").onclick = () => startDraft({name: "", shop: [], steps: [], src: ""});
+    return;
+  }
+  const opts = [1, 2, 3, 4, 5, 6, 7].map(n => `<option value="${n}"${+d.st === n ? " selected" : ""}>${esc(STAGES[n].ages)}: ${esc(STAGES[n].name)}</option>`).join("");
+  el.innerHTML = `<form class="imp" id="impForm">
+    <p class="store" style="margin:0">${d.src ? `From <a href="${esc(d.src)}" target="_blank" rel="noopener">${esc(new URL(d.src).hostname.replace(/^www\./, ""))}</a>. ` : ""}Check it over, fix anything, then save.</p>
+    <label class="fld" for="dName">Recipe name<input type="text" id="dName" value="${esc(d.name)}" required></label>
+    <div class="row2"><label class="fld" for="dStage">Best for<select id="dStage">${opts}</select></label>
+      <label class="fld" for="dMin">Minutes<input type="number" id="dMin" min="0" max="600" inputmode="numeric" value="${d.m || ""}"></label></div>
+    <label class="chk"><input type="checkbox" id="dFz"${d.fz ? " checked" : ""}> Freezes well (shows in the freezer tools)</label>
+    <label class="fld" for="dShop">Ingredients <span class="rlabel">one per line</span><textarea id="dShop" rows="6">${esc((d.shop || []).join("\n"))}</textarea></label>
+    <label class="fld" for="dSteps">Steps <span class="rlabel">one per line</span><textarea id="dSteps" rows="7">${esc((d.steps || []).join("\n"))}</textarea></label>
+    <label class="fld" for="dWhy">Why it's good <span class="rlabel">filled in from the ingredients</span><textarea id="dWhy" rows="2">${esc(d.why || "")}</textarea></label>
+    <label class="fld" for="dNote">Notes <span class="rlabel">(optional)</span><input type="text" id="dNote" value="${esc(d.note || "")}" placeholder="e.g. cut into strips for MJ, skip the salt"></label>
+    <div id="dSafe">${safetyHtml(d)}</div>
+    <div class="row"><button type="submit" class="go">${IMP.editing ? "Save changes" : "Save to My recipes"}</button><button type="button" class="mini" id="dCancel">Cancel</button></div></form>`;
+  const sync = () => { d.name = $("dName").value; d.st = +$("dStage").value; d.m = +$("dMin").value || 0; d.fz = $("dFz").checked;
+    d.shop = $("dShop").value.split("\n").map(x => x.trim()).filter(Boolean); d.steps = $("dSteps").value.split("\n").map(x => x.trim()).filter(Boolean);
+    d.why = $("dWhy").value.trim(); d.note = $("dNote").value.trim(); $("dSafe").innerHTML = safetyHtml(d); };
+  $("impForm").addEventListener("input", sync); $("impForm").addEventListener("change", sync);
+  $("dCancel").onclick = () => { IMP = {open: false}; drawImporter(); };
+  $("impForm").onsubmit = e => { e.preventDefault(); sync(); saveDraft(); };
+}
+function startDraft(p){
+  const a = analyze(p);
+  IMP.draft = Object.assign({st: stageNow(), m: p.m || 0, fz: /freez/i.test((p.steps || []).join(" ")), why: a.why, note: p.yield ? `Makes ${p.yield}.` : ""}, p);
+  IMP.msg = ""; drawImporter(); $("importer").scrollIntoView({behavior: "smooth", block: "start"});
+}
+async function doImport(){
+  let url = ($("impUrl").value || "").trim(); if(!url) return;
+  if(!/^https?:\/\//i.test(url)) url = "https://" + url;
+  try{ new URL(url); }catch(_){ IMP.msg = "That doesn't look like a web address. It should start with https://"; drawImporter(); return; }
+  IMP.url = url; IMP.busy = true; IMP.msg = ""; drawImporter();
+  try{ const raw = await fetchPage(url); const p = parseRecipe(raw, url); IMP.busy = false;
+    if(!p.shop.length && !p.steps.length){ IMP.msg = "Couldn't find a recipe on that page. Copy the ingredients and steps from the page and use \"Or paste the recipe text\" below."; drawImporter(); return; }
+    startDraft(p); }
+  catch(err){ IMP.busy = false; IMP.msg = `Couldn't open that page (${err.message}). Some sites block this; copy the recipe text and paste it below instead.`; drawImporter(); }
+}
+function saveDraft(){
+  const d = IMP.draft; if(!d.name.trim()){ toast("Give the recipe a name"); return; }
+  const a = analyze(d), pal = ["carrot", "pea", "berry"];
+  const rec = {cid: IMP.editing || ("m" + uid()), name: d.name.trim(), st: +d.st || 1, m: +d.m || 0, fz: !!d.fz, shop: d.shop.length ? d.shop : ["(no ingredients listed)"], steps: d.steps.length ? d.steps : ["(no steps listed)"],
+    why: d.why || "Your own recipe.", note: d.note || "", src: d.src || "", iron: a.iron, meat: a.meat, allergen: a.allergens[0] || "", c: pal[(d.name.length) % 3]};
+  const i = MINE.findIndex(m => m.cid === rec.cid);
+  if(i >= 0) MINE[i] = rec; else MINE.push(rec);
+  try{ localStorage.setItem("mjskitchen.mine", JSON.stringify(MINE)); }catch(_){}
+  const full = Object.assign({g: "mine", custom: true, y: 0, u: "", id: rec.cid, k: "mine:" + rec.cid}, rec);
+  const j = R.findIndex(r => r.k === full.k); if(j >= 0) R[j] = full; else R.push(full); BYK[full.k] = full;
+  const was = IMP.editing; IMP = {open: false}; drawAll(); toast(was ? "Recipe updated" : `${rec.name} added to My recipes`);
+  setTimeout(() => { const el = $(rec.cid); if(el){ el.open = true; el.scrollIntoView({behavior: "smooth", block: "start"}); } }, 80);
+}
+document.addEventListener("click", e => {
+  const hd = e.target.closest("[data-hide]"); if(hd){ HIDDEN = [...new Set(HIDDEN.concat(hd.dataset.hide))]; try{ localStorage.setItem("mjskitchen.hidden", JSON.stringify(HIDDEN)); }catch(_){} const n = BYK[hd.dataset.hide]; drawAll(); toast(`${n ? n.name : "Recipe"} hidden · bring it back under Hidden recipes at the end of the Cookbook`); return; }
+  const uh = e.target.closest("[data-unhide]"); if(uh){ HIDDEN = HIDDEN.filter(k => k !== uh.dataset.unhide); try{ localStorage.setItem("mjskitchen.hidden", JSON.stringify(HIDDEN)); }catch(_){} drawAll(); toast("Recipe is back"); return; }
+  if(e.target.closest("#addRecipeBtn")){ IMP = {open: true}; drawImporter(); setTimeout(() => { const u = $("impUrl"); if(u) u.focus(); }, 30); return; }
+  const ed = e.target.closest("[data-edit]"); if(ed){ const r = MINE.find(m => m.cid === ed.dataset.edit); if(r){ IMP = {open: true, editing: r.cid, draft: JSON.parse(JSON.stringify(r))}; drawImporter(); $("importer").scrollIntoView({behavior: "smooth"}); } return; }
+  const dl = e.target.closest("[data-del-recipe]"); if(dl){
+    if(dl.dataset.sure !== "1"){ dl.dataset.sure = "1"; dl.textContent = "Tap again to delete"; setTimeout(() => { if(dl.isConnected){ dl.dataset.sure = ""; dl.textContent = "Delete"; } }, 4000); return; }
+    const cid = dl.dataset.delRecipe; MINE = MINE.filter(m => m.cid !== cid); try{ localStorage.setItem("mjskitchen.mine", JSON.stringify(MINE)); }catch(_){}
+    const j = R.findIndex(r => r.k === "mine:" + cid); if(j >= 0) R.splice(j, 1); delete BYK["mine:" + cid]; drawAll(); toast("Recipe deleted"); }
+});
 function refreshCard(c){
   const k = c.dataset.k, e = entry(k);
   c.querySelector(".badges").innerHTML = badges(k);
@@ -880,7 +1098,7 @@ function refreshCard(c){
   c.querySelector(".rlabel").textContent = e.rating ? RATES[e.rating] : "Tap a star";
   const s = c.querySelector(".saved"); s.textContent = "Saved"; clearTimeout(s._t); s._t = setTimeout(() => s.textContent = "", 1500);
   const sec = c.closest("section"), list = R.filter(r => r.g === BYK[k].g), d = list.filter(r => tried(r.k)).length;
-  sec.querySelector(".progress").innerHTML = `<span>${d} of ${list.length} tried</span><span class="bar"><i style="width:${d / list.length * 100}%"></i></span>`;
+  if(sec.querySelector(".progress")) sec.querySelector(".progress").innerHTML = `<span>${d} of ${list.length} tried</span><span class="bar"><i style="width:${d / list.length * 100}%"></i></span>`;
   drawLog(); drawNext();
 }
 $("book").addEventListener("click", ev => {
@@ -905,7 +1123,7 @@ function markTab(){
   const tabs = [...document.querySelectorAll("#cbJump .cbtab")]; if(!tabs.length) return;
   let cur = null; tabs.forEach(t => { const sec = $(t.dataset.jumpto); if(sec && sec.getBoundingClientRect().top < 120) cur = t; });
   if(!cur) cur = tabs[0];
-  tabs.forEach(t => { const on = t === cur; if(on && !t.classList.contains("on")){ const bar = $("cbJump"); bar.scrollTo({left: Math.max(0, t.offsetLeft - 16), behavior: "smooth"}); } t.classList.toggle("on", on); });
+  tabs.forEach(t => { const on = t === cur; if(on && !t.classList.contains("on")){ const bar = $("cbJump"); bar.scrollTo({left: Math.max(0, bar.scrollLeft + t.getBoundingClientRect().left - bar.getBoundingClientRect().left - 16), behavior: "smooth"}); } t.classList.toggle("on", on); });
 }
 window.addEventListener("scroll", () => requestAnimationFrame(markTab), {passive: true});
 function openRecipe(k){ const r = BYK[k]; if(!r) return; location.hash = "cookbook"; setTimeout(() => { const d = $(r.id); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); } }, 60); }
@@ -949,7 +1167,7 @@ function formHints(){
   if(k){ const b = {k, made, loc, unit, inFridge: made}; $("bUseBy").textContent = `Use by ${nice(useBy(b))}${loc === "fridge" ? (isMeat(k) ? " (meat, egg and fish keep 1 day in the fridge)" : " (2 days in the fridge)") : " (1 month in the freezer)"}.`; }
 }
 ["bLoc", "bUnit"].forEach(i => $(i).addEventListener("change", formHints));
-$("bFood").addEventListener("change", () => { const r = BYK[$("bFood").value]; if(r){ $("bCubes").value = r.y || 8; const u = /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge|patt|burrito|pop/.test(r.u) ? "piece" : "cube"; document.querySelector(`input[name="bUnit"][value="${u}"]`).checked = true; } formHints(); });
+$("bFood").addEventListener("change", () => { const r = BYK[$("bFood").value]; if(r){ $("bCubes").value = r.y || 8; const u = /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge|patt|burrito|pop|slice|pizza/.test(r.u) ? "piece" : "cube"; document.querySelector(`input[name="bUnit"][value="${u}"]`).checked = true; } formHints(); });
 $("bMade").addEventListener("change", formHints);
 function batchClick(e){
   const c = e.target.closest("[data-cube]"); if(c){ const b = FRZ.find(x => x.id === c.dataset.b); if(b){ b.left = Math.max(0, b.left + +c.dataset.cube); b.cubes = Math.max(b.cubes, b.left); saveFrz(); drawFreezer(); drawNext(); if(!b.left) toast(`${BYK[b.k] ? BYK[b.k].name : "Batch"} used up`); } return; }
@@ -979,7 +1197,7 @@ $("batchForm").addEventListener("submit", e => {
 let PLAN = S.get("mjskitchen.plan", []);
 function drawPlan(){
   const cur = stageNow();
-  const opts = R.filter(r => r.fz && r.st <= Math.min(4, cur + 0));
+  const opts = R.filter(r => r.fz && r.st <= cur && shown(r));
   $("planPick").innerHTML = `<div class="pick">${opts.map(r => `<label class="pk${PLAN.includes(r.k) ? " on" : ""}"><input type="checkbox" value="${r.k}"${PLAN.includes(r.k) ? " checked" : ""}><span>${esc(r.name)}</span><small>${r.m} min</small></label>`).join("")}</div>`;
   const sel = PLAN.map(k => BYK[k]).filter(Boolean);
   if(!sel.length){ $("planOut").innerHTML = `<p class="store">Tick 2 to 4 foods to plan a session.</p>`; return; }
@@ -998,7 +1216,7 @@ function drawPlan(){
     </ol>
     <div class="row" style="margin-top:12px"><button type="button" class="go" id="planAdd">Add all to freezer (made today)</button><button type="button" class="mini" id="planClear">Clear</button></div>
     <p class="store">Yields are estimates: ${sel.map(r => `${r.name} about ${r.y} ${r.u}`).join(", ")}. Adjust counts on the freezer list if you get more or fewer.</p></div>`;
-  $("planAdd").onclick = () => { sel.forEach(r => FRZ.push({id: uid(), k: r.k, made: today(), cubes: r.y, left: r.y, loc: "freezer", unit: /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge|patt|burrito|pop/.test(r.u) ? "piece" : "cube"})); saveFrz(); PLAN = []; S.set("mjskitchen.plan", PLAN); drawFreezer(); drawPlan(); drawNext(); toast(`${sel.length} batch${sel.length === 1 ? "" : "es"} added to the freezer`); window.scrollTo({top: 0, behavior: "smooth"}); };
+  $("planAdd").onclick = () => { sel.forEach(r => FRZ.push({id: uid(), k: r.k, made: today(), cubes: r.y, left: r.y, loc: "freezer", unit: /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge|patt|burrito|pop|slice|pizza/.test(r.u) ? "piece" : "cube"})); saveFrz(); PLAN = []; S.set("mjskitchen.plan", PLAN); drawFreezer(); drawPlan(); drawNext(); toast(`${sel.length} batch${sel.length === 1 ? "" : "es"} added to the freezer`); window.scrollTo({top: 0, behavior: "smooth"}); };
   $("planClear").onclick = () => { PLAN = []; S.set("mjskitchen.plan", PLAN); drawPlan(); };
 }
 $("planPick").addEventListener("change", e => { const v = e.target.value; if(!v) return; PLAN = e.target.checked ? [...new Set(PLAN.concat(v))] : PLAN.filter(k => k !== v); S.set("mjskitchen.plan", PLAN); drawPlan(); });
@@ -1016,14 +1234,14 @@ function drawLog(){
     : `<li class="empty">No reactions noted. Write in the Reaction log box on any recipe, or add a note when you log a meal.</li>`;
 }
 $("backup").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify({app: "mjs-kitchen", v: 2, saved: new Date().toISOString(), log: LOG, meals: MEALS, freezer: FRZ, bday: BDAY}, null, 2)], {type: "application/json"});
+  const blob = new Blob([JSON.stringify({app: "mjs-kitchen", v: 2, saved: new Date().toISOString(), log: LOG, meals: MEALS, freezer: FRZ, bday: BDAY, mine: MINE, hidden: HIDDEN}, null, 2)], {type: "application/json"});
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `mjs-kitchen-backup-${today()}.json`; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000); $("bkMsg").textContent = "Backup saved to your downloads.";
 });
 $("restore").addEventListener("change", async ev => {
   const f = ev.target.files[0]; if(!f) return;
   try{ const d = JSON.parse(await f.text()); if(!d || typeof d.log !== "object") throw 0;
-    S.set("mjskitchen.log", d.log); S.set("mjskitchen.meals", d.meals || []); S.set("mjskitchen.freezer", d.freezer || []); if(d.bday) S.set("mjskitchen.bday", d.bday); location.reload(); }
+    S.set("mjskitchen.log", d.log); S.set("mjskitchen.meals", d.meals || []); S.set("mjskitchen.freezer", d.freezer || []); if(d.bday) S.set("mjskitchen.bday", d.bday); if(Array.isArray(d.mine)) S.set("mjskitchen.mine", d.mine); if(Array.isArray(d.hidden)) S.set("mjskitchen.hidden", d.hidden); location.reload(); }
   catch(_){ $("bkMsg").textContent = "That file isn't an MJ's Kitchen backup. Pick the .json file the Save a backup button made."; }
   ev.target.value = "";
 });
@@ -1031,7 +1249,7 @@ $("restore").addEventListener("change", async ev => {
 /* ---------- guide: stages ---------- */
 function drawStages(){
   const cur = stageNow();
-  $("stages").innerHTML = [1, 2, 3, 4, 5, 6].map(n => { const s = STAGES[n];
+  $("stages").innerHTML = [1, 2, 3, 4, 5, 6, 7].map(n => { const s = STAGES[n];
     return `<div class="stage${n === cur ? " now" : ""}"><span class="sn">${n}</span><div><b>${esc(s.name)}</b> <span class="rlabel">${esc(s.ages)}${n === cur && ageMonths() != null ? " · her stage now" : ""}</span>
       <p><b>Texture:</b> ${esc(s.texture)}</p><p><b>How:</b> ${esc(s.how)}</p><p><b>${n < 4 ? "Ready to move on when" : "Good to know"}:</b> ${esc(s.next)}</p></div></div>`; }).join("");
 }
