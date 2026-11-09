@@ -186,7 +186,7 @@ body:not([data-tab="today"]) .hero h1{font-size:clamp(28px,7vw,40px);}
 .cbtab small{font:600 11px var(--body);color:var(--dim);letter-spacing:.02em;}
 .cbtab.later{border-style:dashed;border-color:var(--berry);}
 .cbtab.on{background:var(--pea);border-color:var(--pea);color:#fff;} .cbtab.on small{color:#fff;opacity:.9;}
-#book section{scroll-margin-top:72px;} #book .stagehead{scroll-margin-top:72px;}
+#book section, #v-guide section{scroll-margin-top:72px;} #book .stagehead{scroll-margin-top:72px;}
 .jobs{display:grid;gap:10px;}
 .minehead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
 .cbtab.mine{border-color:var(--pea);color:var(--pea);} .cbtab.mine.on{color:#fff;}
@@ -422,7 +422,14 @@ details.add summary::-webkit-details-marker{display:none;}
 
 <!-- ============ GUIDE ============ -->
 <div class="view" id="v-guide" data-view="guide" hidden>
-  <div class="chips" style="margin-top:22px"><a class="chip" href="#g-start">Start here</a><a class="chip" href="#g-method">Method</a><a class="chip" href="#g-stages">Stages</a><a class="chip" href="#g-allergens">Allergens</a><a class="chip" href="#g-choke">Choking safety</a><a class="chip" href="#g-storage">Storage</a></div>
+  <nav class="cbtabs" aria-label="Guide sections"><div class="cbtabs-in" id="gJump">
+    <a class="cbtab" href="#g-start" data-jumpto="g-start"><span>Start here</span><small>basics</small></a>
+    <a class="cbtab" href="#g-method" data-jumpto="g-method"><span>Method</span><small>how to cook</small></a>
+    <a class="cbtab" href="#g-stages" data-jumpto="g-stages"><span>Stages</span><small>6 mo to 5+</small></a>
+    <a class="cbtab" href="#g-allergens" data-jumpto="g-allergens"><span>Allergens</span><small>first tastes</small></a>
+    <a class="cbtab" href="#g-choke" data-jumpto="g-choke"><span>Choking</span><small>safety</small></a>
+    <a class="cbtab" href="#g-storage" data-jumpto="g-storage"><span>Storage</span><small>fridge &amp; freezer</small></a>
+  </div></nav>
 
 <section id="g-start">
   <h2>Start here</h2>
@@ -1119,11 +1126,11 @@ $("book").addEventListener("input", ev => {
 $("cbJump").addEventListener("click", e => { const a = e.target.closest("[data-jumpto]"); if(!a) return; e.preventDefault(); $(a.dataset.jumpto).scrollIntoView({behavior: "smooth", block: "start"}); });
 /* highlight the cookbook tab for the section in view, and keep it visible in the tab row */
 function markTab(){
-  if($("v-cookbook").hidden) return;
-  const tabs = [...document.querySelectorAll("#cbJump .cbtab")]; if(!tabs.length) return;
+  const barId = !$("v-cookbook").hidden ? "cbJump" : !$("v-guide").hidden ? "gJump" : null; if(!barId) return;
+  const tabs = [...document.querySelectorAll(`#${barId} .cbtab`)]; if(!tabs.length) return;
   let cur = null; tabs.forEach(t => { const sec = $(t.dataset.jumpto); if(sec && sec.getBoundingClientRect().top < 120) cur = t; });
   if(!cur) cur = tabs[0];
-  tabs.forEach(t => { const on = t === cur; if(on && !t.classList.contains("on")){ const bar = $("cbJump"); bar.scrollTo({left: Math.max(0, bar.scrollLeft + t.getBoundingClientRect().left - bar.getBoundingClientRect().left - 16), behavior: "smooth"}); } t.classList.toggle("on", on); });
+  tabs.forEach(t => { const on = t === cur; if(on && !t.classList.contains("on")){ const bar = $(barId); bar.scrollTo({left: Math.max(0, bar.scrollLeft + t.getBoundingClientRect().left - bar.getBoundingClientRect().left - 16), behavior: "smooth"}); } t.classList.toggle("on", on); });
 }
 window.addEventListener("scroll", () => requestAnimationFrame(markTab), {passive: true});
 function openRecipe(k){ const r = BYK[k]; if(!r) return; location.hash = "cookbook"; setTimeout(() => { const d = $(r.id); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); } }, 60); }
@@ -1273,7 +1280,7 @@ function route(){
   try{ localStorage.setItem("mjskitchen.tab", h); }catch(_){}
 }
 window.addEventListener("hashchange", route);
-document.querySelectorAll('#v-guide .chip').forEach(a => a.addEventListener("click", e => { e.preventDefault(); $(a.getAttribute("href").slice(1)).scrollIntoView({behavior: "smooth", block: "start"}); }));
+$("gJump").addEventListener("click", e => { const a = e.target.closest("[data-jumpto]"); if(!a) return; e.preventDefault(); $(a.dataset.jumpto).scrollIntoView({behavior: "smooth", block: "start"}); });
 
 /* ---------- text size ---------- */
 const SIZES = ["Normal", "Large", "Extra large"];
