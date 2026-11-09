@@ -229,12 +229,16 @@ section.later .card{opacity:.92;}
 /* freezer */
 .frz{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:8px;}
 .frz li{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--pea);border-radius:12px;padding:10px 12px;}
-.frz li.soon{border-left-color:var(--carrot);} .frz li.bad{border-left-color:var(--warn);background:var(--warn-soft);}
+.frz li.soon{border-left-color:var(--carrot);} .frz li.bad{border-left-color:var(--warn);background:var(--warn-soft);} .frz li.fr{border-left-color:var(--berry);}
+.acts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;} .acts:empty{display:none;}
+.fridgebox{background:var(--pea-soft);border:2px solid var(--pea);border-radius:16px;padding:14px;}
+.fridgebox h2{font-size:1.35em;color:var(--pea);}
+.fridgebox .frz{margin:0;}
 .frz li > div:first-child{min-width:0;} .frz li b{display:block;}
 .frz .rlabel{display:block;}
 .cnt{display:flex;align-items:center;gap:8px;white-space:nowrap;}
 .cnt span{min-width:64px;text-align:center;font-size:.9em;} .cnt span b{font:600 1.3em var(--display);display:inline;}
-.warnb{grid-column:1/-1;justify-self:start;color:var(--warn);background:var(--warn-soft);}
+.warnb{color:var(--warn);background:var(--warn-soft);}
 details.add{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px 14px;}
 details.add summary{cursor:pointer;font:600 1em var(--body);color:var(--pea);padding:10px 0;list-style:none;}
 details.add summary::-webkit-details-marker{display:none;}
@@ -274,6 +278,14 @@ details.add summary::-webkit-details-marker{display:none;}
 
 <!-- ============ TODAY ============ -->
 <div class="view" id="v-today" data-view="today">
+  <section id="eatSoon" hidden>
+    <div class="fridgebox">
+      <h2>Eat soon: in the fridge</h2>
+      <p class="store" style="margin:2px 0 10px">Use these first, before they go bad.</p>
+      <ul class="frz" id="todayFridge"></ul>
+    </div>
+  </section>
+
   <section>
     <div class="bday" id="bdayBox">
       <label class="fld" for="bday">MJ's birthday <span class="rlabel">so the site knows her stage and what's next</span>
@@ -310,23 +322,37 @@ details.add summary::-webkit-details-marker{display:none;}
   <div id="book"></div>
 </div>
 
-<!-- ============ FREEZER ============ -->
+<!-- ============ FRIDGE & FREEZER ============ -->
 <div class="view" id="v-freezer" data-view="freezer" hidden>
   <section>
-    <h2>Freezer</h2>
-    <p class="lead" id="frzSum">Every batch you freeze, with the date it was made and how many cubes are left. Purees keep 1 month.</p>
-    <ul class="frz" id="frz"></ul>
+    <h2>Fridge &amp; freezer</h2>
+    <p class="lead">Every batch you've made, where it is, and when to use it by. Fridge: fruit and veg 2 days; meat, egg, fish and anything thawed 1 day. Freezer: 1 month.</p>
     <details class="add" id="addBatch">
       <summary>+ Add a batch</summary>
       <form class="addf" id="batchForm">
         <label class="fld" for="bFood">Food<select id="bFood" required></select></label>
+        <div class="fld"><span>Where is it?</span><div class="amts" id="bLoc">
+          <label><input type="radio" name="bLoc" value="freezer" checked><span>Freezer</span></label>
+          <label><input type="radio" name="bLoc" value="fridge"><span>Fridge</span></label></div></div>
+        <div class="fld"><span>Stored in</span><div class="amts" id="bUnit">
+          <label><input type="radio" name="bUnit" value="cube" checked><span>Cubes</span></label>
+          <label><input type="radio" name="bUnit" value="bag"><span>Bags</span></label>
+          <label><input type="radio" name="bUnit" value="jar"><span>Jars</span></label>
+          <label><input type="radio" name="bUnit" value="piece"><span>Pieces</span></label></div></div>
         <div class="row2">
-          <label class="fld" for="bCubes">Cubes / pieces<input type="number" id="bCubes" min="1" max="99" value="8" inputmode="numeric" required></label>
+          <label class="fld" for="bCubes"><span id="bCountLbl">How many cubes</span><input type="number" id="bCubes" min="1" max="99" value="8" inputmode="numeric" required></label>
           <label class="fld" for="bMade">Date made<input type="date" id="bMade" required></label>
         </div>
-        <button class="go" type="submit">Add to freezer</button>
+        <p class="store" id="bUseBy" style="margin:0"></p>
+        <button class="go" type="submit" id="bGo">Add to freezer</button>
       </form>
     </details>
+    <div class="sub">In the fridge</div>
+    <p class="store" id="fridgeSum" style="margin-top:0"></p>
+    <ul class="frz" id="fridge"></ul>
+    <div class="sub">In the freezer</div>
+    <p class="store" id="frzSum" style="margin-top:0"></p>
+    <ul class="frz" id="frz"></ul>
   </section>
 
   <section>
@@ -488,7 +514,7 @@ details.add summary::-webkit-details-marker{display:none;}
 <nav class="tabbar" aria-label="Sections">
   <a href="#today" data-tab="today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>Today</a>
   <a href="#cookbook" data-tab="cookbook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h7a2 2 0 0 1 2 2V20a1.5 1.5 0 0 0-1.5-1.5H4zM20 4.5h-5a2 2 0 0 0-2 2V20a1.5 1.5 0 0 1 1.5-1.5H20z"/></svg>Cookbook</a>
-  <a href="#freezer" data-tab="freezer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5v19M4 7l16 10M20 7L4 17M9.5 4 12 6.5 14.5 4M9.5 20l2.5-2.5 2.5 2.5"/></svg>Freezer</a>
+  <a href="#freezer" data-tab="freezer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5v19M4 7l16 10M20 7L4 17M9.5 4 12 6.5 14.5 4M9.5 20l2.5-2.5 2.5 2.5"/></svg>Storage</a>
   <a href="#log" data-tab="log"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17H6zM9 8h6M9 12h6M9 16h3"/></svg>Log</a>
   <a href="#guide" data-tab="guide"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Guide</a>
 </nav>
@@ -582,7 +608,8 @@ const ALLERGENS = ["Peanut", "Egg", "Dairy", "Wheat", "Soy", "Fish", "Sesame"];
 const S = {get(k, d){ try{ const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; }catch(_){ return d; } }, set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(_){} }};
 let LOG = S.get("mjskitchen.log", {});            // {k: {date, rating, notes}}
 let MEALS = S.get("mjskitchen.meals", []);        // [{id, d, meal, k, amt, note, fz}]
-let FRZ = S.get("mjskitchen.freezer", []);        // [{id, k, made, cubes, left}]
+let FRZ = S.get("mjskitchen.freezer", []);        // [{id, k, made, cubes, left, unit: cube|bag|jar|piece, loc: freezer|fridge, inFridge, thawed}]
+FRZ.forEach(b => { if(!b.loc) b.loc = "freezer"; if(!b.unit) b.unit = BYK[b.k] && /pancake|muffin|meatball|piece|portion/.test(BYK[b.k].u) ? "piece" : "cube"; });
 let BDAY = S.get("mjskitchen.bday", "");
 try{ const old = JSON.parse(localStorage.getItem("mjskitchen.tried") || "{}") || {}; Object.keys(old).forEach(k => { if(!LOG[k]) LOG[k] = {date: today()}; }); localStorage.removeItem("mjskitchen.tried"); }catch(_){}
 const saveLog = () => S.set("mjskitchen.log", LOG), saveMeals = () => S.set("mjskitchen.meals", MEALS), saveFrz = () => S.set("mjskitchen.freezer", FRZ);
@@ -608,7 +635,12 @@ const MEALNAMES = ["Breakfast", "Lunch", "Dinner", "Snack"];
 function toast(t){ const el = $("toast"); el.textContent = t; el.classList.add("on"); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("on"), 2200); }
 function ageMonths(){ if(!BDAY) return null; const b = D(BDAY), n = new Date(); let m = (n.getFullYear() - b.getFullYear()) * 12 + n.getMonth() - b.getMonth(); if(n.getDate() < b.getDate()) m--; return Math.max(0, m); }
 function stageNow(){ const a = ageMonths(); if(a == null) return 1; return a >= 12 ? 4 : a >= 9 ? 3 : a >= 7 ? 2 : 1; }
-const useBy = b => addDays(b.made, 30);
+/* use-by: freezer 1 month from made; fridge 1 day for thawed food or meat/egg/fish, 2 days for fruit and veg */
+const isMeat = k => !!(BYK[k] && (BYK[k].meat || BYK[k].allergen === "Egg" || BYK[k].allergen === "Fish"));
+const useBy = b => b.loc === "fridge" ? addDays(b.thawed ? b.inFridge : b.made, (b.thawed || isMeat(b.k)) ? 1 : 2) : addDays(b.made, 30);
+const UNITS = {cube: ["cube", "cubes"], bag: ["bag", "bags"], jar: ["jar", "jars"], piece: ["piece", "pieces"]};
+const unitName = (b, n) => (UNITS[b.unit] || UNITS.cube)[n === 1 ? 0 : 1];
+const leftIn = d => d < 0 ? "past use-by" : d === 0 ? "use today" : d === 1 ? "use by tomorrow" : `${d} days left`;
 const lastHad = k => { const m = MEALS.filter(x => x.k === k).map(x => x.d).sort().pop(); const e = entry(k).date; return [m, e].filter(Boolean).sort().pop() || null; };
 const tried = k => !!entry(k).date;
 const foodOptions = (sel, onlyFreeze) => {
@@ -660,9 +692,9 @@ function drawNext(){
     }
   });
   // 4) freezer: use what's expiring
-  const soon = FRZ.filter(b => b.left > 0 && daysBetween(t, useBy(b)) <= 7).sort((a, b) => useBy(a).localeCompare(useBy(b)))[0];
+  const soon = FRZ.filter(b => b.left > 0 && b.loc === "freezer" && daysBetween(t, useBy(b)) <= 7).sort((a, b) => useBy(a).localeCompare(useBy(b)))[0];
   if(soon){ const r = BYK[soon.k], d = daysBetween(t, useBy(soon));
-    out.push({tag: "From the freezer", tone: d < 0 ? "warn" : "carrot", title: `${r ? r.name : "Batch"}: ${soon.left} left`, text: d < 0 ? `Past its 1-month use-by (${nice(useBy(soon))}). Throw these out.` : `Use by ${nice(useBy(soon))}${d === 0 ? " (today)" : ` (${d} day${d === 1 ? "" : "s"})`}.`}); }
+    out.push({tag: "From the freezer", tone: d < 0 ? "warn" : "carrot", title: `${r ? r.name : "Batch"}: ${soon.left} ${unitName(soon, soon.left)} left`, text: d < 0 ? `Past its 1-month use-by (${nice(useBy(soon))}). Throw these out.` : `Use by ${nice(useBy(soon))}${d === 0 ? " (today)" : ` (${d} day${d === 1 ? "" : "s"})`}.`}); }
   // 5) a favorite
   const fav = R.filter(r => entry(r.k).rating === 5).sort((a, b) => (lastHad(a.k) || "").localeCompare(lastHad(b.k) || ""))[0];
   if(fav) out.push({tag: "She loves", tone: "pea", title: fav.name, k: fav.k, text: `Rated 5 stars${lastHad(fav.k) ? `; last had ${nice(lastHad(fav.k))}` : ""}. Mix in a newer food to make it more interesting.`});
@@ -685,11 +717,11 @@ function drawMeals(){
     const form = ADDING === meal ? `<form class="addf mealf" data-meal="${meal}">
         <label class="fld" for="mf-food">Food<select id="mf-food" required><option value="">Pick a food…</option>${foodOptions()}</select></label>
         <div class="fld"><span>How much</span><div class="amts">${AMTS.map((a, i) => `<label><input type="radio" name="mf-amt" value="${i}"${i === 1 ? " checked" : ""}><span>${a}</span></label>`).join("")}</div></div>
-        <label class="chk"><input type="checkbox" id="mf-frz"> From the freezer (take 1 cube off)</label>
+        <label class="chk"><input type="checkbox" id="mf-frz"> From the fridge or freezer (take 1 off, fridge first)</label>
         <label class="fld" for="mf-note">Reaction or note <span class="rlabel">(optional)</span><input type="text" id="mf-note" placeholder="e.g. loved it, rash on cheek, gassy"></label>
         <div class="row"><button class="go" type="submit">Save</button><button class="mini" type="button" data-cancel>Cancel</button></div></form>` : "";
     return `<div class="meal"><div class="mh"><b>${meal}</b><button type="button" class="plus" data-add="${meal}" aria-label="Add to ${meal}">+</button></div>
-      ${list.length ? `<ul>${list.map(m => { const r = BYK[m.k]; return `<li><span><b>${esc(r ? r.name : "Food")}</b> <span class="rlabel">${esc(AMTS[m.amt] || "")}${m.fz ? " · from freezer" : ""}</span>${m.note ? `<span class="mnote">${esc(m.note)}</span>` : ""}</span><button type="button" class="x" data-del="${m.id}" aria-label="Remove">✕</button></li>`; }).join("")}</ul>` : ""}${form}</div>`;
+      ${list.length ? `<ul>${list.map(m => { const r = BYK[m.k]; return `<li><span><b>${esc(r ? r.name : "Food")}</b> <span class="rlabel">${esc(AMTS[m.amt] || "")}${m.fz ? " · from storage" : ""}</span>${m.note ? `<span class="mnote">${esc(m.note)}</span>` : ""}</span><button type="button" class="x" data-del="${m.id}" aria-label="Remove">✕</button></li>`; }).join("")}</ul>` : ""}${form}</div>`;
   }).join("");
   // last 7 days
   $("week").innerHTML = Array.from({length: 7}, (_, i) => addDays(today(), -i)).map(d => {
@@ -710,7 +742,8 @@ $("meals").addEventListener("submit", e => {
   let msg = `${BYK[k].name} added to ${f.dataset.meal.toLowerCase()}`;
   if(!tried(k) || entry(k).date > DAY){ setEntry(k, {date: DAY}); msg += " · first try logged"; }
   if(note) setEntry(k, {notes: [entry(k).notes, `${nice(DAY)}: ${note}`].filter(Boolean).join("\n")});
-  if(fz){ const b = FRZ.filter(x => x.k === k && x.left > 0).sort((a, c) => a.made.localeCompare(c.made))[0]; if(b){ b.left--; saveFrz(); msg += ` · ${b.left} left in freezer`; } else msg += " · none in the freezer list"; }
+  if(fz){ const b = FRZ.filter(x => x.k === k && x.left > 0).sort((a, c) => (a.loc === "fridge" ? 0 : 1) - (c.loc === "fridge" ? 0 : 1) || useBy(a).localeCompare(useBy(c)))[0];
+    if(b){ b.left--; saveFrz(); msg += ` · ${b.left} ${unitName(b, b.left)} left in the ${b.loc}`; } else msg += " · none in the fridge or freezer list"; }
   ADDING = null; drawAll(); toast(msg);
 });
 $("mealDate").addEventListener("change", e => { DAY = e.target.value || today(); ADDING = null; drawMeals(); });
@@ -740,7 +773,7 @@ function card(r){
           <span class="rlabel">${e.rating ? RATES[e.rating] : "Tap a star"}</span></div>
         <label class="fld" for="n-${k}">Reaction log
           <textarea id="n-${k}" data-f="notes" rows="3" placeholder="Any reaction? Rash, hives, vomiting, fussiness, gas, constipation… or none. Plus how much she ate.">${esc(e.notes || "")}</textarea></label>
-        <div class="row">${r.fz ? `<button type="button" class="mini" data-tofreezer>Add a batch to the freezer</button>` : ""}<span class="saved" aria-live="polite"></span></div>
+        <div class="row">${r.fz ? `<button type="button" class="mini" data-tofreezer>Add a batch to the fridge or freezer</button>` : ""}<span class="saved" aria-live="polite"></span></div>
       </div>
     </div></details>`;
 }
@@ -777,7 +810,7 @@ $("book").addEventListener("click", ev => {
   const rb = ev.target.closest("[data-rate]");
   if(rb){ const n = +rb.dataset.rate; setEntry(k, {rating: entry(k).rating === n ? 0 : n, date: entry(k).date || today()}); c.querySelector('[data-f="date"]').value = entry(k).date || ""; refreshCard(c); return; }
   if(ev.target.closest("[data-today]")){ setEntry(k, {date: today()}); c.querySelector('[data-f="date"]').value = today(); refreshCard(c); return; }
-  if(ev.target.closest("[data-tofreezer]")){ location.hash = "freezer"; $("addBatch").open = true; $("bFood").value = k; $("bCubes").value = BYK[k].y || 8; $("bMade").value = today(); setTimeout(() => $("addBatch").scrollIntoView({behavior: "smooth", block: "center"}), 60); }
+  if(ev.target.closest("[data-tofreezer]")){ location.hash = "freezer"; $("addBatch").open = true; $("bFood").value = k; $("bFood").dispatchEvent(new Event("change")); $("bMade").value = today(); formHints(); setTimeout(() => $("addBatch").scrollIntoView({behavior: "smooth", block: "center"}), 60); }
 });
 const timers = {};
 $("book").addEventListener("input", ev => {
@@ -790,31 +823,68 @@ $("cbJump").addEventListener("click", e => { const a = e.target.closest("[data-j
 function openRecipe(k){ const r = BYK[k]; if(!r) return; location.hash = "cookbook"; setTimeout(() => { const d = $(r.id); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); } }, 60); }
 document.addEventListener("click", e => { const a = e.target.closest("[data-go]"); if(a){ e.preventDefault(); openRecipe(a.dataset.go); } });
 
-/* ---------- freezer ---------- */
+/* ---------- fridge & freezer ---------- */
+function batchItem(b, onToday){
+  const t = today(), r = BYK[b.k], d = daysBetween(t, useBy(b));
+  const cls = d < 0 ? "bad" : b.loc === "fridge" ? (d <= 1 ? "soon" : "fr") : d <= 7 ? "soon" : "";
+  const when = b.loc === "fridge" ? `${b.thawed ? `Thawed ${nice(b.inFridge)}` : `Made ${nice(b.made)}`} · ${d < 0 ? `past use-by (${nice(useBy(b))}), throw out` : `${leftIn(d)}${d > 1 ? ` (by ${nice(useBy(b))})` : ""}`}`
+    : `Made ${nice(b.made)} · ${d < 0 ? `past use-by (${nice(useBy(b))}), throw out` : `use by ${nice(useBy(b))}${d <= 7 ? ` (${d} day${d === 1 ? "" : "s"})` : ""}`}`;
+  return `<li class="${cls}"><div><b>${esc(r ? r.name : "Food")}</b><span class="rlabel">${when}</span></div>
+    <div class="cnt"><button type="button" class="nav" data-cube="-1" data-b="${b.id}" aria-label="Use one">−</button><span><b>${b.left}</b> ${unitName(b, b.left)}</span><button type="button" class="nav" data-cube="1" data-b="${b.id}" aria-label="Add one">+</button></div>
+    <div class="acts">${d < 0 ? `<button type="button" class="mini warnb" data-toss="${b.id}">Toss</button>` : ""}
+      ${b.loc === "freezer" && d >= 0 ? `<button type="button" class="mini" data-thaw="${b.id}">Move 1 to fridge to thaw</button>` : ""}
+      ${onToday && d >= 0 ? `<button type="button" class="mini" data-eat="${b.id}">She ate 1</button>` : ""}</div></li>`;
+}
 function drawFreezer(){
   const t = today();
   $("bFood").innerHTML = foodOptions($("bFood").value || "", true);
   if(!$("bMade").value) $("bMade").value = t;
   $("bMade").max = t;
-  const list = FRZ.filter(b => b.left > 0).sort((a, b) => useBy(a).localeCompare(useBy(b)));
-  const cubes = list.reduce((s, b) => s + b.left, 0), expired = list.filter(b => useBy(b) < t).length;
-  $("frzSum").textContent = list.length ? `${cubes} cube${cubes === 1 ? "" : "s"} in ${list.length} batch${list.length === 1 ? "" : "es"}${expired ? ` · ${expired} past use-by` : ""}. Purees keep 1 month; oldest first.` : "Nothing logged yet. Add a batch when you freeze one, or plan a cooking session below.";
-  $("frz").innerHTML = list.map(b => {
-    const r = BYK[b.k], d = daysBetween(t, useBy(b)), cls = d < 0 ? "bad" : d <= 7 ? "soon" : "";
-    return `<li class="${cls}"><div><b>${esc(r ? r.name : "Food")}</b><span class="rlabel">Made ${nice(b.made)} · ${d < 0 ? `past use-by (${nice(useBy(b))}), throw out` : `use by ${nice(useBy(b))}${d <= 7 ? ` (${d} day${d === 1 ? "" : "s"})` : ""}`}</span></div>
-      <div class="cnt"><button type="button" class="nav" data-cube="-1" data-b="${b.id}" aria-label="Use one">−</button><span><b>${b.left}</b> ${esc(r ? r.u || "cubes" : "cubes")}</span><button type="button" class="nav" data-cube="1" data-b="${b.id}" aria-label="Add one">+</button></div>
-      ${d < 0 ? `<button type="button" class="mini warnb" data-toss="${b.id}">Toss</button>` : ""}</li>`;
-  }).join("");
+  formHints();
+  const live = FRZ.filter(b => b.left > 0).sort((a, b) => useBy(a).localeCompare(useBy(b)));
+  const fr = live.filter(b => b.loc === "fridge"), fz = live.filter(b => b.loc !== "fridge");
+  const fzExp = fz.filter(b => useBy(b) < t).length, frExp = fr.filter(b => useBy(b) < t).length;
+  $("fridgeSum").textContent = fr.length ? `${fr.length} item${fr.length === 1 ? "" : "s"}, soonest first${frExp ? ` · ${frExp} past use-by` : ""}. These also show on the Today tab.` : "Nothing in the fridge. Thaw something from the freezer, or add a fresh batch as Fridge.";
+  $("fridge").innerHTML = fr.map(b => batchItem(b)).join("");
+  $("frzSum").textContent = fz.length ? `${fz.length} batch${fz.length === 1 ? "" : "es"}, oldest first${fzExp ? ` · ${fzExp} past use-by` : ""}.` : "Nothing in the freezer yet. Add a batch when you freeze one, or plan a cooking session below.";
+  $("frz").innerHTML = fz.map(b => batchItem(b)).join("");
+  // Today tab: fridge items to eat soon
+  $("eatSoon").hidden = !fr.length;
+  $("todayFridge").innerHTML = fr.map(b => batchItem(b, true)).join("");
 }
-$("frz").addEventListener("click", e => {
+function formHints(){
+  const unit = (document.querySelector('input[name="bUnit"]:checked') || {}).value || "cube";
+  const loc = (document.querySelector('input[name="bLoc"]:checked') || {}).value || "freezer";
+  const k = $("bFood").value, made = $("bMade").value || today();
+  $("bCountLbl").textContent = `How many ${UNITS[unit][1]}`;
+  $("bGo").textContent = loc === "fridge" ? "Add to fridge" : "Add to freezer";
+  if(k){ const b = {k, made, loc, unit, inFridge: made}; $("bUseBy").textContent = `Use by ${nice(useBy(b))}${loc === "fridge" ? (isMeat(k) ? " (meat, egg and fish keep 1 day in the fridge)" : " (2 days in the fridge)") : " (1 month in the freezer)"}.`; }
+}
+["bLoc", "bUnit"].forEach(i => $(i).addEventListener("change", formHints));
+$("bFood").addEventListener("change", () => { const r = BYK[$("bFood").value]; if(r){ $("bCubes").value = r.y || 8; const u = /pancake|muffin|meatball|piece|portion/.test(r.u) ? "piece" : "cube"; document.querySelector(`input[name="bUnit"][value="${u}"]`).checked = true; } formHints(); });
+$("bMade").addEventListener("change", formHints);
+function batchClick(e){
   const c = e.target.closest("[data-cube]"); if(c){ const b = FRZ.find(x => x.id === c.dataset.b); if(b){ b.left = Math.max(0, b.left + +c.dataset.cube); b.cubes = Math.max(b.cubes, b.left); saveFrz(); drawFreezer(); drawNext(); if(!b.left) toast(`${BYK[b.k] ? BYK[b.k].name : "Batch"} used up`); } return; }
-  const tz = e.target.closest("[data-toss]"); if(tz){ FRZ = FRZ.filter(x => x.id !== tz.dataset.toss); saveFrz(); drawFreezer(); drawNext(); toast("Tossed"); }
-});
+  const tz = e.target.closest("[data-toss]"); if(tz){ FRZ = FRZ.filter(x => x.id !== tz.dataset.toss); saveFrz(); drawFreezer(); drawNext(); toast("Tossed"); return; }
+  const th = e.target.closest("[data-thaw]"); if(th){ const b = FRZ.find(x => x.id === th.dataset.thaw); if(b && b.left > 0){
+      b.left--; const name = BYK[b.k] ? BYK[b.k].name : "Food";
+      const same = FRZ.find(x => x.loc === "fridge" && x.thawed && x.k === b.k && x.inFridge === today() && x.unit === b.unit && x.left > 0);
+      if(same) same.left++; else FRZ.push({id: uid(), k: b.k, made: b.made, cubes: 1, left: 1, unit: b.unit, loc: "fridge", thawed: true, inFridge: today()});
+      saveFrz(); drawFreezer(); drawNext(); toast(`1 ${unitName(b, 1)} of ${name} moved to the fridge · use by tomorrow`); } return; }
+  const eat = e.target.closest("[data-eat]"); if(eat){ const b = FRZ.find(x => x.id === eat.dataset.eat); if(b && b.left > 0){
+      b.left--; const h = new Date().getHours(), meal = h < 10 ? "Breakfast" : h < 14 ? "Lunch" : h < 19 ? "Dinner" : "Snack";
+      MEALS.push({id: uid(), d: today(), meal, k: b.k, amt: 3, note: "", fz: true}); saveMeals(); saveFrz();
+      if(!tried(b.k)) setEntry(b.k, {date: today()});
+      drawAll(); toast(`Logged ${BYK[b.k] ? BYK[b.k].name : "it"} for ${meal.toLowerCase()} · ${b.left} left`); } }
+}
+$("frz").addEventListener("click", batchClick); $("fridge").addEventListener("click", batchClick); $("todayFridge").addEventListener("click", batchClick);
 $("batchForm").addEventListener("submit", e => {
   e.preventDefault();
   const k = $("bFood").value, n = Math.max(1, +$("bCubes").value || 1), made = $("bMade").value || today();
-  FRZ.push({id: uid(), k, made, cubes: n, left: n}); saveFrz();
-  $("addBatch").open = false; drawFreezer(); drawNext(); toast(`${BYK[k].name}: ${n} added, use by ${nice(addDays(made, 30))}`);
+  const unit = document.querySelector('input[name="bUnit"]:checked').value, loc = document.querySelector('input[name="bLoc"]:checked').value;
+  const b = {id: uid(), k, made, cubes: n, left: n, unit, loc, inFridge: made};
+  FRZ.push(b); saveFrz();
+  $("addBatch").open = false; drawFreezer(); drawNext(); toast(`${BYK[k].name}: ${n} ${unitName(b, n)} in the ${loc}, use by ${nice(useBy(b))}`);
 });
 
 /* ---------- batch-cooking planner ---------- */
@@ -840,7 +910,7 @@ function drawPlan(){
     </ol>
     <div class="row" style="margin-top:12px"><button type="button" class="go" id="planAdd">Add all to freezer (made today)</button><button type="button" class="mini" id="planClear">Clear</button></div>
     <p class="store">Yields are estimates: ${sel.map(r => `${r.name} about ${r.y} ${r.u}`).join(", ")}. Adjust counts on the freezer list if you get more or fewer.</p></div>`;
-  $("planAdd").onclick = () => { sel.forEach(r => FRZ.push({id: uid(), k: r.k, made: today(), cubes: r.y, left: r.y})); saveFrz(); PLAN = []; S.set("mjskitchen.plan", PLAN); drawFreezer(); drawPlan(); drawNext(); toast(`${sel.length} batch${sel.length === 1 ? "" : "es"} added to the freezer`); window.scrollTo({top: 0, behavior: "smooth"}); };
+  $("planAdd").onclick = () => { sel.forEach(r => FRZ.push({id: uid(), k: r.k, made: today(), cubes: r.y, left: r.y, loc: "freezer", unit: /pancake|muffin|meatball|piece|portion/.test(r.u) ? "piece" : "cube"})); saveFrz(); PLAN = []; S.set("mjskitchen.plan", PLAN); drawFreezer(); drawPlan(); drawNext(); toast(`${sel.length} batch${sel.length === 1 ? "" : "es"} added to the freezer`); window.scrollTo({top: 0, behavior: "smooth"}); };
   $("planClear").onclick = () => { PLAN = []; S.set("mjskitchen.plan", PLAN); drawPlan(); };
 }
 $("planPick").addEventListener("change", e => { const v = e.target.value; if(!v) return; PLAN = e.target.checked ? [...new Set(PLAN.concat(v))] : PLAN.filter(k => k !== v); S.set("mjskitchen.plan", PLAN); drawPlan(); });
