@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MJ's Kitchen</title>
+<meta name="description" content="Homemade baby food for a 6-month-old: 23 simple recipes, what each one does for your baby, allergen introduction and safe storage.">
+<meta name="theme-color" content="#f6f8f3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141a16" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MJ's Kitchen">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: one narrow reading column, a sticky jump bar of food groups, recipe cards that open like index cards */
+:root{
+  --bg:#f6f8f3;          /* pea-tinted paper */
+  --panel:#ffffff;
+  --ink:#1f2a22;
+  --dim:#46524a;
+  --line:#dde5da;
+  --pea:#4e8a3e;         /* accent: garden pea */
+  --pea-soft:#e6f0e0;
+  --carrot:#d9692b;      /* second accent: carrot */
+  --carrot-soft:#fbe9dd;
+  --berry:#5b5aa6;
+  --berry-soft:#e9e8f7;
+  --warn:#a5401b;
+  --warn-soft:#fbe6dc;
+  --display:"Fredoka", "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#141a16; --panel:#1c241e; --ink:#eef4ec; --dim:#bccabf; --line:#2e3a31;
+  --pea:#8cc77a; --pea-soft:#24331f; --carrot:#f0965f; --carrot-soft:#3a2518; --berry:#a9a8ee; --berry-soft:#26254a;
+  --warn:#f3a07c; --warn-soft:#3b221a; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#141a16; --panel:#1c241e; --ink:#eef4ec; --dim:#bccabf; --line:#2e3a31;
+  --pea:#8cc77a; --pea-soft:#24331f; --carrot:#f0965f; --carrot-soft:#3a2518; --berry:#a9a8ee; --berry-soft:#26254a;
+  --warn:#f3a07c; --warn-soft:#3b221a; color-scheme:dark; }
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;background:var(--bg);color:var(--ink);font:var(--fs,19px)/1.65 var(--body);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html[data-size="1"]{--fs:21px;} html[data-size="2"]{--fs:24px;}
+img{max-width:100%;} [hidden]{display:none!important;}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.15;text-wrap:balance;margin:0;}
+a{color:var(--pea);}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--carrot);outline-offset:2px;border-radius:6px;}
+
+/* hero */
+.hero{padding-block:28px 18px;}
+.hero .kicker{font:600 13px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--carrot);}
+.hero h1{font-size:clamp(34px,9vw,52px);margin-top:8px;}
+.hero h1 span{color:var(--pea);}
+.hero p{color:var(--dim);margin:10px 0 0;max-width:60ch;font-size:1.05em;}
+.spoons{display:flex;gap:6px;margin-top:16px;flex-wrap:wrap;}
+.spoons span{font:600 13px var(--body);padding:4px 10px;border-radius:999px;background:var(--pea-soft);color:var(--pea);}
+.spoons span:nth-child(2){background:var(--carrot-soft);color:var(--carrot);}
+.spoons span:nth-child(3){background:var(--berry-soft);color:var(--berry);}
+
+/* jump bar */
+.jump{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);}
+.jump .in{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:none;}
+.jump .in::-webkit-scrollbar{display:none;}
+.jump a{flex:none;text-decoration:none;color:var(--dim);font:600 16px var(--body);padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel);}
+.jump a.on{background:var(--pea);border-color:var(--pea);color:var(--panel);}
+
+section{padding-block:26px 6px;scroll-margin-top:70px;}
+section > h2{font-size:1.6em;}
+.lead{color:var(--dim);margin:6px 0 16px;}
+.sub{font:700 13px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:20px 0 8px;}
+
+/* lists */
+.ticks{list-style:none;padding:0;margin:0;display:grid;gap:8px;}
+.ticks li{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;}
+.ticks li::before{content:"";width:12px;height:12px;margin-top:7px;border-radius:50%;background:var(--pea);justify-self:center;}
+.rules{display:grid;gap:10px;}
+.rule{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;}
+.rule b{display:block;font-family:var(--display);font-weight:600;font-size:1.05em;}
+.rule.no b{color:var(--warn);}
+.rule p{margin:4px 0 0;color:var(--dim);font-size:.95em;}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;gap:12px;}
+.steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:12px;}
+.steps li::before{content:counter(s);font:600 18px/34px var(--display);text-align:center;width:34px;height:34px;border-radius:50%;background:var(--carrot-soft);color:var(--carrot);}
+.note{background:var(--pea-soft);border-radius:12px;padding:12px 14px;margin-top:14px;}
+.note.warn{background:var(--warn-soft);}
+.note b{font-family:var(--display);font-weight:600;}
+
+/* recipe cards */
+.cards{display:grid;gap:10px;}
+details.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+details.card[open]{border-color:var(--pea);}
+details.card summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:12px 14px;}
+details.card summary::-webkit-details-marker{display:none;}
+.dot{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:600 18px var(--display);color:#fff;}
+.card h3{font-size:1.15em;}
+.meta{display:flex;flex-wrap:wrap;gap:4px 10px;color:var(--dim);font-size:.8em;margin-top:2px;}
+.chev{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--bg);color:var(--dim);transition:transform .2s;}
+details[open] .chev{transform:rotate(180deg);}
+.body{padding:0 14px 14px;display:grid;gap:12px;}
+.body h4{margin:0 0 4px;font:700 13px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);}
+.body ol{margin:0;padding-left:24px;display:grid;gap:8px;}
+.why{background:var(--pea-soft);border-radius:10px;padding:10px 12px;}
+.why p{margin:0;}
+.store{font-size:.88em;color:var(--dim);}
+.store b{color:var(--ink);}
+.tried{justify-self:start;font:600 15px var(--body);border:1.5px solid var(--pea);color:var(--pea);background:transparent;border-radius:999px;padding:6px 14px;cursor:pointer;}
+.tried[aria-pressed="true"]{background:var(--pea);color:var(--panel);}
+.done{font:600 12px var(--body);color:var(--pea);background:var(--pea-soft);border-radius:999px;padding:2px 8px;}
+.progress{display:flex;align-items:center;gap:10px;font-size:.85em;color:var(--dim);margin:-6px 0 14px;}
+.bar{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden;}
+.bar i{display:block;height:100%;background:var(--pea);border-radius:4px;transition:width .3s;}
+
+/* storage */
+.tw{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+th{font:700 13px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);}
+tr:last-child td{border-bottom:0;}
+td.big{font:600 1.05em/1.25 var(--display);}
+th:not(:first-child),td.big{width:24%;}
+.trays{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px 0 4px;max-width:260px;}
+.trays i{aspect-ratio:1;border-radius:6px;background:var(--carrot-soft);border:2px solid var(--carrot);opacity:.85;}
+.trays i:nth-child(3n){background:var(--pea-soft);border-color:var(--pea);}
+.trays i:nth-child(4n){background:var(--berry-soft);border-color:var(--berry);}
+.label{display:inline-block;font:600 15px var(--body);border:1.5px dashed var(--dim);border-radius:6px;padding:6px 10px;background:var(--panel);margin-top:6px;}
+
+.size{margin-top:16px;font:600 16px var(--body);color:var(--ink);background:var(--panel);border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;cursor:pointer;}
+.size b{color:var(--pea);}
+footer{color:var(--dim);font-size:.85em;padding-block:28px 40px;border-top:1px solid var(--line);margin-top:28px;}
+footer ul{padding-left:18px;margin:8px 0 0;display:grid;gap:4px;}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important;} }
+</style>
+
+</head>
+<body>
+<header class="wrap hero">
+  <div class="kicker">Homemade baby food · from 6 months</div>
+  <h1>MJ's <span>Kitchen</span></h1>
+  <p>Simple single-ingredient purees, what each one does for your baby, and how to store them safely. Tap any recipe to open it.</p>
+  <div class="spoons"><span>23 recipes</span><span>Freezer-friendly</span><span>Allergen guide</span></div>
+  <button class="size" id="size" type="button" aria-label="Change text size">Text size: <b id="sizeLbl">Normal</b></button>
+</header>
+
+<nav class="jump" aria-label="Jump to a section"><div class="wrap in" id="jump">
+  <a href="#start">Start here</a><a href="#method">Method</a><a href="#veggies">Veggies</a><a href="#fruits">Fruits</a>
+  <a href="#iron">Iron &amp; protein</a><a href="#allergens">Allergens</a><a href="#storage">Storage</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="start">
+  <h2>Start here</h2>
+  <p class="lead">Start solids once your baby shows all of these signs, and run your plan by your pediatrician, especially if food allergies run in the family.</p>
+  <div class="sub">Signs your baby is ready</div>
+  <ul class="ticks">
+    <li>Sits up with little or no support and holds their head steady</li>
+    <li>Opens their mouth and leans in when food comes near</li>
+    <li>No longer pushes food straight back out with their tongue</li>
+    <li>Shows interest in what you're eating</li>
+  </ul>
+  <div class="sub">First-year rules</div>
+  <div class="rules">
+    <div class="rule no"><b>No honey before 12 months</b><p>Not even baked in. It can cause infant botulism, a severe food poisoning.</p></div>
+    <div class="rule no"><b>No cow's milk as a drink, and no juice</b><p>Breast milk or formula stays the main food until 12 months.</p></div>
+    <div class="rule no"><b>No added salt or sugar</b><p>Babies don't need either, and their kidneys can't handle much salt.</p></div>
+    <div class="rule"><b>Cook meat to a safe temperature</b><p>Ground beef 160°F, chicken and turkey 165°F, fish 145°F. Use a thermometer.</p></div>
+    <div class="rule"><b>Smooth and thin at first</b><p>Runny purees now, thicker and lumpier over the next few months. No whole nuts, whole grapes, popcorn or hard raw vegetables.</p></div>
+    <div class="rule"><b>Vary the grains</b><p>Rice cereal can carry arsenic. Oat, barley and mixed-grain infant cereals give iron too.</p></div>
+    <div class="rule"><b>Carrots, beets and spinach are fine now</b><p>The nitrate warning for homemade vegetable purees is for babies under 3 months.</p></div>
+  </div>
+  <div class="sub">What you'll need</div>
+  <ul class="ticks">
+    <li>A pot with a steamer basket (or a baby food maker)</li>
+    <li>A blender, food processor or stick blender</li>
+    <li>Silicone ice cube trays with lids (1-ounce cubes)</li>
+    <li>Freezer bags or small freezer-safe containers</li>
+    <li>Masking tape and a marker for labels</li>
+    <li>A fine strainer for skins (peas, blueberries)</li>
+  </ul>
+</section>
+
+<section id="method">
+  <h2>The basic method</h2>
+  <p class="lead">Almost every recipe follows these five steps. The recipe cards give the cooking time and anything different.</p>
+  <ol class="steps">
+    <li><div><b>Prep.</b> Wash, peel and remove seeds, pits or tough skins. Cut into 1-inch pieces so they cook evenly.</div></li>
+    <li><div><b>Steam.</b> Put 1 to 2 inches of water in a pot, set the basket over it, cover, and cook until a fork slides through easily. Steaming keeps more vitamins than boiling. Save the water in the pot.</div></li>
+    <li><div><b>Blend.</b> Blend until completely smooth, adding liquid 1 tablespoon at a time: the saved steaming water, breast milk, formula or plain water.</div></li>
+    <li><div><b>Check the texture.</b> For a first-time eater it should drip slowly off a spoon, like thin yogurt. Over the next 2 to 3 months, add less liquid, then mash with a fork instead of blending.</div></li>
+    <li><div><b>Cool and portion.</b> Serve what you need and freeze the rest within 2 hours (see Storage).</div></li>
+  </ol>
+  <div class="note"><b>How much:</b> start with 1 to 2 teaspoons once a day and let your baby lead. Stop when they turn away or close their mouth. Most babies work up to a few tablespoons, 2 to 3 times a day, over the next few months.</div>
+  <div class="note"><b>One new food at a time:</b> give each new food for 2 to 3 days before adding the next, so you can spot a reaction. Once a food is tolerated, mix it with others freely.</div>
+</section>
+
+<section id="veggies">
+  <h2>Vegetables</h2>
+  <p class="lead">A great place to start: mild, a little sweet, and packed with vitamins.</p>
+  <div class="progress" data-group="veggies"></div>
+  <div class="cards" data-group="veggies"></div>
+  <div class="note"><b>Combos once each is tolerated:</b> sweet potato + apple, squash + pear, peas + zucchini, carrot + mango.</div>
+</section>
+
+<section id="fruits">
+  <h2>Fruits</h2>
+  <p class="lead">Naturally sweet, so they're easy wins. Pair them with iron foods: vitamin C helps your baby absorb iron.</p>
+  <div class="progress" data-group="fruits"></div>
+  <div class="cards" data-group="fruits"></div>
+</section>
+
+<section id="iron">
+  <h2>Iron &amp; protein</h2>
+  <p class="lead">The iron your baby was born with runs low around 6 months, and breast milk has little of it. Offer an iron-rich food every day.</p>
+  <div class="progress" data-group="iron"></div>
+  <div class="cards" data-group="iron"></div>
+</section>
+
+<section id="allergens">
+  <h2>Introducing allergens</h2>
+  <p class="lead">Giving common allergens early, around 4 to 6 months and once your baby has handled a few other foods, can lower the chance of a food allergy. If your baby has severe eczema or an egg allergy, talk to your pediatrician first; they may want an allergy test.</p>
+  <div class="progress" data-group="allergens"></div>
+  <div class="cards" data-group="allergens"></div>
+  <div class="sub">Every first taste of an allergen</div>
+  <ol class="steps">
+    <li><div>Pick a day your baby is healthy (no cold, vomiting or diarrhea), at home, with one adult watching closely.</div></li>
+    <li><div>Offer a small taste on the tip of a spoon, then wait 10 minutes.</div></li>
+    <li><div>No reaction? Give the rest of the portion slowly, at your baby's usual pace.</div></li>
+    <li><div>Stay with your baby for 2 hours afterward.</div></li>
+  </ol>
+  <div class="note warn"><b>Mild reaction:</b> a new rash or a few hives around the mouth. Stop and call your pediatrician.<br>
+  <b>Call 911:</b> swelling of the lips, face or tongue, vomiting, hives all over, trouble breathing, wheezing, repeated coughing, pale or blue skin, or sudden floppiness.</div>
+  <div class="note"><b>Keep it up:</b> once a food is tolerated, keep it in your baby's diet regularly, a few times a week. Never give whole nuts or spoonfuls of thick nut butter; both are choking hazards.</div>
+</section>
+
+<section id="storage">
+  <h2>Storing baby food</h2>
+  <p class="lead">Cook in batches, freeze in 1-ounce cubes, and thaw one or two at a time. Baby food keeps a much shorter time than adult leftovers.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Food</th><th>Fridge</th><th>Freezer</th></tr></thead>
+    <tbody>
+      <tr><td>Fruit and vegetable purees</td><td class="big">2 days</td><td class="big">1 month</td></tr>
+      <tr><td>Meat, poultry, fish and egg purees</td><td class="big">1 day</td><td class="big">1 month</td></tr>
+      <tr><td>Thawed food (any)</td><td class="big">1 day</td><td class="big">Don't refreeze</td></tr>
+      <tr><td>Out at room temperature (1 hour if over 90°F); leftovers in baby's bowl get tossed</td><td class="big">2 hours max</td><td class="big">Toss it</td></tr>
+    </tbody>
+  </table></div>
+  <p class="store" style="margin-top:8px">Some blogs say frozen purees last 3 months or more. This guide uses the 1-month limit from FDA and university food-safety guidance: safer, and the flavor is better too.</p>
+
+  <div class="sub">The ice cube tray method</div>
+  <div class="trays" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <ol class="steps">
+    <li><div>Cool the puree quickly: spread it in a shallow dish or set the bowl in ice water. Get it into the freezer within 2 hours of cooking.</div></li>
+    <li><div>Spoon it into a clean ice cube tray. One standard cube holds about 1 ounce (2 tablespoons), a good first-meal portion.</div></li>
+    <li><div>Cover with the lid, foil or plastic wrap, and freeze flat until solid, usually overnight.</div></li>
+    <li><div>Pop the cubes into a freezer bag or container, squeeze out the air, and keep one food per bag.</div></li>
+    <li><div>Label every bag with the food and the date it was made.<br><span class="label">Sweet potato · made Nov 9 · use by Dec 9</span></div></li>
+  </ol>
+  <p class="store">No trays? Drop 1 to 2 tablespoon mounds onto a lined cookie sheet, freeze, then bag them the same way.</p>
+
+  <div class="sub">Thawing and reheating</div>
+  <div class="rules">
+    <div class="rule"><b>Thaw in the fridge overnight</b><p>Or warm the frozen cubes straight from the freezer on the stove or in the microwave.</p></div>
+    <div class="rule no"><b>Never thaw on the counter</b><p>Or in standing water. Bacteria grow fast at room temperature.</p></div>
+    <div class="rule"><b>Reheat until steaming, then cool</b><p>Heat to 165°F (steaming all the way through), stir well, and let it cool. Microwaves leave hot spots, so stir and test a bit on your wrist before serving.</p></div>
+    <div class="rule no"><b>Never refreeze thawed food</b><p>Use thawed cubes within a day.</p></div>
+  </div>
+
+  <div class="sub">Serving</div>
+  <ul class="ticks">
+    <li>Spoon a portion into a bowl. Don't feed straight from the storage container or jar: saliva on the spoon spoils what's left.</li>
+    <li>Throw out whatever is left in the bowl after the meal.</li>
+    <li>Never chew food before giving it to your baby.</li>
+    <li>Wash trays, containers and blender parts in hot, soapy water (or the dishwasher) between batches.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <b>Not medical advice.</b> Ask your pediatrician about your baby's needs, especially with allergies, eczema, reflux or a premature birth.
+  <ul>
+    <li><a href="https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/foods-and-drinks-to-avoid-or-limit.html" target="_blank" rel="noopener">CDC: Foods and drinks to avoid or limit</a></li>
+    <li><a href="https://www.canr.msu.edu/news/homemade_baby_food_is_healthy_and_cost-effective" target="_blank" rel="noopener">MSU Extension: Tips for safely making homemade baby food</a></li>
+    <li><a href="https://www.foodsafetynews.com/2011/02/making-homemade-baby-food-safe/" target="_blank" rel="noopener">Food Safety News: Making homemade baby food safe (FDA guidance)</a></li>
+    <li><a href="https://pubweb-prod.niaid.nih.gov/sites/default/files/addendum_guidelines_peanut_appx_d.pdf" target="_blank" rel="noopener">NIAID: Instructions for feeding peanut to infants</a></li>
+    <li><a href="https://health.clevelandclinic.org/when-can-babies-have-peanut-butter" target="_blank" rel="noopener">Cleveland Clinic: When can babies have peanut butter?</a></li>
+    <li><a href="https://www.health.harvard.edu/blog/fda-warns-parents-about-arsenic-in-rice-cereal-201604059473" target="_blank" rel="noopener">Harvard Health: FDA advice on arsenic in rice cereal</a></li>
+    <li><a href="https://drgreene.com/mythbusting-carrots-nitrates-homemade-baby-food" target="_blank" rel="noopener">Dr. Greene: Nitrates and homemade baby food (AAP guidance)</a></li>
+  </ul>
+</footer>
+
+<script>
+(function(){
+"use strict";
+/* [name, color token, time, freezes?, steps[], why, storage note] */
+const R = {
+  veggies: [
+    ["Sweet potato", "carrot", "15 min", true, ["Peel and cut into 1-inch cubes.", "Steam 12 to 15 minutes until very soft (or bake whole at 400°F for 45 minutes and scoop out the flesh).", "Blend with steaming water, breast milk or formula until smooth."], "Beta-carotene (vitamin A) for healthy eyes, skin and immunity, plus fiber for regular digestion.", "1 medium sweet potato makes about 1 cup, or 8 cubes."],
+    ["Butternut squash", "carrot", "12 min", true, ["Peel, scoop out the seeds and cube.", "Steam 10 to 12 minutes (or roast halves cut side down at 400°F for 40 minutes).", "Blend until smooth."], "Vitamins A and C plus potassium. Smooth and naturally sweet, a very easy first food.", ""],
+    ["Carrots", "carrot", "12 min", true, ["Peel and slice into thin coins.", "Steam 10 to 12 minutes until very soft.", "Blend with plenty of liquid; carrots need more than most."], "Beta-carotene for vision and immunity.", ""],
+    ["Peas", "pea", "5 min", true, ["Use frozen peas, no need to thaw.", "Steam 3 to 5 minutes.", "Blend, then push through a fine strainer to remove the skins."], "Plant protein, fiber, vitamin K and some iron. Builds a taste for green vegetables.", ""],
+    ["Green beans", "pea", "10 min", true, ["Trim the ends and cut in half.", "Steam 8 to 10 minutes.", "Blend well; strain if stringy."], "Vitamins K and C, folate and fiber. Gets your baby used to a less sweet, \"green\" taste.", ""],
+    ["Zucchini", "pea", "5 min", true, ["Peel if you like and slice.", "Steam 4 to 5 minutes.", "Blend. It's watery, so you usually won't need extra liquid."], "Gentle on the stomach, with vitamin C and potassium.", ""],
+    ["Avocado", "pea", "No cook", false, ["Cut a ripe avocado in half and scoop out the flesh.", "Mash with a fork or blend, adding breast milk or formula to thin."], "Healthy fats for brain growth, plus folate and potassium.", "Best made fresh. It browns and turns watery in the freezer."],
+  ],
+  fruits: [
+    ["Banana", "carrot", "No cook", false, ["Peel a ripe banana (brown spots are good).", "Mash with a fork, thinning with breast milk or formula."], "Potassium and easy-to-digest carbohydrates for energy.", "Best made fresh; it browns once mashed."],
+    ["Apple", "pea", "10 min", true, ["Peel, core and cut into chunks.", "Steam 8 to 10 minutes until soft.", "Blend with a little steaming water."], "Vitamin C and fiber. Mixes well with almost anything.", ""],
+    ["Pear", "pea", "6 min", true, ["Peel and core. Very ripe pears can be blended raw.", "Otherwise steam 4 to 6 minutes.", "Blend; it's juicy, so add little or no liquid."], "Gentle fiber that can help with constipation.", ""],
+    ["Mango", "carrot", "No cook", true, ["Use a ripe mango, or frozen chunks steamed 2 to 3 minutes.", "Peel and cut the flesh off the pit.", "Blend until smooth."], "Vitamins A and C. The vitamin C helps your baby absorb iron from other foods.", ""],
+    ["Blueberries", "berry", "5 min", true, ["Simmer 1 cup fresh or frozen berries with 1 to 2 tablespoons of water for 5 minutes.", "Blend, then strain out the skins.", "Stir into oatmeal or pear to balance the tartness."], "Antioxidants, vitamin C and fiber.", ""],
+    ["Prunes", "berry", "10 min", true, ["Simmer 10 pitted dried prunes in 1 cup of water for 10 minutes.", "Blend with the cooking water until smooth."], "Natural sorbitol and fiber to ease constipation.", "Serve just 1 to 2 teaspoons at a time, mixed into another puree."],
+  ],
+  iron: [
+    ["Iron-fortified oat cereal", "pea", "1 min", false, ["Stir 1 tablespoon of infant oat (or barley or mixed-grain) cereal into 4 to 5 tablespoons of breast milk or formula.", "Thicken gradually as your baby gets used to it."], "Iron and zinc in an easy first food. Choose oat, barley or mixed grains over rice to limit arsenic.", "Make it fresh at each meal; it doesn't need storing."],
+    ["Chicken", "carrot", "20 min", true, ["Cut boneless, skinless chicken thighs into chunks.", "Simmer in water (no salt) about 20 minutes, until it reaches 165°F.", "Blend with the cooking liquid until very smooth, with no stringy bits."], "Protein, plus easily absorbed iron and zinc. Thighs have more iron than breast meat.", "Meat purees keep just 1 day in the fridge."],
+    ["Beef", "carrot", "20 min", true, ["Brown lean ground beef, or simmer stew cubes in water until tender.", "Cook to 160°F, then drain the fat.", "Blend with water or cooking liquid until very smooth."], "The best food source of iron and zinc your baby can absorb.", "Meat purees keep just 1 day in the fridge."],
+    ["Red lentils", "berry", "20 min", true, ["Rinse 1/2 cup red lentils.", "Simmer in 1 1/2 cups water for 15 to 20 minutes, until mushy.", "Blend until smooth."], "Plant iron, protein and fiber. Serve with mango, apple or blueberries; vitamin C boosts how much iron gets absorbed.", ""],
+    ["Salmon", "carrot", "15 min", true, ["Bake a skinless fillet at 400°F for 12 to 15 minutes, to 145°F.", "Flake it and check carefully for bones.", "Blend with water, breast milk or formula."], "Omega-3 fats (DHA) for brain and eye development, plus protein. Low in mercury.", "Fish is also an allergen: follow the first-taste steps below."],
+  ],
+  allergens: [
+    ["Peanut", "carrot", "2 min", false, ["Stir 2 teaspoons of smooth peanut butter with 2 to 3 teaspoons of hot water until smooth, then let it cool.", "Or mix 2 teaspoons of peanut butter into 2 to 3 tablespoons of a fruit or vegetable puree your baby already eats.", "Follow the first-taste steps below."], "Early, regular peanut can lower the chance of a peanut allergy.", "Never whole peanuts or a lump of thick peanut butter."],
+    ["Egg", "pea", "12 min", true, ["Hard-boil an egg for 12 minutes, then cool and peel.", "Mash the whole egg (yolk and white) with breast milk or formula until smooth.", "Or scramble until fully set and blend."], "Protein and choline for brain development; also an early allergen.", "Egg purees keep 1 day in the fridge. Always fully cook eggs."],
+    ["Dairy (yogurt)", "berry", "No cook", false, ["Use plain, whole-milk yogurt with no added sugar.", "Serve as is, or swirl in a fruit puree."], "Protein, calcium and an early dairy exposure. Yogurt is fine before 12 months; cow's milk as a drink is not.", ""],
+    ["Wheat", "pea", "1 min", false, ["Mix infant wheat or mixed-grain cereal with breast milk or formula, like the oat cereal."], "An early wheat exposure, plus iron from the fortified cereal.", ""],
+    ["Sesame", "berry", "2 min", false, ["Thin 1 teaspoon of tahini with warm water, or stir it into a puree your baby already eats."], "Sesame is now one of the most common food allergens; early tastes may help.", ""],
+  ],
+};
+const KEY = "mjskitchen.tried";
+let tried = {};
+try{ tried = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }catch(_){ tried = {}; }
+const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(tried)); }catch(_){} };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+const id = n => n.toLowerCase().replace(/[^a-z]+/g, "-");
+function card(g, r){
+  const [name, color, time, freezes, steps, why, note] = r, k = g + ":" + id(name), on = !!tried[k];
+  return `<details class="card" id="${id(name)}">
+    <summary><span class="dot" style="background:var(--${color})" aria-hidden="true">${esc(name[0])}</span>
+      <span><h3>${esc(name)} ${on ? `<span class="done">Tried</span>` : ""}</h3><span class="meta"><span>${esc(time)}</span><span>${freezes ? "Freezes well" : "Best fresh"}</span></span></span>
+      <span class="chev" aria-hidden="true">&#9662;</span></summary>
+    <div class="body">
+      <div><h4>How to make it</h4><ol>${steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol></div>
+      <div class="why"><h4>Why it's good</h4><p>${esc(why)}</p></div>
+      ${note ? `<p class="store" style="margin:0">${esc(note)}</p>` : ""}
+      <button class="tried" type="button" data-k="${k}" aria-pressed="${on}">${on ? "Tried it ✓" : "Mark as tried"}</button>
+    </div></details>`;
+}
+function progress(g){
+  const el = document.querySelector(`.progress[data-group="${g}"]`), n = R[g].length, d = R[g].filter(r => tried[g + ":" + id(r[0])]).length;
+  el.innerHTML = `<span>${d} of ${n} tried</span><span class="bar"><i style="width:${n ? d / n * 100 : 0}%"></i></span>`;
+}
+Object.keys(R).forEach(g => {
+  const box = document.querySelector(`.cards[data-group="${g}"]`);
+  box.innerHTML = R[g].map(r => card(g, r)).join("");
+  progress(g);
+  box.addEventListener("click", e => {
+    const b = e.target.closest(".tried"); if(!b) return;
+    const k = b.dataset.k; tried[k] = !tried[k]; if(!tried[k]) delete tried[k]; save();
+    const det = b.closest("details"), g2 = k.split(":")[0], r = R[g2].find(x => g2 + ":" + id(x[0]) === k);
+    const tmp = document.createElement("div"); tmp.innerHTML = card(g2, r); const fresh = tmp.firstElementChild; fresh.open = true;
+    det.replaceWith(fresh); progress(g2);
+  });
+});
+/* text size: Normal / Large / Extra large, remembered on this phone */
+const SIZES = ["Normal", "Large", "Extra large"];
+let size = 0;
+try{ size = +localStorage.getItem("mjskitchen.size") || 0; }catch(_){}
+const setSize = n => { size = n % 3; document.documentElement.dataset.size = size; document.getElementById("sizeLbl").textContent = SIZES[size]; try{ localStorage.setItem("mjskitchen.size", size); }catch(_){} };
+setSize(size);
+document.getElementById("size").addEventListener("click", () => setSize(size + 1));
+/* jump bar: highlight the section in view */
+const links = [...document.querySelectorAll("#jump a")], secs = links.map(a => document.querySelector(a.getAttribute("href")));
+function mark(){
+  let cur = 0; secs.forEach((s, i) => { if(s.getBoundingClientRect().top < 120) cur = i; });
+  if(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) cur = secs.length - 1;
+  const bar = document.getElementById("jump");
+  links.forEach((a, i) => { const on = i === cur; if(on && !a.classList.contains("on")) bar.scrollTo({left: Math.max(0, a.offsetLeft - 16), behavior: "smooth"}); a.classList.toggle("on", on); });
+}
+links.forEach((a, i) => a.addEventListener("click", e => { e.preventDefault(); secs[i].scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }));
+window.addEventListener("scroll", () => requestAnimationFrame(mark), {passive: true});
+mark();
+/* open a recipe named in the link (#sweet-potato) */
+const h = location.hash.slice(1), t = h && document.getElementById(h);
+if(t && t.tagName === "DETAILS"){ t.open = true; setTimeout(() => t.scrollIntoView(), 50); }
+})();
+</script>
+
+</body>
+</html>
