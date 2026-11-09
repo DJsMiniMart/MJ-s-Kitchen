@@ -110,13 +110,37 @@ details[open] .chev{transform:rotate(180deg);}
 .why p{margin:0;}
 .store{font-size:.88em;color:var(--dim);}
 .store b{color:var(--ink);}
-.tried{justify-self:start;font:600 15px var(--body);border:1.5px solid var(--pea);color:var(--pea);background:transparent;border-radius:999px;padding:6px 14px;cursor:pointer;}
-.tried[aria-pressed="true"]{background:var(--pea);color:var(--panel);}
 .done{font:600 12px var(--body);color:var(--pea);background:var(--pea-soft);border-radius:999px;padding:2px 8px;}
 .progress{display:flex;align-items:center;gap:10px;font-size:.85em;color:var(--dim);margin:-6px 0 14px;}
 .bar{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden;}
 .bar i{display:block;height:100%;background:var(--pea);border-radius:4px;transition:width .3s;}
 
+/* MJ's notes in each recipe */
+.badges{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:4px;}
+.badges:empty{display:none;}
+.stars{color:var(--carrot);letter-spacing:1px;font-size:.9em;} .stars .off{color:var(--line);}
+.mj{border-top:1px dashed var(--line);padding-top:12px;display:grid;gap:12px;}
+.fld{display:grid;gap:6px;font-weight:600;font-size:.92em;}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+input[type=date],textarea{font:400 1rem var(--body);font-size:max(16px,.95em);color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;}
+input[type=date]{min-width:0;flex:1;max-width:220px;}
+textarea{width:100%;resize:vertical;line-height:1.5;}
+input:focus,textarea:focus{outline:none;border-color:var(--pea);}
+.mini{font:600 15px var(--body);color:var(--pea);background:var(--pea-soft);border:0;border-radius:999px;padding:9px 16px;cursor:pointer;display:inline-block;}
+.rate{display:flex;gap:4px;}
+.rate button{width:44px;height:44px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--line);font-size:24px;line-height:1;cursor:pointer;padding:0;}
+.rate button.on{color:var(--carrot);border-color:var(--carrot);background:var(--carrot-soft);}
+.rlabel{font-weight:400;color:var(--dim);font-size:.9em;}
+.saved{font-size:.8em;color:var(--pea);min-height:1em;}
+/* food log */
+.log{list-style:none;margin:0;padding:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+.log li{border-bottom:1px solid var(--line);} .log li:last-child{border-bottom:0;}
+.log a{display:grid;grid-template-columns:auto 1fr auto;gap:2px 12px;align-items:center;padding:12px 14px;color:inherit;text-decoration:none;}
+.log .ld{color:var(--dim);font-size:.85em;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.log .ln{font-weight:600;min-width:0;}
+.log .lnote{grid-column:1/-1;color:var(--dim);font-size:.85em;}
+.log .empty{padding:14px;color:var(--dim);}
+.bk{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
 /* storage */
 .tw{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;}
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;}
@@ -149,11 +173,22 @@ footer ul{padding-left:18px;margin:8px 0 0;display:grid;gap:4px;}
 </header>
 
 <nav class="jump" aria-label="Jump to a section"><div class="wrap in" id="jump">
-  <a href="#start">Start here</a><a href="#method">Method</a><a href="#veggies">Veggies</a><a href="#fruits">Fruits</a>
+  <a href="#log">Food log</a><a href="#start">Start here</a><a href="#method">Method</a><a href="#veggies">Veggies</a><a href="#fruits">Fruits</a>
   <a href="#iron">Iron &amp; protein</a><a href="#allergens">Allergens</a><a href="#storage">Storage</a>
 </div></nav>
 
 <main class="wrap">
+
+<section id="log">
+  <h2>MJ's food log</h2>
+  <p class="lead" id="logSum"></p>
+  <ul class="log" id="logList"></ul>
+  <div class="bk">
+    <button type="button" class="mini" id="backup">Save a backup</button>
+    <label class="mini" for="restore">Restore a backup<input type="file" id="restore" accept="application/json,.json" hidden></label>
+  </div>
+  <p class="store" id="bkMsg">Dates, ratings and notes are saved on this phone only. Save a backup now and then, and use Restore on a new phone.</p>
+</section>
 
 <section id="start">
   <h2>Start here</h2>
@@ -333,40 +368,110 @@ const R = {
     ["Sesame", "berry", "2 min", false, ["Thin 1 teaspoon of tahini with warm water, or stir it into a puree your baby already eats."], "Sesame is now one of the most common food allergens; early tastes may help.", ""],
   ],
 };
-const KEY = "mjskitchen.tried";
-let tried = {};
-try{ tried = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }catch(_){ tried = {}; }
-const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(tried)); }catch(_){} };
+/* MJ's log, saved on this phone: {"group:food": {date:"YYYY-MM-DD", rating:1-5, notes:"..."}}. A food counts as tried once it has a date. */
+const KEY = "mjskitchen.log";
+let LOG = {};
+try{ LOG = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }catch(_){ LOG = {}; }
+try{ const old = JSON.parse(localStorage.getItem("mjskitchen.tried") || "{}") || {};   // earlier "Mark as tried" taps
+  Object.keys(old).forEach(k => { if(!LOG[k]) LOG[k] = {date: today()}; }); localStorage.removeItem("mjskitchen.tried"); }catch(_){}
+function today(){ const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }
+const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(LOG)); }catch(_){} };
+const entry = k => LOG[k] || {};
+const setEntry = (k, patch) => { const e = Object.assign({}, LOG[k], patch); Object.keys(e).forEach(x => { if(e[x] === "" || e[x] == null || e[x] === 0) delete e[x]; }); if(Object.keys(e).length) LOG[k] = e; else delete LOG[k]; save(); };
+const RATES = ["", "Spat it out", "Not a fan", "It's okay", "Liked it", "Loved it"];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
 const id = n => n.toLowerCase().replace(/[^a-z]+/g, "-");
+const nice = d => d ? new Date(d + "T12:00:00").toLocaleDateString("en-US", {month: "short", day: "numeric", year: "numeric"}) : "";
+const stars = n => n ? `<span class="stars" aria-label="${n} of 5: ${RATES[n]}">${"★".repeat(n)}<span class="off">${"★".repeat(5 - n)}</span></span>` : "";
+function badges(k){
+  const e = entry(k);
+  return e.date ? `<span class="done">Tried ${esc(nice(e.date))}</span>${stars(e.rating)}` : "";
+}
 function card(g, r){
-  const [name, color, time, freezes, steps, why, note] = r, k = g + ":" + id(name), on = !!tried[k];
-  return `<details class="card" id="${id(name)}">
+  const [name, color, time, freezes, steps, why, note] = r, k = g + ":" + id(name), e = entry(k);
+  return `<details class="card" id="${id(name)}" data-k="${k}">
     <summary><span class="dot" style="background:var(--${color})" aria-hidden="true">${esc(name[0])}</span>
-      <span><h3>${esc(name)} ${on ? `<span class="done">Tried</span>` : ""}</h3><span class="meta"><span>${esc(time)}</span><span>${freezes ? "Freezes well" : "Best fresh"}</span></span></span>
+      <span><h3>${esc(name)}</h3><span class="meta"><span>${esc(time)}</span><span>${freezes ? "Freezes well" : "Best fresh"}</span></span><span class="badges">${badges(k)}</span></span>
       <span class="chev" aria-hidden="true">&#9662;</span></summary>
     <div class="body">
       <div><h4>How to make it</h4><ol>${steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol></div>
       <div class="why"><h4>Why it's good</h4><p>${esc(why)}</p></div>
       ${note ? `<p class="store" style="margin:0">${esc(note)}</p>` : ""}
-      <button class="tried" type="button" data-k="${k}" aria-pressed="${on}">${on ? "Tried it ✓" : "Mark as tried"}</button>
+      <div class="mj">
+        <h4>MJ's notes</h4>
+        <label class="fld" for="d-${k}">First tried
+          <span class="row"><input type="date" id="d-${k}" data-f="date" value="${esc(e.date || "")}" max="${today()}"><button type="button" class="mini" data-today>Today</button></span></label>
+        <div class="fld"><span id="r-${k}">How much she liked it</span>
+          <span class="rate" role="radiogroup" aria-labelledby="r-${k}">${[1, 2, 3, 4, 5].map(n => `<button type="button" role="radio" aria-checked="${e.rating === n}" data-rate="${n}" title="${RATES[n]}" class="${e.rating >= n ? "on" : ""}">★</button>`).join("")}</span>
+          <span class="rlabel">${e.rating ? RATES[e.rating] : "Tap a star"}</span></div>
+        <label class="fld" for="n-${k}">Notes
+          <textarea id="n-${k}" data-f="notes" rows="3" placeholder="Texture, how much she ate, any reaction, what to try next…">${esc(e.notes || "")}</textarea></label>
+        <span class="saved" aria-live="polite"></span>
+      </div>
     </div></details>`;
 }
 function progress(g){
-  const el = document.querySelector(`.progress[data-group="${g}"]`), n = R[g].length, d = R[g].filter(r => tried[g + ":" + id(r[0])]).length;
+  const el = document.querySelector(`.progress[data-group="${g}"]`), n = R[g].length, d = R[g].filter(r => entry(g + ":" + id(r[0])).date).length;
   el.innerHTML = `<span>${d} of ${n} tried</span><span class="bar"><i style="width:${n ? d / n * 100 : 0}%"></i></span>`;
 }
+function refresh(card){
+  const k = card.dataset.k, e = entry(k);
+  card.querySelector(".badges").innerHTML = badges(k);
+  card.querySelectorAll("[data-rate]").forEach(b => { const n = +b.dataset.rate; b.classList.toggle("on", (e.rating || 0) >= n); b.setAttribute("aria-checked", e.rating === n); });
+  card.querySelector(".rlabel").textContent = e.rating ? RATES[e.rating] : "Tap a star";
+  const s = card.querySelector(".saved"); s.textContent = "Saved"; clearTimeout(s._t); s._t = setTimeout(() => s.textContent = "", 1500);
+  progress(k.split(":")[0]); drawLog();
+}
+const timers = {};
 Object.keys(R).forEach(g => {
   const box = document.querySelector(`.cards[data-group="${g}"]`);
   box.innerHTML = R[g].map(r => card(g, r)).join("");
   progress(g);
-  box.addEventListener("click", e => {
-    const b = e.target.closest(".tried"); if(!b) return;
-    const k = b.dataset.k; tried[k] = !tried[k]; if(!tried[k]) delete tried[k]; save();
-    const det = b.closest("details"), g2 = k.split(":")[0], r = R[g2].find(x => g2 + ":" + id(x[0]) === k);
-    const tmp = document.createElement("div"); tmp.innerHTML = card(g2, r); const fresh = tmp.firstElementChild; fresh.open = true;
-    det.replaceWith(fresh); progress(g2);
+  box.addEventListener("click", ev => {
+    const c = ev.target.closest("details.card"); if(!c) return;
+    const k = c.dataset.k;
+    const rb = ev.target.closest("[data-rate]");
+    if(rb){ const n = +rb.dataset.rate; setEntry(k, {rating: entry(k).rating === n ? 0 : n, date: entry(k).date || today()});
+      c.querySelector('[data-f="date"]').value = entry(k).date || ""; refresh(c); return; }
+    if(ev.target.closest("[data-today]")){ setEntry(k, {date: today()}); c.querySelector('[data-f="date"]').value = today(); refresh(c); }
   });
+  box.addEventListener("input", ev => {
+    const f = ev.target.dataset && ev.target.dataset.f; if(!f) return;
+    const c = ev.target.closest("details.card"), k = c.dataset.k, v = ev.target.value;
+    clearTimeout(timers[k + f]);
+    timers[k + f] = setTimeout(() => { setEntry(k, {[f]: f === "notes" ? v : v}); refresh(c); }, f === "notes" ? 500 : 0);
+  });
+});
+/* MJ's food log: everything she's tried, newest first */
+function drawLog(){
+  const all = [];
+  Object.keys(R).forEach(g => R[g].forEach(r => { const k = g + ":" + id(r[0]), e = entry(k); if(e.date) all.push({k, name: r[0], ...e}); }));
+  all.sort((a, b) => b.date.localeCompare(a.date) || a.name.localeCompare(b.name));
+  const total = Object.values(R).reduce((s, l) => s + l.length, 0);
+  const loved = all.filter(x => x.rating === 5).map(x => x.name);
+  document.getElementById("logSum").innerHTML = `<b>${all.length}</b> of ${total} foods tried${loved.length ? ` · Loves: ${loved.map(esc).join(", ")}` : ""}`;
+  document.getElementById("logList").innerHTML = all.length ? all.map(x => `<li><a href="#${id(x.name)}" data-open="${id(x.name)}"><span class="ld">${esc(nice(x.date))}</span><span class="ln">${esc(x.name)}</span>${stars(x.rating)}${x.notes ? `<span class="lnote">${esc(x.notes.length > 90 ? x.notes.slice(0, 88) + "…" : x.notes)}</span>` : ""}</a></li>`).join("")
+    : `<li class="empty">Nothing yet. Open any recipe below and set the date MJ first tried it; it shows up here with her rating and your notes.</li>`;
+}
+document.getElementById("logList").addEventListener("click", ev => {
+  const a = ev.target.closest("[data-open]"); if(!a) return; ev.preventDefault();
+  const d = document.getElementById(a.dataset.open); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); }
+});
+drawLog();
+/* backup: save the log as a file, or restore one (e.g. on a new phone) */
+document.getElementById("backup").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify({app: "mjs-kitchen", saved: new Date().toISOString(), log: LOG}, null, 2)], {type: "application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `mjs-kitchen-backup-${today()}.json`; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  document.getElementById("bkMsg").textContent = "Backup saved to your downloads.";
+});
+document.getElementById("restore").addEventListener("change", async ev => {
+  const f = ev.target.files[0]; if(!f) return;
+  const msg = document.getElementById("bkMsg");
+  try{ const d = JSON.parse(await f.text()); if(!d || typeof d.log !== "object") throw 0;
+    LOG = d.log; save(); location.reload(); }
+  catch(_){ msg.textContent = "That file isn't an MJ's Kitchen backup. Pick the .json file the Save a backup button made."; }
+  ev.target.value = "";
 });
 /* text size: Normal / Large / Extra large, remembered on this phone */
 const SIZES = ["Normal", "Large", "Extra large"];
