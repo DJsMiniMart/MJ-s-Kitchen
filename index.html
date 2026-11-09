@@ -189,7 +189,8 @@ body:not([data-tab="today"]) .hero h1{font-size:clamp(28px,7vw,40px);}
 #book section, #v-guide section{scroll-margin-top:72px;} #book .stagehead{scroll-margin-top:72px;}
 .jobs{display:grid;gap:10px;}
 .minehead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
-.cbtab.mine{border-color:var(--pea);color:var(--pea);} .cbtab.mine.on{color:#fff;}
+.meta .added{background:var(--pea);color:#fff;border-radius:999px;padding:1px 8px;font-size:.78em;font-weight:700;align-self:center;}
+details.flash{box-shadow:0 0 0 3px var(--pea);transition:box-shadow .4s;}
 .imp{display:grid;gap:12px;background:var(--panel);border:2px solid var(--pea);border-radius:14px;padding:14px;margin-bottom:12px;}
 .imp input[type=url]{font:400 16px var(--body);color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;}
 .imp textarea{font-size:16px;}
@@ -351,6 +352,8 @@ details.add summary::-webkit-details-marker{display:none;}
   <section>
     <h2>Cookbook</h2>
     <p class="lead" id="cbLead">Recipes by stage. New stages open up as MJ grows; you can always peek ahead.</p>
+    <div class="row"><button type="button" class="go" id="addRecipeBtn">+ Add a recipe</button></div>
+    <div id="importer"></div>
   </section>
   <nav class="cbtabs" aria-label="Cookbook sections"><div class="cbtabs-in" id="cbJump"></div></nav>
   <div id="book"></div>
@@ -702,10 +705,20 @@ const id = n => n.toLowerCase().replace(/[^a-z]+/g, "-");
 let HIDDEN = []; try{ HIDDEN = JSON.parse(localStorage.getItem("mjskitchen.hidden") || "[]") || []; }catch(_){ HIDDEN = []; }
 const shown = r => !HIDDEN.includes(r.k);
 let MINE = []; try{ MINE = JSON.parse(localStorage.getItem("mjskitchen.mine") || "[]") || []; }catch(_){ MINE = []; }
-MINE.forEach(m => R.push(Object.assign({g: "mine", custom: true, y: 0, u: ""}, m)));
-R.forEach(r => { r.id = r.custom ? r.cid : id(r.name); r.k = r.g + ":" + r.id; if(!r.custom) r.st = GROUPS[r.g].st; });
+function guessGroup(d){   // which cookbook section an added recipe belongs in: stage first, then what's in it
+  const st = +d.st || 1, txt = ((d.shop || []).join(" ") + " " + (d.name || "")).toLowerCase();
+  if(st >= 7) return "family"; if(st === 6) return "faves"; if(st === 5) return "little"; if(st === 4) return "toddler";
+  if(st === 3) return "finger"; if(st === 2) return "combos";
+  if(d.iron || d.meat || /\b(beef|lamb|chicken|turkey|pork|lentil|chickpea|black bean|kidney bean|tofu|iron-fortified|liver)/.test(txt)) return "iron";
+  if(d.allergen || /\b(peanut|egg|yogurt|yoghurt|cheese|wheat|salmon|fish|shrimp|sesame|tahini|almond|cashew|soy)/.test(txt)) return "allergens";
+  const fruit = /\b(apple|pear|banana|peach|plum|mango|berr|blueberr|strawberr|raspberr|prune|apricot|melon|kiwi|cherr|papaya|avocado)/;
+  const veg = /\b(carrot|peas?\b|squash|pumpkin|potato|broccoli|bean|spinach|zucchini|courgette|cauliflower|beet|parsnip|kale|corn|vegetable)/;
+  return fruit.test(txt) && !veg.test(txt) ? "fruits" : "veggies";
+}
+const PICKABLE = () => Object.keys(GROUPS).filter(g => !GROUPS[g].info && g !== "mine");
+MINE.forEach(m => { const g = m.g && GROUPS[m.g] && !GROUPS[m.g].info ? m.g : guessGroup(m); R.push(Object.assign({custom: true, y: 0, u: ""}, m, {g})); });
+R.forEach(r => { r.id = r.custom ? r.cid : id(r.name); r.k = r.custom ? "mine:" + r.cid : r.g + ":" + r.id; r.st = GROUPS[r.g].st; });
 const BYK = Object.fromEntries(R.map(r => [r.k, r]));
-GROUPS.mine = {st: 0, tab: "My recipes", title: "My recipes", lead: "Recipes you've added from the web or typed in, fitted to MJ's Kitchen."};
 const JOBS = [
   {age: "Age 3", note: "Big movements and simple steps. Pre-measure ingredients and let her dump them in.", list: ["Wash fruits and vegetables in a bowl of water", "Tear lettuce, spinach and herbs", "Stir cold ingredients in a big bowl", "Pour pre-measured ingredients into the bowl", "Mash bananas, avocado or beans with a fork or masher", "Sprinkle cheese, seeds and toppings", "Put muffin liners in the tin", "Wipe the table and carry unbreakable dishes"]},
   {age: "Age 4", note: "Everything at 3, plus jobs that need more control.", list: ["Crack eggs into a separate small bowl (fish out any shell together)", "Measure dry ingredients with measuring cups", "Spread with a butter knife (peanut butter, cream cheese, sauce)", "Peel bananas, clementines and hard-boiled eggs", "Cut soft foods (banana, strawberries, cooked potato) with a kid-safe nylon knife", "Shape meatballs, patties and dough balls", "Use cookie cutters on sandwiches, pancakes or cheese", "Squeeze lemons and oranges with a hand juicer"]},
@@ -870,7 +883,7 @@ function card(r){
   const e = entry(r.k), k = r.k;
   return `<details class="card" id="${r.id}" data-k="${k}">
     <summary><span class="dot" style="background:var(--dot-${r.c})" aria-hidden="true">${esc(r.name[0])}</span>
-      <span><h3>${esc(r.name)}</h3><span class="meta"><span>${r.m ? r.m + " min" : "No cook"}</span><span>${r.fz ? "Freezes well" : "Best fresh"}</span>${r.allergen ? `<span class="al">${esc(r.allergen)}</span>` : ""}${r.iron ? `<span class="fe" title="Iron-rich">Fe</span>` : ""}</span><span class="badges">${badges(k)}</span></span>
+      <span><h3>${esc(r.name)}</h3><span class="meta"><span>${r.m ? r.m + " min" : "No cook"}</span><span>${r.fz ? "Freezes well" : "Best fresh"}</span>${r.custom ? `<span class="added">Added</span>` : ""}${r.allergen ? `<span class="al">${esc(r.allergen)}</span>` : ""}${r.iron ? `<span class="fe" title="Iron-rich">Fe</span>` : ""}</span><span class="badges">${badges(k)}</span></span>
       <span class="chev" aria-hidden="true">&#9662;</span></summary>
     <div class="body">
       <div><h4>You'll need</h4><p class="store" style="margin:0">${r.shop.map(esc).join(" · ")}${r.y ? ` · makes about ${r.y} ${esc(r.u)}` : ""}</p></div>
@@ -898,13 +911,9 @@ function drawBook(){
   $("cbLead").textContent = a == null ? "Recipes by stage. Add MJ's birthday on the Today tab and the cookbook follows her age." : `MJ is in stage ${cur}: ${STAGES[cur].name.toLowerCase()}. Later stages open up as she grows; you can always peek ahead.`;
   const groups = Object.keys(GROUPS);
   const STAGE_TAB = {1: "6 mo", 2: "7–8 mo", 3: "9–11 mo", 4: "1 yr", 5: "2–3 yrs", 6: "3–5 yrs", 7: "5+ yrs"};
-  $("cbJump").innerHTML = `<a class="cbtab mine" href="#grp-mine" data-jumpto="grp-mine"><span>My recipes</span><small>${MINE.length ? MINE.length + " added" : "+ Add"}</small></a>` + groups.filter(g => g !== "mine").map(g => `<a class="cbtab${GROUPS[g].st > cur ? " later" : ""}" href="#grp-${g}" data-jumpto="grp-${g}"><span>${esc(GROUPS[g].tab)}</span><small>${STAGE_TAB[GROUPS[g].st]}</small></a>`).join("");
-  const mine = R.filter(r => r.g === "mine");
-  let html = `<section id="grp-mine"><div class="minehead"><h2>My recipes</h2><button type="button" class="go" id="addRecipeBtn">+ Add a recipe</button></div>
-    <p class="lead">${mine.length ? "Recipes you've added, fitted to MJ's Kitchen." : "Found a recipe online? Paste its web address and MJ's Kitchen pulls out just the recipe and fits it to this cookbook, with checks for her age."}</p>
-    <div id="importer"></div>${mine.length ? `<div class="cards">${mine.map(card).join("")}</div>` : ""}</section>`, lastSt = 0;
+  $("cbJump").innerHTML = groups.map(g => `<a class="cbtab${GROUPS[g].st > cur ? " later" : ""}" href="#grp-${g}" data-jumpto="grp-${g}"><span>${esc(GROUPS[g].tab)}</span><small>${STAGE_TAB[GROUPS[g].st]}</small></a>`).join("");
+  let html = "", lastSt = 0;
   groups.forEach(g => {
-    if(g === "mine") return;
     const G = GROUPS[g], list = R.filter(r => r.g === g && shown(r)), st = G.st, later = st > cur;
     if(G.info){
       if(st !== lastSt){ lastSt = st; const S2 = STAGES[st];
@@ -1040,20 +1049,20 @@ function drawImporter(){
     $("impBlank").onclick = () => startDraft({name: "", shop: [], steps: [], src: ""});
     return;
   }
-  const opts = [1, 2, 3, 4, 5, 6, 7].map(n => `<option value="${n}"${+d.st === n ? " selected" : ""}>${esc(STAGES[n].ages)}: ${esc(STAGES[n].name)}</option>`).join("");
+  const opts = PICKABLE().map(g => `<option value="${g}"${d.g === g ? " selected" : ""}>${esc(GROUPS[g].tab)} (${esc(STAGES[GROUPS[g].st].ages)})</option>`).join("");
   el.innerHTML = `<form class="imp" id="impForm">
     <p class="store" style="margin:0">${d.src ? `From <a href="${esc(d.src)}" target="_blank" rel="noopener">${esc(new URL(d.src).hostname.replace(/^www\./, ""))}</a>. ` : ""}Check it over, fix anything, then save.</p>
     <label class="fld" for="dName">Recipe name<input type="text" id="dName" value="${esc(d.name)}" required></label>
-    <div class="row2"><label class="fld" for="dStage">Best for<select id="dStage">${opts}</select></label>
-      <label class="fld" for="dMin">Minutes<input type="number" id="dMin" min="0" max="600" inputmode="numeric" value="${d.m || ""}"></label></div>
+    <label class="fld" for="dGroup">Cookbook section<select id="dGroup">${opts}</select></label>
+    <div class="row2"><label class="fld" for="dMin">Minutes<input type="number" id="dMin" min="0" max="600" inputmode="numeric" value="${d.m || ""}"></label></div>
     <label class="chk"><input type="checkbox" id="dFz"${d.fz ? " checked" : ""}> Freezes well (shows in the freezer tools)</label>
     <label class="fld" for="dShop">Ingredients <span class="rlabel">one per line</span><textarea id="dShop" rows="6">${esc((d.shop || []).join("\n"))}</textarea></label>
     <label class="fld" for="dSteps">Steps <span class="rlabel">one per line</span><textarea id="dSteps" rows="7">${esc((d.steps || []).join("\n"))}</textarea></label>
     <label class="fld" for="dWhy">Why it's good <span class="rlabel">filled in from the ingredients</span><textarea id="dWhy" rows="2">${esc(d.why || "")}</textarea></label>
     <label class="fld" for="dNote">Notes <span class="rlabel">(optional)</span><input type="text" id="dNote" value="${esc(d.note || "")}" placeholder="e.g. cut into strips for MJ, skip the salt"></label>
     <div id="dSafe">${safetyHtml(d)}</div>
-    <div class="row"><button type="submit" class="go">${IMP.editing ? "Save changes" : "Save to My recipes"}</button><button type="button" class="mini" id="dCancel">Cancel</button></div></form>`;
-  const sync = () => { d.name = $("dName").value; d.st = +$("dStage").value; d.m = +$("dMin").value || 0; d.fz = $("dFz").checked;
+    <div class="row"><button type="submit" class="go">${IMP.editing ? "Save changes" : "Save to the cookbook"}</button><button type="button" class="mini" id="dCancel">Cancel</button></div></form>`;
+  const sync = () => { d.name = $("dName").value; d.g = $("dGroup").value; d.st = GROUPS[d.g].st; d.m = +$("dMin").value || 0; d.fz = $("dFz").checked;
     d.shop = $("dShop").value.split("\n").map(x => x.trim()).filter(Boolean); d.steps = $("dSteps").value.split("\n").map(x => x.trim()).filter(Boolean);
     d.why = $("dWhy").value.trim(); d.note = $("dNote").value.trim(); $("dSafe").innerHTML = safetyHtml(d); };
   $("impForm").addEventListener("input", sync); $("impForm").addEventListener("change", sync);
@@ -1063,6 +1072,7 @@ function drawImporter(){
 function startDraft(p){
   const a = analyze(p);
   IMP.draft = Object.assign({st: stageNow(), m: p.m || 0, fz: /freez/i.test((p.steps || []).join(" ")), why: a.why, note: p.yield ? `Makes ${p.yield}.` : ""}, p);
+  if(!IMP.draft.g || !GROUPS[IMP.draft.g]) IMP.draft.g = guessGroup(IMP.draft); IMP.draft.st = GROUPS[IMP.draft.g].st;
   IMP.msg = ""; drawImporter(); $("importer").scrollIntoView({behavior: "smooth", block: "start"});
 }
 async function doImport(){
@@ -1078,21 +1088,22 @@ async function doImport(){
 function saveDraft(){
   const d = IMP.draft; if(!d.name.trim()){ toast("Give the recipe a name"); return; }
   const a = analyze(d), pal = ["carrot", "pea", "berry"];
-  const rec = {cid: IMP.editing || ("m" + uid()), name: d.name.trim(), st: +d.st || 1, m: +d.m || 0, fz: !!d.fz, shop: d.shop.length ? d.shop : ["(no ingredients listed)"], steps: d.steps.length ? d.steps : ["(no steps listed)"],
+  const g = d.g && GROUPS[d.g] ? d.g : guessGroup(d);
+  const rec = {cid: IMP.editing || ("m" + uid()), name: d.name.trim(), g, st: GROUPS[g].st, m: +d.m || 0, fz: !!d.fz, shop: d.shop.length ? d.shop : ["(no ingredients listed)"], steps: d.steps.length ? d.steps : ["(no steps listed)"],
     why: d.why || "Your own recipe.", note: d.note || "", src: d.src || "", iron: a.iron, meat: a.meat, allergen: a.allergens[0] || "", c: pal[(d.name.length) % 3]};
   const i = MINE.findIndex(m => m.cid === rec.cid);
   if(i >= 0) MINE[i] = rec; else MINE.push(rec);
   try{ localStorage.setItem("mjskitchen.mine", JSON.stringify(MINE)); }catch(_){}
-  const full = Object.assign({g: "mine", custom: true, y: 0, u: "", id: rec.cid, k: "mine:" + rec.cid}, rec);
+  const full = Object.assign({custom: true, y: 0, u: "", id: rec.cid, k: "mine:" + rec.cid}, rec);
   const j = R.findIndex(r => r.k === full.k); if(j >= 0) R[j] = full; else R.push(full); BYK[full.k] = full;
-  const was = IMP.editing; IMP = {open: false}; drawAll(); toast(was ? "Recipe updated" : `${rec.name} added to My recipes`);
-  setTimeout(() => { const el = $(rec.cid); if(el){ el.open = true; el.scrollIntoView({behavior: "smooth", block: "start"}); } }, 80);
+  const was = IMP.editing; IMP = {open: false}; drawAll(); toast(was ? "Recipe updated" : `${rec.name} added to ${GROUPS[g].title}`);
+  setTimeout(() => { const el = $(rec.cid); if(el){ el.open = false; el.scrollIntoView({behavior: "smooth", block: "center"}); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 2400); } }, 80);
 }
 document.addEventListener("click", e => {
   const hd = e.target.closest("[data-hide]"); if(hd){ HIDDEN = [...new Set(HIDDEN.concat(hd.dataset.hide))]; try{ localStorage.setItem("mjskitchen.hidden", JSON.stringify(HIDDEN)); }catch(_){} const n = BYK[hd.dataset.hide]; drawAll(); toast(`${n ? n.name : "Recipe"} hidden · bring it back under Hidden recipes at the end of the Cookbook`); return; }
   const uh = e.target.closest("[data-unhide]"); if(uh){ HIDDEN = HIDDEN.filter(k => k !== uh.dataset.unhide); try{ localStorage.setItem("mjskitchen.hidden", JSON.stringify(HIDDEN)); }catch(_){} drawAll(); toast("Recipe is back"); return; }
   if(e.target.closest("#addRecipeBtn")){ IMP = {open: true}; drawImporter(); setTimeout(() => { const u = $("impUrl"); if(u) u.focus(); }, 30); return; }
-  const ed = e.target.closest("[data-edit]"); if(ed){ const r = MINE.find(m => m.cid === ed.dataset.edit); if(r){ IMP = {open: true, editing: r.cid, draft: JSON.parse(JSON.stringify(r))}; drawImporter(); $("importer").scrollIntoView({behavior: "smooth"}); } return; }
+  const ed = e.target.closest("[data-edit]"); if(ed){ const r = MINE.find(m => m.cid === ed.dataset.edit); if(r){ IMP = {open: true, editing: r.cid, draft: Object.assign(JSON.parse(JSON.stringify(r)), {g: (BYK["mine:" + r.cid] || {}).g || guessGroup(r)})}; drawImporter(); $("importer").scrollIntoView({behavior: "smooth"}); } return; }
   const dl = e.target.closest("[data-del-recipe]"); if(dl){
     if(dl.dataset.sure !== "1"){ dl.dataset.sure = "1"; dl.textContent = "Tap again to delete"; setTimeout(() => { if(dl.isConnected){ dl.dataset.sure = ""; dl.textContent = "Delete"; } }, 4000); return; }
     const cid = dl.dataset.delRecipe; MINE = MINE.filter(m => m.cid !== cid); try{ localStorage.setItem("mjskitchen.mine", JSON.stringify(MINE)); }catch(_){}
