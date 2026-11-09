@@ -186,6 +186,35 @@ body:not([data-tab="today"]) .hero h1{font-size:clamp(28px,7vw,40px);}
 .cbtab small{font:600 11px var(--body);color:var(--dim);letter-spacing:.02em;}
 .cbtab.later{border-style:dashed;border-color:var(--berry);}
 .cbtab.on{background:var(--pea);border-color:var(--pea);color:#fff;} .cbtab.on small{color:#fff;opacity:.9;}
+.cbbody{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:start;margin-top:8px;}
+.cbrail{position:sticky;top:calc(8px + env(safe-area-inset-top,0px));display:grid;gap:6px;max-height:calc(100vh - 110px);overflow-y:auto;scrollbar-width:none;padding-bottom:8px;}
+.cbrail::-webkit-scrollbar{display:none;}
+.rail{display:grid;justify-items:center;gap:1px;padding:8px 3px;border-radius:14px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);font:600 10.5px/1.15 var(--body);text-align:center;cursor:pointer;}
+.rail b{font:700 22px/1 var(--display);color:var(--pea);}
+.rail small{font:700 11px/1.2 var(--body);}
+.rail span{color:var(--dim);font-weight:500;}
+.rail em{font:700 9.5px var(--body);font-style:normal;text-transform:uppercase;letter-spacing:.06em;color:#fff;background:var(--pea);border-radius:999px;padding:1px 6px;margin-top:2px;}
+.rail.later{border-style:dashed;border-color:var(--berry);}
+.rail.mine{margin-top:6px;border-color:var(--pea);}
+.rail.on{background:var(--pea);border-color:var(--pea);color:#fff;} .rail.on b,.rail.on span{color:#fff;} .rail.on em{background:#fff;color:var(--pea);}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) :is(.rail.on, .rail.on b, .rail.on span, .cbtab.on, .cbtab.on small){color:var(--bg);} :root:not([data-theme="light"]) .rail.on em{background:var(--bg);} }
+:root[data-theme="dark"] :is(.rail.on, .rail.on b, .rail.on span, .cbtab.on, .cbtab.on small){color:var(--bg);} :root[data-theme="dark"] .rail.on em{background:var(--bg);}
+.cbmain .cbtabs{margin:0;top:env(safe-area-inset-top,0px);} .cbmain .cbtabs-in{padding:0 0 10px;}
+.cbmain .stagehead:first-child{margin-top:0;}
+.cbmain .cards{grid-template-columns:minmax(0,1fr);}
+.nextst{margin-top:22px;width:100%;}
+.minesub{margin:22px 0 8px;font:700 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--pea);}
+.sim{display:grid;gap:8px;}
+.sim:empty{display:none;}
+.sim h4{margin:0;}
+.simlist{list-style:none;margin:0;padding:0;display:grid;gap:8px;}
+.simlist li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--bg);}
+.simlist li div{display:grid;gap:2px;min-width:0;}
+.simlist a{font-weight:600;font-size:.92em;line-height:1.3;overflow-wrap:anywhere;}
+.simlist .rlabel{font-size:.8em;}
+.simlist .row{gap:8px;}
+.idea{padding:12px 14px;border:1.5px solid var(--line);border-radius:16px;background:var(--panel);margin-bottom:12px;display:grid;gap:8px;}
+.idea > b{font:600 1.15em var(--display);}
 #book section, #v-guide section{scroll-margin-top:72px;} #book .stagehead{scroll-margin-top:72px;}
 .jobs{display:grid;gap:10px;}
 .minehead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
@@ -355,8 +384,13 @@ details.add summary::-webkit-details-marker{display:none;}
     <div class="row"><button type="button" class="go" id="addRecipeBtn">+ Add a recipe</button></div>
     <div id="importer"></div>
   </section>
-  <nav class="cbtabs" aria-label="Cookbook sections"><div class="cbtabs-in" id="cbJump"></div></nav>
-  <div id="book"></div>
+  <div class="cbbody">
+    <nav class="cbrail" id="cbRail" aria-label="Cookbook stages"></nav>
+    <div class="cbmain">
+      <nav class="cbtabs" id="cbTabs" aria-label="Sections in this stage"><div class="cbtabs-in" id="cbJump"></div></nav>
+      <div id="book"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ============ FRIDGE & FREEZER ============ -->
@@ -823,12 +857,13 @@ function drawNext(){
     out.push({tag: "From the freezer", tone: d < 0 ? "warn" : "carrot", title: `${r ? r.name : "Batch"}: ${soon.left} ${unitName(soon, soon.left)} left`, text: d < 0 ? `Past its 1-month use-by (${nice(useBy(soon))}). Throw these out.` : `Use by ${nice(useBy(soon))}${d === 0 ? " (today)" : ` (${d} day${d === 1 ? "" : "s"})`}.`}); }
   // 5) a favorite
   const fav = R.filter(r => entry(r.k).rating === 5).sort((a, b) => (lastHad(a.k) || "").localeCompare(lastHad(b.k) || ""))[0];
-  if(fav) out.push({tag: "She loves", tone: "pea", title: fav.name, k: fav.k, text: `Rated 5 stars${lastHad(fav.k) ? `; last had ${nice(lastHad(fav.k))}` : ""}. Mix in a newer food to make it more interesting.`});
+  if(fav){ const sc = SIMC[fav.k], n = sc && sc.list ? sc.list.length : 0;
+    out.push({tag: "She loves", tone: "pea", title: fav.name, k: fav.k, ideas: true, text: `Rated 5 stars${lastHad(fav.k) ? `; last had ${nice(lastHad(fav.k))}` : ""}. ${n ? `${n} similar recipe${n === 1 ? "" : "s"} found on the web.` : "Mix in a newer food to make it more interesting."}`}); }
   // 6) stage ahead
   const a = ageMonths();
   if(a != null && st < LAST && STAGES[st + 1].from - a <= 1) out.push({tag: "Coming up", tone: "berry", title: `${STAGES[st + 1].name} at ${atAge(STAGES[st + 1].from)}`, text: `Ready when: ${STAGES[st].next} Peek at the recipes in the Cookbook.`});
   if(!out.length) out.push({tag: "All set", tone: "pea", title: "She's tried everything at her stage", text: "Keep variety going with combos, and check the Cookbook for what opens up next."});
-  $("next").innerHTML = out.slice(0, 5).map(o => `<div class="nx t-${o.tone}"><span class="tag">${esc(o.tag)}</span><b>${esc(o.title)}</b><p>${esc(o.text)}</p>${o.k ? `<a href="#cookbook" data-go="${o.k}">Open recipe ›</a>` : ""}</div>`).join("");
+  $("next").innerHTML = out.slice(0, 5).map(o => `<div class="nx t-${o.tone}"><span class="tag">${esc(o.tag)}</span><b>${esc(o.title)}</b><p>${esc(o.text)}</p>${o.k ? `<a href="#cookbook" data-go="${o.k}">Open recipe ›</a>` : ""}${o.ideas ? ` <a href="#cookbook" data-cbgo="ideas">Similar recipes ›</a>` : ""}</div>`).join("");
 }
 
 /* ---------- meal log ---------- */
@@ -900,41 +935,147 @@ function card(r){
         <div class="fld"><span id="r-${k}">How much she liked it</span>
           <span class="rate" role="radiogroup" aria-labelledby="r-${k}">${[1, 2, 3, 4, 5].map(n => `<button type="button" role="radio" aria-checked="${e.rating === n}" data-rate="${n}" title="${RATES[n]}" class="${e.rating >= n ? "on" : ""}">★</button>`).join("")}</span>
           <span class="rlabel">${e.rating ? RATES[e.rating] : "Tap a star"}</span></div>
+        <div class="sim" data-sim="${esc(k)}">${simHtml(r)}</div>
         <label class="fld" for="n-${k}">Reaction log
           <textarea id="n-${k}" data-f="notes" rows="3" placeholder="Any reaction? Rash, hives, vomiting, fussiness, gas, constipation… or none. Plus how much she ate.">${esc(e.notes || "")}</textarea></label>
         <div class="row">${r.fz ? `<button type="button" class="mini" data-tofreezer>Add a batch to the fridge or freezer</button>` : ""}<span class="saved" aria-live="polite"></span></div>
       </div>
     </div></details>`;
 }
+/* the cookbook shows one stage at a time; the rail on the left picks it, "My recipes" is the last stop */
+let CBSEL = S.get("mjskitchen.cbst", null);
+const cbSel = () => CBSEL === "mine" || (CBSEL >= 1 && CBSEL <= LAST) ? CBSEL : stageNow();
+function setStage(v, top){ CBSEL = v; S.set("mjskitchen.cbst", v); drawBook(); if(top !== false){ const b = document.querySelector(".cbbody"); if(b && b.getBoundingClientRect().top < 0) b.scrollIntoView({block: "start"}); } setTimeout(markTab, 30); }
+const STAGE_TAB = {1: "6 mo", 2: "7–8 mo", 3: "9–11 mo", 4: "1 yr", 5: "2–3 yrs", 6: "3–5 yrs", 7: "5+ yrs"};
+const STAGE_SHORT = {1: "Purees", 2: "Combos", 3: "Finger foods", 4: "Family foods", 5: "Toddler", 6: "Kid meals", 7: "Family"};
+function stageHead(st, cur, a){
+  const S2 = STAGES[st], later = st > cur;
+  return `<div class="stagehead${later ? " later" : ""}${st === cur ? " now" : ""}" id="stage-${st}"><span>Stage ${st} · ${esc(S2.ages)}</span><b>${esc(S2.name)}</b>${later && a != null ? `<em>Opens at ${atAge(S2.from)}${BDAY ? ` (${nice(addMonths(BDAY, S2.from))})` : ""}</em>` : st === cur && a != null ? `<em>Her stage now</em>` : ""}</div>`;
+}
 function drawBook(){
-  const cur = stageNow(), a = ageMonths();
-  $("cbLead").textContent = a == null ? "Recipes by stage. Add MJ's birthday on the Today tab and the cookbook follows her age." : `MJ is in stage ${cur}: ${STAGES[cur].name.toLowerCase()}. Later stages open up as she grows; you can always peek ahead.`;
-  const groups = Object.keys(GROUPS);
-  const STAGE_TAB = {1: "6 mo", 2: "7–8 mo", 3: "9–11 mo", 4: "1 yr", 5: "2–3 yrs", 6: "3–5 yrs", 7: "5+ yrs"};
-  $("cbJump").innerHTML = groups.map(g => `<a class="cbtab${GROUPS[g].st > cur ? " later" : ""}" href="#grp-${g}" data-jumpto="grp-${g}"><span>${esc(GROUPS[g].tab)}</span><small>${STAGE_TAB[GROUPS[g].st]}</small></a>`).join("");
-  let html = "", lastSt = 0;
-  groups.forEach(g => {
-    const G = GROUPS[g], list = R.filter(r => r.g === g && shown(r)), st = G.st, later = st > cur;
-    if(G.info){
-      if(st !== lastSt){ lastSt = st; const S2 = STAGES[st];
-        html += `<div class="stagehead${later ? " later" : ""}${st === cur ? " now" : ""}" id="stage-${st}"><span>Stage ${st} · ${esc(S2.ages)}</span><b>${esc(S2.name)}</b>${later && a != null ? `<em>Opens at ${atAge(S2.from)}${BDAY ? ` (${nice(addMonths(BDAY, S2.from))})` : ""}</em>` : st === cur && a != null ? `<em>Her stage now</em>` : ""}</div>`; }
+  const cur = stageNow(), a = ageMonths(), sel = cbSel();
+  $("cbLead").textContent = a == null ? "Pick a stage on the left. Add MJ's birthday on the Today tab and the cookbook follows her age." : `MJ is in stage ${cur}: ${STAGES[cur].name.toLowerCase()}. Pick any stage on the left to peek ahead or look back.`;
+  const mineN = R.filter(r => r.custom).length;
+  $("cbRail").innerHTML = [1, 2, 3, 4, 5, 6, 7].map(n => `<button type="button" class="rail${n === sel ? " on" : ""}${n > cur ? " later" : ""}" data-st="${n}" aria-pressed="${n === sel}"><b>${n}</b><small>${STAGE_TAB[n]}</small><span>${STAGE_SHORT[n]}</span>${n === cur && a != null ? "<em>Now</em>" : ""}</button>`).join("")
+    + `<button type="button" class="rail mine${sel === "mine" ? " on" : ""}" data-st="mine" aria-pressed="${sel === "mine"}"><b>&#9829;</b><small>My recipes</small><span>${mineN ? mineN + " added" : "Add yours"}</span></button>`;
+  let html = "";
+  if(sel === "mine"){
+    $("cbTabs").hidden = true;
+    const mine = R.filter(r => r.custom);
+    html += `<section id="grp-mine"><h2>My recipes</h2><p class="lead">${mine.length ? "Every recipe you've added. Each one also sits in its own stage of the cookbook." : "Recipes you add show up here, and in the right stage of the cookbook."}</p>`;
+    if(!mine.length) html += `<button type="button" class="go" data-addnew>+ Add a recipe</button>`;
+    [1, 2, 3, 4, 5, 6, 7].forEach(st => { const list = mine.filter(r => r.st === st); if(!list.length) return;
+      html += `<p class="minesub">Stage ${st} · ${esc(STAGES[st].ages)}</p><div class="cards">${list.map(card).join("")}</div>`; });
+    html += `</section>`;
+    const loved = R.filter(r => entry(r.k).rating >= 4 && shown(r)).sort((x, y) => entry(y.k).rating - entry(x.k).rating || (entry(y.k).date || "").localeCompare(entry(x.k).date || ""));
+    html += `<section id="grp-ideas"><h2>More like her favorites</h2><p class="lead">When she gives a recipe 5 stars, MJ's Kitchen searches the web for similar recipes for her age. 4-star recipes get a button to search. Tap <b>+ Add</b> on one you like and it's fitted to the cookbook like any other.</p>
+      ${loved.length ? loved.map(r => `<div class="idea"><b>${esc(r.name)}</b><span class="rlabel">${"★".repeat(entry(r.k).rating)} · Stage ${r.st} · ${esc(GROUPS[r.g].title)}</span><div class="sim" data-sim="${esc(r.k)}">${simHtml(r, true)}</div></div>`).join("")
+        : `<div class="note">Nothing rated 4 or 5 stars yet. Rate recipes in the cookbook and ideas will show up here.</div>`}</section>`;
+  } else {
+    const st = sel, groups = Object.keys(GROUPS).filter(g => GROUPS[g].st === st);
+    $("cbTabs").hidden = groups.length < 2;
+    $("cbJump").innerHTML = groups.map(g => `<a class="cbtab" href="#grp-${g}" data-jumpto="grp-${g}"><span>${esc(GROUPS[g].tab)}</span><small>${GROUPS[g].info ? "for kids" : R.filter(r => r.g === g && shown(r)).length + " recipes"}</small></a>`).join("");
+    html += stageHead(st, cur, a);
+    const later = st > cur;
+    groups.forEach(g => {
+      const G = GROUPS[g], list = R.filter(r => r.g === g && shown(r));
+      if(G.info){
+        html += `<section id="grp-${g}" class="${later ? "later" : ""}"><h2>${esc(G.title)}</h2><p class="lead">${esc(G.lead)}</p>
+          <div class="jobs">${JOBS.map(j => `<div class="job"><b>${esc(j.age)}</b><p>${esc(j.note)}</p><ul>${j.list.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}</div>
+          <div class="note warn"><b>Kitchen safety:</b> ${esc(JOB_RULES)}</div></section>`;
+        return;
+      }
+      const d = list.filter(r => tried(r.k)).length;
       html += `<section id="grp-${g}" class="${later ? "later" : ""}"><h2>${esc(G.title)}</h2><p class="lead">${esc(G.lead)}</p>
-        <div class="jobs">${JOBS.map(j => `<div class="job"><b>${esc(j.age)}</b><p>${esc(j.note)}</p><ul>${j.list.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}</div>
-        <div class="note warn"><b>Kitchen safety:</b> ${esc(JOB_RULES)}</div></section>`;
-      return;
-    }
-    if(st !== lastSt){ lastSt = st; const S2 = STAGES[st];
-      html += `<div class="stagehead${later ? " later" : ""}${st === cur ? " now" : ""}"><span>Stage ${st} · ${esc(S2.ages)}</span><b>${esc(S2.name)}</b>${later && a != null ? `<em>Opens at ${atAge(S2.from)}${BDAY ? ` (${nice(addMonths(BDAY, S2.from))})` : ""}</em>` : st === cur && a != null ? `<em>Her stage now</em>` : ""}</div>`; }
-    const d = list.filter(r => tried(r.k)).length;
-    html += `<section id="grp-${g}" class="${later ? "later" : ""}"><h2>${esc(G.title)}</h2><p class="lead">${esc(G.lead)}</p>
-      <div class="progress"><span>${d} of ${list.length} tried</span><span class="bar"><i style="width:${d / list.length * 100}%"></i></span></div>
-      <div class="cards">${list.map(card).join("")}</div></section>`;
-  });
-  if(HIDDEN.length) html += `<section id="grp-hidden"><h2>Hidden recipes</h2><p class="lead">Recipes you've hidden. Tap Show to put one back.</p>
-    <ul class="frz">${HIDDEN.map(k => BYK[k]).filter(Boolean).map(r => `<li><div><b>${esc(r.name)}</b><span class="rlabel">${esc(GROUPS[r.g].title)} · ${esc(STAGES[r.st].ages)}</span></div><button type="button" class="mini" data-unhide="${esc(r.k)}">Show</button></li>`).join("")}</ul></section>`;
+        <div class="progress"><span>${d} of ${list.length} tried</span><span class="bar"><i style="width:${list.length ? d / list.length * 100 : 0}%"></i></span></div>
+        <div class="cards">${list.map(card).join("")}</div></section>`;
+    });
+    const hid = HIDDEN.map(k => BYK[k]).filter(r => r && r.st === st);
+    if(hid.length) html += `<section id="grp-hidden"><h2>Hidden recipes</h2><p class="lead">Recipes you've hidden from this stage. Tap Show to put one back.</p>
+      <ul class="frz">${hid.map(r => `<li><div><b>${esc(r.name)}</b><span class="rlabel">${esc(GROUPS[r.g].title)}</span></div><button type="button" class="mini" data-unhide="${esc(r.k)}">Show</button></li>`).join("")}</ul></section>`;
+    html += `<button type="button" class="go nextst" data-st="${st < LAST ? st + 1 : "mine"}">${st < LAST ? `Next: stage ${st + 1}, ${esc(STAGES[st + 1].name.toLowerCase())} ›` : "Next: My recipes ›"}</button>`;
+  }
   $("book").innerHTML = html;
   drawImporter();
 }
+$("cbRail").addEventListener("click", e => { const b = e.target.closest("[data-st]"); if(b) setStage(b.dataset.st === "mine" ? "mine" : +b.dataset.st); });
+$("book").addEventListener("click", e => { const b = e.target.closest(".nextst"); if(b) setStage(b.dataset.st === "mine" ? "mine" : +b.dataset.st); });
+
+/* ---------- similar recipes from the web, for the ones she loves ---------- */
+let SIMC = S.get("mjskitchen.similar", {}) || {};
+const SIMBUSY = {};
+const SIM_STOP = new Set("easy best the a an and with of for my baby toddler kids kid homemade simple quick healthy super perfect recipe recipes style puree mash i ii".split(" "));
+const MAINS = ["pork chop", "pork tenderloin", "pulled pork", "meatball", "chicken nugget", "chicken", "turkey", "beef", "steak", "salmon", "fish", "shrimp", "lentil", "chickpea", "bean", "tofu", "egg", "pasta", "mac and cheese", "rice", "quinoa", "oat", "pancake", "waffle", "muffin", "soup", "stew", "casserole", "taco", "pizza", "quesadilla", "sweet potato", "squash", "carrot", "pea", "broccoli", "spinach", "apple", "pear", "banana", "mango", "berry", "peach", "avocado", "yogurt"];
+function simQueries(r){
+  const nm = r.name.toLowerCase().replace(/&/g, " and ").replace(/\(.*?\)/g, " ");
+  const words = nm.replace(/[^a-z\s'-]/g, " ").split(/\s+/).filter(w => w && !SIM_STOP.has(w));
+  const who = r.st === 1 ? "baby puree" : r.st <= 3 ? "baby" : r.st === 4 ? "toddler" : r.st <= 6 ? "kids" : "family dinner";
+  const main = MAINS.find(m => nm.includes(m));
+  const q = [`${words.join(" ")} recipe ${who}`];
+  if(main && words.join(" ") !== main) q.push(`${main} recipes ${r.st >= 7 ? "family dinner" : "for " + who.replace(" puree", "")}`);
+  return q;
+}
+const SEARCH = [q => `https://html.duckduckgo.com/html/?q=${encodeURIComponent(q)}`, q => `https://www.bing.com/search?q=${encodeURIComponent(q)}`];
+const NOT_RECIPE_HOST = /(^|\.)(duckduckgo|bing|microsoft|msn|google|youtube|youtu|facebook|instagram|pinterest|tiktok|twitter|x|amazon|walmart|target|reddit|wikipedia|quora|jina|allorigins|codetabs|yahoo)\.[a-z.]+$/;
+function decodeHit(h){
+  if(!h) return null; if(h.startsWith("//")) h = "https:" + h;
+  let u; try{ u = new URL(h, "https://duckduckgo.com/"); }catch(_){ return null; }
+  if(/duckduckgo\.com$/.test(u.hostname) && u.searchParams.get("uddg")) return decodeHit(u.searchParams.get("uddg"));
+  if(/bing\.com$/.test(u.hostname) && u.searchParams.get("u")){ const x = u.searchParams.get("u"); if(/^a1/.test(x)){ try{ return decodeHit(atob(x.slice(2).replace(/-/g, "+").replace(/_/g, "/"))); }catch(_){} } return null; }
+  if(!/^https?:$/.test(u.protocol)) return null;
+  u.hash = ""; return u.href;
+}
+function parseHits(txt){
+  const out = [];
+  const add = (title, href) => { const url = decodeHit(href); title = clean(title).replace(/\s*[|–-]\s*[^|–-]{0,40}$/, m => m.length < title.length / 2 ? "" : m);
+    if(!url || title.length < 12 || title.length > 140) return; let host; try{ host = new URL(url).hostname.replace(/^www\./, ""); }catch(_){ return; }
+    if(NOT_RECIPE_HOST.test(host) || !/recipe|recipes/i.test(url + " " + title)) return; if(new URL(url).pathname.length < 3) return;
+    out.push({title, url, host}); };
+  if(/<a[\s>]/i.test(txt)) new DOMParser().parseFromString(txt, "text/html").querySelectorAll("a[href]").forEach(a => add(a.textContent, a.getAttribute("href")));
+  for(const m of txt.matchAll(/\[([^\]]{12,160})\]\((https?:\/\/[^)\s]+)\)/g)) add(m[1], m[2]);
+  return out;
+}
+async function findSimilar(k, force){
+  const r = BYK[k]; if(!r || SIMBUSY[k]) return;
+  const c = SIMC[k]; if(!force && c && c.list && c.list.length && daysBetween(c.d, today()) < 14) return;
+  SIMBUSY[k] = true; drawSims(k);
+  const have = new Set(R.map(x => x.src).filter(Boolean)), hits = [], seen = new Set(), perHost = {};
+  let ok = false;
+  await Promise.all(simQueries(r).map(async (q, qi) => {
+    for(const eng of SEARCH){
+      try{ const list = parseHits(await fetchPage(eng(q))); if(list.length){ ok = true; list.forEach((h, i) => hits.push(Object.assign({o: i * 2 + qi}, h))); return; } }catch(_){}
+    }
+  }));
+  hits.sort((x, y) => x.o - y.o).forEach(h => { const key = h.url.replace(/[?#].*$/, "").replace(/\/$/, ""); if(seen.has(key) || have.has(h.url) || h.url === r.src) return;
+    if((perHost[h.host] = (perHost[h.host] || 0) + 1) > 2) return; seen.add(key); });
+  const list = []; const s2 = new Set();
+  hits.sort((x, y) => x.o - y.o).forEach(h => { const key = h.url.replace(/[?#].*$/, "").replace(/\/$/, ""); if(s2.has(key) || !seen.has(key) || list.length >= 6) return; s2.add(key); list.push({title: h.title, url: h.url, host: h.host}); });
+  SIMC[k] = {d: today(), list, failed: !ok}; S.set("mjskitchen.similar", SIMC);
+  SIMBUSY[k] = false; drawSims(k); drawNext();
+}
+function searchLinks(r){
+  const q = simQueries(r)[0];
+  return `<a href="https://www.google.com/search?q=${encodeURIComponent(q)}" target="_blank" rel="noopener">Google</a> · <a href="https://www.allrecipes.com/search?q=${encodeURIComponent(q.replace(/ recipe.*$/, ""))}" target="_blank" rel="noopener">Allrecipes</a> · <a href="https://duckduckgo.com/?q=${encodeURIComponent(q)}" target="_blank" rel="noopener">DuckDuckGo</a>`;
+}
+function simHtml(r, always){
+  const k = r.k, rt = entry(k).rating || 0, c = SIMC[k];
+  if(rt < 4 && !always) return "";
+  if(SIMBUSY[k]) return `<h4>Similar recipes</h4><p class="store" style="margin:0">Searching the web for recipes like ${esc(r.name)}…</p>`;
+  if(!c) return rt === 5 ? `<h4>Similar recipes</h4><p class="store" style="margin:0">She loves this one. <button type="button" class="mini" data-find="${esc(k)}">Find similar recipes</button></p>`
+    : `<div class="row"><button type="button" class="mini" data-find="${esc(k)}">Find similar recipes</button></div>`;
+  if(!c.list.length) return `<h4>Similar recipes</h4><p class="store" style="margin:0">${c.failed ? "Couldn't reach the web search just now." : "No good matches came back."} Search yourself: ${searchLinks(r)}. Found one? Tap + Add a recipe at the top and paste its link.</p>
+    <div class="row"><button type="button" class="mini" data-find="${esc(k)}" data-force="1">Try again</button></div>`;
+  return `<h4>Similar recipes she might like</h4><ul class="simlist">${c.list.map(h => `<li><div><a href="${esc(h.url)}" target="_blank" rel="noopener">${esc(h.title)}</a><span class="rlabel">${esc(h.host)}</span></div>
+      <button type="button" class="mini" data-addsim="${esc(h.url)}" data-g="${esc(r.g)}" aria-label="Add ${esc(h.title)} to the cookbook">+ Add</button></li>`).join("")}</ul>
+    <p class="store" style="margin:0">Found ${nice(c.d)}. <button type="button" class="mini ghostb" data-find="${esc(k)}" data-force="1">Search again</button> More: ${searchLinks(r)}</p>`;
+}
+function drawSims(k){ document.querySelectorAll(`[data-sim="${CSS.escape(k)}"]`).forEach(el => { const r = BYK[k]; if(r) el.innerHTML = simHtml(r, !!el.closest(".idea")); }); }
+document.addEventListener("click", e => {
+  const f = e.target.closest("[data-find]"); if(f){ e.preventDefault(); findSimilar(f.dataset.find, f.dataset.force === "1"); return; }
+  const ad = e.target.closest("[data-addsim]"); if(ad){ e.preventDefault(); IMP = {open: true, presetG: ad.dataset.g}; drawImporter(); const u = $("impUrl"); if(u){ u.value = ad.dataset.addsim; doImport(); $("importer").scrollIntoView({behavior: "smooth", block: "start"}); } return; }
+  if(e.target.closest("[data-addnew]")){ IMP = {open: true}; drawImporter(); $("importer").scrollIntoView({behavior: "smooth", block: "start"}); setTimeout(() => { const u = $("impUrl"); if(u) u.focus(); }, 300); return; }
+  const cg = e.target.closest("[data-cbgo]"); if(cg){ e.preventDefault(); location.hash = "cookbook"; setTimeout(() => { setStage("mine"); const el = $("grp-" + cg.dataset.cbgo); if(el) el.scrollIntoView({behavior: "smooth", block: "start"}); }, 60); }
+});
 /* ---------- add a recipe from a web page (or pasted text) ---------- */
 let IMP = {open: false, busy: false, msg: "", draft: null, editing: null};
 const PROXIES = [u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`, u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`, u => `https://r.jina.ai/${u}`];
@@ -1072,6 +1213,7 @@ function drawImporter(){
 function startDraft(p){
   const a = analyze(p);
   IMP.draft = Object.assign({st: stageNow(), m: p.m || 0, fz: /freez/i.test((p.steps || []).join(" ")), why: a.why, note: p.yield ? `Makes ${p.yield}.` : ""}, p);
+  if(IMP.presetG && GROUPS[IMP.presetG] && !IMP.draft.g) IMP.draft.g = IMP.presetG;
   if(!IMP.draft.g || !GROUPS[IMP.draft.g]) IMP.draft.g = guessGroup(IMP.draft); IMP.draft.st = GROUPS[IMP.draft.g].st;
   IMP.msg = ""; drawImporter(); $("importer").scrollIntoView({behavior: "smooth", block: "start"});
 }
@@ -1096,7 +1238,7 @@ function saveDraft(){
   try{ localStorage.setItem("mjskitchen.mine", JSON.stringify(MINE)); }catch(_){}
   const full = Object.assign({custom: true, y: 0, u: "", id: rec.cid, k: "mine:" + rec.cid}, rec);
   const j = R.findIndex(r => r.k === full.k); if(j >= 0) R[j] = full; else R.push(full); BYK[full.k] = full;
-  const was = IMP.editing; IMP = {open: false}; drawAll(); toast(was ? "Recipe updated" : `${rec.name} added to ${GROUPS[g].title}`);
+  const was = IMP.editing; IMP = {open: false}; if(CBSEL !== "mine") CBSEL = rec.st, S.set("mjskitchen.cbst", rec.st); drawAll(); toast(was ? "Recipe updated" : `${rec.name} added to ${GROUPS[g].title}`);
   setTimeout(() => { const el = $(rec.cid); if(el){ el.open = false; el.scrollIntoView({behavior: "smooth", block: "center"}); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 2400); } }, 80);
 }
 document.addEventListener("click", e => {
@@ -1123,7 +1265,8 @@ $("book").addEventListener("click", ev => {
   const c = ev.target.closest("details.card"); if(!c) return;
   const k = c.dataset.k;
   const rb = ev.target.closest("[data-rate]");
-  if(rb){ const n = +rb.dataset.rate; setEntry(k, {rating: entry(k).rating === n ? 0 : n, date: entry(k).date || today()}); c.querySelector('[data-f="date"]').value = entry(k).date || ""; refreshCard(c); return; }
+  if(rb){ const n = +rb.dataset.rate; setEntry(k, {rating: entry(k).rating === n ? 0 : n, date: entry(k).date || today()}); c.querySelector('[data-f="date"]').value = entry(k).date || ""; refreshCard(c);
+    drawSims(k); if(entry(k).rating === 5) findSimilar(k); return; }
   if(ev.target.closest("[data-today]")){ setEntry(k, {date: today()}); c.querySelector('[data-f="date"]').value = today(); refreshCard(c); return; }
   if(ev.target.closest("[data-tofreezer]")){ location.hash = "freezer"; $("addBatch").open = true; $("bFood").value = k; $("bFood").dispatchEvent(new Event("change")); $("bMade").value = today(); formHints(); setTimeout(() => $("addBatch").scrollIntoView({behavior: "smooth", block: "center"}), 60); }
 });
@@ -1144,7 +1287,7 @@ function markTab(){
   tabs.forEach(t => { const on = t === cur; if(on && !t.classList.contains("on")){ const bar = $(barId); bar.scrollTo({left: Math.max(0, bar.scrollLeft + t.getBoundingClientRect().left - bar.getBoundingClientRect().left - 16), behavior: "smooth"}); } t.classList.toggle("on", on); });
 }
 window.addEventListener("scroll", () => requestAnimationFrame(markTab), {passive: true});
-function openRecipe(k){ const r = BYK[k]; if(!r) return; location.hash = "cookbook"; setTimeout(() => { const d = $(r.id); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); } }, 60); }
+function openRecipe(k){ const r = BYK[k]; if(!r) return; location.hash = "cookbook"; if(cbSel() !== r.st){ CBSEL = r.st; S.set("mjskitchen.cbst", r.st); drawBook(); } setTimeout(() => { const d = $(r.id); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); } }, 60); }
 document.addEventListener("click", e => { const a = e.target.closest("[data-go]"); if(a){ e.preventDefault(); openRecipe(a.dataset.go); } });
 
 /* ---------- fridge & freezer ---------- */
@@ -1279,7 +1422,7 @@ function route(){
   const g = h.startsWith("g-") ? h : null;
   if(g) h = "guide";
   const recipe = !TABS.includes(h) && R.find(r => r.id === h);
-  if(recipe){ h = "cookbook"; }
+  if(recipe){ h = "cookbook"; if(cbSel() !== recipe.st && !(cbSel() === "mine" && recipe.custom)){ CBSEL = recipe.st; S.set("mjskitchen.cbst", recipe.st); drawBook(); } }
   if(!TABS.includes(h)) h = "today";
   document.querySelectorAll(".view").forEach(v => v.hidden = v.dataset.view !== h);
   document.querySelectorAll(".tabbar a").forEach(a => a.classList.toggle("on", a.dataset.tab === h));
