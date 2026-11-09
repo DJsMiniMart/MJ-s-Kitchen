@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MJ's Kitchen</title>
 <meta name="description" content="MJ's Kitchen: homemade baby food recipes that grow with her, a daily meal log, freezer list and batch-cooking planner.">
-<meta name="theme-color" content="#f6f8f3" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#141a16" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1216" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -17,30 +17,30 @@
 <style>
 /* Layout: one narrow reading column, a sticky jump bar of food groups, recipe cards that open like index cards */
 :root{
-  --bg:#f6f8f3;          /* pea-tinted paper */
-  --panel:#ffffff;
-  --ink:#1f2a22;
-  --dim:#46524a;
-  --line:#dde5da;
-  --pea:#4e8a3e;         /* accent: garden pea */
-  --pea-soft:#e6f0e0;
-  --carrot:#d9692b;      /* second accent: carrot */
-  --carrot-soft:#fbe9dd;
-  --berry:#5b5aa6;
-  --berry-soft:#e9e8f7;
-  --warn:#a5401b;
-  --warn-soft:#fbe6dc;
+  --bg:#ffffff;          /* white */
+  --panel:#fff7fa;       /* barely-pink cards */
+  --ink:#2b1d24;
+  --dim:#5f4652;
+  --line:#f3d3e0;
+  --pea:#c8336f;         /* primary: pink */
+  --pea-soft:#fde3ee;
+  --carrot:#e0607e;      /* rose */
+  --carrot-soft:#fde8ed;
+  --berry:#8e5bb5;       /* lavender */
+  --berry-soft:#f3eafb;
+  --warn:#b4233c;
+  --warn-soft:#fde5e8;
   --display:"Fredoka", "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
   --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#141a16; --panel:#1c241e; --ink:#eef4ec; --dim:#bccabf; --line:#2e3a31;
-  --pea:#8cc77a; --pea-soft:#24331f; --carrot:#f0965f; --carrot-soft:#3a2518; --berry:#a9a8ee; --berry-soft:#26254a;
-  --warn:#f3a07c; --warn-soft:#3b221a; color-scheme:dark; } }
+  --bg:#1a1216; --panel:#25191f; --ink:#f8eef2; --dim:#d9bfca; --line:#412c36;
+  --pea:#f48fb8; --pea-soft:#40222f; --carrot:#f7a1b4; --carrot-soft:#3f2128; --berry:#cdaaf0; --berry-soft:#2f2342;
+  --warn:#ff9aa8; --warn-soft:#3f1c23; color-scheme:dark; } }
 :root[data-theme="dark"]{
-  --bg:#141a16; --panel:#1c241e; --ink:#eef4ec; --dim:#bccabf; --line:#2e3a31;
-  --pea:#8cc77a; --pea-soft:#24331f; --carrot:#f0965f; --carrot-soft:#3a2518; --berry:#a9a8ee; --berry-soft:#26254a;
-  --warn:#f3a07c; --warn-soft:#3b221a; color-scheme:dark; }
+  --bg:#1a1216; --panel:#25191f; --ink:#f8eef2; --dim:#d9bfca; --line:#412c36;
+  --pea:#f48fb8; --pea-soft:#40222f; --carrot:#f7a1b4; --carrot-soft:#3f2128; --berry:#cdaaf0; --berry-soft:#2f2342;
+  --warn:#ff9aa8; --warn-soft:#3f1c23; color-scheme:dark; }
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;}
