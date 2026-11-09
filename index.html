@@ -179,6 +179,18 @@ body:not([data-tab="today"]) .hero{padding-block:16px 0;}
 body:not([data-tab="today"]) .hero h1{font-size:clamp(28px,7vw,40px);}
 .chips{display:flex;flex-wrap:wrap;gap:6px;}
 .chip{text-decoration:none;color:var(--ink);font:600 15px var(--body);padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--panel);}
+.cbtabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:8;background:var(--bg);border-bottom:1px solid var(--line);margin:8px calc(-1 * max(16px,env(safe-area-inset-left,0px))) 0;}
+.cbtabs-in{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:10px max(16px,env(safe-area-inset-left,0px));}
+.cbtabs-in::-webkit-scrollbar{display:none;}
+.cbtab{flex:none;display:grid;gap:0;text-decoration:none;text-align:center;color:var(--ink);font:600 15px/1.2 var(--body);padding:6px 13px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel);}
+.cbtab small{font:600 11px var(--body);color:var(--dim);letter-spacing:.02em;}
+.cbtab.later{border-style:dashed;border-color:var(--berry);}
+.cbtab.on{background:var(--pea);border-color:var(--pea);color:#fff;} .cbtab.on small{color:#fff;opacity:.9;}
+#book section{scroll-margin-top:72px;} #book .stagehead{scroll-margin-top:72px;}
+.jobs{display:grid;gap:10px;}
+.job{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--berry);border-radius:12px;padding:12px 14px;}
+.job b{font:600 1.1em var(--display);} .job p{margin:2px 0 8px;color:var(--dim);font-size:.9em;}
+.job ul{margin:0;padding-left:20px;display:grid;gap:4px;}
 .chip.later{color:var(--berry);border-style:dashed;border-color:var(--berry);}
 section{scroll-margin-top:16px;}
 /* birthday */
@@ -325,8 +337,8 @@ details.add summary::-webkit-details-marker{display:none;}
   <section>
     <h2>Cookbook</h2>
     <p class="lead" id="cbLead">Recipes by stage. New stages open up as MJ grows; you can always peek ahead.</p>
-    <div class="chips" id="cbJump"></div>
   </section>
+  <nav class="cbtabs" aria-label="Cookbook sections"><div class="cbtabs-in" id="cbJump"></div></nav>
   <div id="book"></div>
 </div>
 
@@ -551,15 +563,17 @@ const STAGES = [
    how: "Let her help: washing produce, stirring, tearing lettuce, spreading with a butter knife. Kids eat more of what they make. Juice: 4 to 6 ounces a day at most, from age 4.", next: "Aim for about 2 to 2 1/2 cups of milk or other dairy a day, a fruit or vegetable at every meal, and whole grains most days."},
 ];
 const GROUPS = {
-  veggies: {st: 1, title: "Vegetables", lead: "A great place to start: mild, a little sweet, and packed with vitamins."},
-  fruits: {st: 1, title: "Fruits", lead: "Naturally sweet. Pair them with iron foods: vitamin C helps her absorb iron."},
-  iron: {st: 1, title: "Iron & protein", lead: "The iron babies are born with runs low around 6 months. Offer an iron-rich food every day."},
-  allergens: {st: 1, title: "Allergens", lead: "Early, regular tastes can lower the chance of a food allergy. Follow the first-taste steps in the Guide."},
-  combos: {st: 2, title: "Thicker purees & combos", lead: "Thicker textures and two or three foods together, for 7 to 8 months."},
-  finger: {st: 3, title: "Mashed & finger foods", lead: "Soft pieces she can pick up herself, for 9 to 11 months. Always seated and watched."},
-  toddler: {st: 4, title: "Family foods", lead: "Small bites of real meals, for 12 to 24 months."},
-  little: {st: 5, title: "Toddler meals", lead: "Simple meals for 2 to 3 years, built around iron, omega-3s and calcium for a fast-growing brain and bones."},
-  kids: {st: 6, title: "Kid-friendly meals", lead: "Easy meals for 3 to 5 years that she can help make. Each recipe says which jobs are good for little hands."},
+  veggies: {st: 1, tab: "Veggies", title: "Vegetables", lead: "A great place to start: mild, a little sweet, and packed with vitamins."},
+  fruits: {st: 1, tab: "Fruits", title: "Fruits", lead: "Naturally sweet. Pair them with iron foods: vitamin C helps her absorb iron."},
+  iron: {st: 1, tab: "Iron", title: "Iron & protein", lead: "The iron babies are born with runs low around 6 months. Offer an iron-rich food every day."},
+  allergens: {st: 1, tab: "Allergens", title: "Allergens", lead: "Early, regular tastes can lower the chance of a food allergy. Follow the first-taste steps in the Guide."},
+  combos: {st: 2, tab: "Combos", title: "Thicker purees & combos", lead: "Thicker textures and two or three foods together, for 7 to 8 months."},
+  finger: {st: 3, tab: "Finger foods", title: "Mashed & finger foods", lead: "Soft pieces she can pick up herself, for 9 to 11 months. Always seated and watched."},
+  toddler: {st: 4, tab: "Family foods", title: "Family foods", lead: "Small bites of real meals, for 12 to 24 months."},
+  little: {st: 5, tab: "Toddler meals", title: "Toddler meals", lead: "Simple meals for 2 to 3 years, built around iron, omega-3s and calcium for a fast-growing brain and bones."},
+  jobs: {st: 6, tab: "Kitchen jobs", title: "Kitchen jobs by age", lead: "Jobs she can do in the kitchen at 3, 4 and 5. Helping builds hand strength, counting and words, and kids eat more of what they make. Always with a grown-up right there.", info: true},
+  kids: {st: 6, tab: "Kid meals", title: "Kid-friendly meals", lead: "Easy meals for 3 to 5 years that she can help make. Each recipe marks the Kid job."},
+  faves: {st: 6, tab: "Kid favorites", title: "Kid favorites, made at home", lead: "The meals kids ask for (nuggets, fries, pancakes, tacos), made at home with whole grains, real chicken and veggies tucked in, and a Kid job in every one."},
 };
 const R = [
   // ---- stage 1: vegetables
@@ -630,11 +644,32 @@ const R = [
   {g: "kids", name: "Lentil veggie soup", iron: true, c: "berry", m: 35, fz: true, y: 8, u: "portions", shop: ["1 cup red lentils", "2 carrots", "2 celery stalks", "1 small onion", "1 can no-salt-added diced tomatoes", "4 cups low-sodium broth"], steps: ["Soften the diced onion, carrots and celery in a little oil, 5 minutes.", "Add the rinsed lentils, tomatoes and broth; simmer 25 to 30 minutes.", "Blend part of it for a thicker soup. Serve with whole-grain toast."], why: "Iron, protein and fiber in one bowl; pair with an orange or strawberries for vitamin C to help absorb the iron."},
   {g: "kids", name: "No-bake oat energy bites", allergen: "Peanut", c: "berry", m: 10, fz: true, y: 16, u: "bites", shop: ["1 cup oats", "1/2 cup smooth peanut butter (or sunflower butter)", "2 tablespoons ground flaxseed", "2 tablespoons honey or maple syrup", "2 tablespoons mini chocolate chips (optional)"], steps: ["Kid job: stir everything together in a bowl.", "Chill 15 minutes, then roll into 1-inch balls.", "Keep in the fridge up to a week, or freeze."], why: "Fiber, healthy fats and omega-3s (from flax) for steady energy. Rolling balls builds fine motor skills. Smooth nut butter only; no whole nuts before age 4."},
   {g: "kids", name: "Apple \"donuts\"", allergen: "Peanut", c: "pea", m: 5, fz: false, y: 0, u: "", shop: ["1 crisp apple", "Smooth peanut or sunflower butter", "Plain yogurt", "Toppings: hemp seeds, shredded coconut, crushed whole-grain cereal"], steps: ["Core the apple and slice into thin rings (about 1/4 inch).", "Kid job: spread with nut butter or yogurt and sprinkle on toppings."], why: "Fiber and vitamin C from the apple, protein from the spread, and a fun snack she can decorate herself. Thin slices only for younger kids."},
+  // ---- stage 6: kid favorites, made at home
+  {g: "faves", name: "Baked chicken nuggets", iron: true, meat: true, allergen: "Egg", c: "carrot", m: 25, fz: true, y: 24, u: "pieces", shop: ["1 lb boneless chicken breast or thighs", "1 egg", "1 cup whole-wheat panko breadcrumbs", "2 tablespoons grated Parmesan", "1/2 teaspoon paprika"], steps: ["Heat the oven to 425°F and line a baking sheet. Cut the chicken into nugget-size pieces.", "Kid job: dip each piece in beaten egg, then roll it in the crumbs mixed with Parmesan and paprika (wash hands after).", "Bake 15 to 18 minutes, flipping halfway, until golden and 165°F inside. Serve with plain yogurt ranch or ketchup."], why: "Real chicken for iron, zinc and protein, and a crunchy coating without the fryer. Freeze cooked nuggets for quick lunches; reheat at 400°F for 8 minutes.", note: "Quick yogurt ranch: 1/2 cup plain yogurt, a pinch of garlic powder and dried dill."},
+  {g: "faves", name: "Sweet potato fries", c: "carrot", m: 30, fz: false, y: 0, u: "", shop: ["2 medium sweet potatoes", "1 tablespoon olive oil", "Pinch of paprika"], steps: ["Heat the oven to 425°F. Cut the sweet potatoes into thin sticks.", "Kid job: toss the sticks with the oil and paprika in a big bowl, then lay them out on the pan in one layer.", "Bake 25 to 30 minutes, turning once, until crisp at the edges."], why: "Vitamin A for eyes and immunity, plus fiber. The perfect side for nuggets or sliders."},
+  {g: "faves", name: "Spaghetti & mini meatballs", iron: true, meat: true, allergen: "Egg", c: "carrot", m: 30, fz: true, y: 6, u: "portions", shop: ["1 lb lean ground beef or turkey", "1 egg", "1/3 cup whole-wheat breadcrumbs", "1 jar low-sodium marinara", "Whole-wheat spaghetti"], steps: ["Heat the oven to 400°F.", "Kid job: squish the meat, egg and breadcrumbs together with clean hands and roll into marble-size balls.", "Bake 12 to 15 minutes (160°F for beef, 165°F for turkey), then simmer in the warm sauce. Serve over spaghetti broken into short pieces."], why: "Iron and zinc for growth and focus, whole grains for steady energy. Rolling meatballs is great hand practice."},
+  {g: "faves", name: "Soft chicken tacos", iron: true, meat: true, allergen: "Dairy", c: "pea", m: 20, fz: false, y: 0, u: "", shop: ["1 lb chicken thighs", "1 teaspoon mild taco seasoning (low-sodium)", "Small whole-wheat or corn tortillas", "Shredded lettuce, diced tomato, avocado, shredded cheese"], steps: ["Cook the chicken with the seasoning and a splash of water until 165°F, then shred it.", "Kid job: set out bowls of toppings and build her own taco.", "Fold and eat, or cut in half for small hands."], why: "Protein and iron, plus a rainbow of toppings. Choosing her own toppings makes her more likely to try new ones."},
+  {g: "faves", name: "Turkey sliders", iron: true, meat: true, c: "carrot", m: 20, fz: true, y: 8, u: "patties", shop: ["1 lb ground turkey", "1/2 cup grated zucchini (squeezed dry)", "Whole-wheat slider buns", "Cheese slices, lettuce, tomato"], steps: ["Kid job: mix the turkey and zucchini and press into 8 small patties.", "Cook in a skillet 4 to 5 minutes a side, to 165°F.", "Serve on slider buns with her choice of toppings, cut in half for younger kids."], why: "Lean protein and iron with a hidden vegetable; small burgers are easy to hold and fun to build."},
+  {g: "faves", name: "Grilled cheese & tomato soup", allergen: "Dairy", c: "carrot", m: 15, fz: false, y: 0, u: "", shop: ["Whole-wheat bread", "Cheddar or mozzarella slices", "1 carton low-sodium tomato soup (or the hidden-veggie sauce thinned with broth)"], steps: ["Kid job: build the sandwich: bread, cheese, bread.", "Cook in a lightly buttered pan 2 to 3 minutes a side until golden and melted.", "Warm the soup. Cut the sandwich into strips for dunking."], why: "Calcium and protein for bones, plus lycopene and vitamin C from tomatoes. Dunking strips makes soup fun."},
+  {g: "faves", name: "French toast sticks", allergen: "Egg", c: "carrot", m: 15, fz: true, y: 12, u: "sticks", shop: ["4 slices whole-wheat bread", "2 eggs", "1/3 cup milk", "1/2 teaspoon cinnamon"], steps: ["Cut each slice of bread into 3 sticks.", "Kid job: whisk the eggs, milk and cinnamon, then dunk each stick.", "Cook in a lightly buttered pan 2 minutes a side until set. Serve with berries or a small drizzle of maple syrup."], why: "Protein and choline from eggs and whole grains for a steady morning. Freeze extras and toast from frozen."},
+  {g: "faves", name: "Pancake faces", allergen: "Egg", c: "berry", m: 20, fz: true, y: 12, u: "pancakes", shop: ["1 cup whole-wheat flour", "1 egg", "1 cup milk", "1 teaspoon baking powder", "1 mashed banana", "Fruit for decorating"], steps: ["Kid job: mash the banana and stir everything into a batter.", "Cook small pancakes on a medium pan, flipping when bubbles form.", "Kid job: make faces with blueberries, banana slices and strawberries."], why: "Whole grains and fruit with no added sugar. Making faces practices fine motor skills and gets fruit eaten."},
+  {g: "faves", name: "Breakfast burritos", iron: true, allergen: "Egg", c: "pea", m: 15, fz: true, y: 6, u: "burritos", shop: ["6 eggs", "1/2 cup black beans", "1/2 cup shredded cheese", "1 cup chopped spinach or peppers", "6 small whole-wheat tortillas"], steps: ["Scramble the eggs with the spinach until fully set.", "Kid job: spoon eggs, beans and cheese onto a tortilla and help roll it up.", "Serve warm, or wrap each in foil and freeze. Reheat in the oven at 350°F for 15 minutes."], why: "Protein, iron and fiber to keep her full and focused. A great grab-and-go breakfast."},
+  {g: "faves", name: "PB&J roll-ups", allergen: "Peanut", c: "berry", m: 5, fz: false, y: 0, u: "", shop: ["Whole-wheat bread", "Smooth peanut or sunflower butter", "Mashed berries or low-sugar jam"], steps: ["Cut the crusts off a slice of bread and flatten it with a rolling pin.", "Kid job: spread a thin layer of peanut butter and mashed berries.", "Roll it up tight and slice into 4 pinwheels."], why: "Protein and healthy fats; rolling and spreading build hand skills. Keeps peanut in her diet."},
+  {g: "faves", name: "Chicken noodle soup", iron: true, meat: true, c: "pea", m: 30, fz: true, y: 8, u: "portions", shop: ["1 lb chicken thighs", "2 carrots", "2 celery stalks", "1 small onion", "6 cups low-sodium chicken broth", "1 cup small whole-wheat pasta"], steps: ["Simmer the chicken in the broth 20 minutes, until 165°F; take it out and shred it.", "Add the diced carrots, celery and onion and the pasta; simmer 10 minutes until soft.", "Kid job: stir the shredded chicken back in (with a grown-up at the stove) and sprinkle on parsley."], why: "Protein, iron and vegetables in a cozy bowl; good for sick days too."},
+  {g: "faves", name: "Hummus & veggie dippers", c: "pea", m: 10, fz: false, y: 0, u: "", shop: ["1 can no-salt-added chickpeas", "2 tablespoons tahini", "1 lemon", "Cucumbers, bell peppers, soft-steamed carrots, whole-wheat pita"], steps: ["Blend the rinsed chickpeas, tahini, lemon juice and a splash of water until smooth.", "Kid job: squeeze the lemon with a hand juicer and arrange the dippers on a plate.", "Cut veggies into thin sticks; steam carrots for younger kids."], why: "Plant protein, iron and fiber, and dipping makes raw veggies far more appealing."},
+  {g: "faves", name: "Yogurt fruit pops", allergen: "Dairy", c: "berry", m: 5, fz: true, y: 6, u: "pops", shop: ["2 cups plain whole-milk yogurt", "1 cup berries or mango", "1 banana"], steps: ["Kid job: help blend the yogurt, fruit and banana.", "Pour into ice-pop molds and freeze at least 4 hours.", "Run the mold under warm water to release."], why: "Calcium, protein and probiotics in a treat she'll think is dessert. Soothing for sore throats too."},
+
 
 ];
 const id = n => n.toLowerCase().replace(/[^a-z]+/g, "-");
 R.forEach(r => { r.id = id(r.name); r.k = r.g + ":" + r.id; r.st = GROUPS[r.g].st; });
 const BYK = Object.fromEntries(R.map(r => [r.k, r]));
+const JOBS = [
+  {age: "Age 3", note: "Big movements and simple steps. Pre-measure ingredients and let her dump them in.", list: ["Wash fruits and vegetables in a bowl of water", "Tear lettuce, spinach and herbs", "Stir cold ingredients in a big bowl", "Pour pre-measured ingredients into the bowl", "Mash bananas, avocado or beans with a fork or masher", "Sprinkle cheese, seeds and toppings", "Put muffin liners in the tin", "Wipe the table and carry unbreakable dishes"]},
+  {age: "Age 4", note: "Everything at 3, plus jobs that need more control.", list: ["Crack eggs into a separate small bowl (fish out any shell together)", "Measure dry ingredients with measuring cups", "Spread with a butter knife (peanut butter, cream cheese, sauce)", "Peel bananas, clementines and hard-boiled eggs", "Cut soft foods (banana, strawberries, cooked potato) with a kid-safe nylon knife", "Shape meatballs, patties and dough balls", "Use cookie cutters on sandwiches, pancakes or cheese", "Squeeze lemons and oranges with a hand juicer"]},
+  {age: "Age 5", note: "Everything at 4, plus small steps on their own while you watch.", list: ["Whisk eggs and batter", "Use measuring spoons and level them off", "Roll out dough with a rolling pin", "Cut cucumbers, zucchini and cheese with a kid-safe knife", "Assemble wraps, sandwiches and tacos", "Follow a picture recipe one step at a time", "Dip and bread nuggets or fish sticks", "Toss a salad and set the table"]},
+];
+const JOB_RULES = "Always supervised. Grown-ups handle the stove, oven, sharp knives and hot liquids. Use a sturdy step stool or learning tower. Wash hands before cooking and again after touching raw meat or eggs.";
 const ALLERGENS = ["Peanut", "Egg", "Dairy", "Wheat", "Soy", "Fish", "Sesame"];
 
 /* ---------- saved data (this phone only) ---------- */
@@ -642,7 +677,7 @@ const S = {get(k, d){ try{ const v = JSON.parse(localStorage.getItem(k)); return
 let LOG = S.get("mjskitchen.log", {});            // {k: {date, rating, notes}}
 let MEALS = S.get("mjskitchen.meals", []);        // [{id, d, meal, k, amt, note, fz}]
 let FRZ = S.get("mjskitchen.freezer", []);        // [{id, k, made, cubes, left, unit: cube|bag|jar|piece, loc: freezer|fridge, inFridge, thawed}]
-FRZ.forEach(b => { if(!b.loc) b.loc = "freezer"; if(!b.unit) b.unit = BYK[b.k] && /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge/.test(BYK[b.k].u) ? "piece" : "cube"; });
+FRZ.forEach(b => { if(!b.loc) b.loc = "freezer"; if(!b.unit) b.unit = BYK[b.k] && /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge|patt|burrito|pop/.test(BYK[b.k].u) ? "piece" : "cube"; });
 let BDAY = S.get("mjskitchen.bday", "");
 try{ const old = JSON.parse(localStorage.getItem("mjskitchen.tried") || "{}") || {}; Object.keys(old).forEach(k => { if(!LOG[k]) LOG[k] = {date: today()}; }); localStorage.removeItem("mjskitchen.tried"); }catch(_){}
 const saveLog = () => S.set("mjskitchen.log", LOG), saveMeals = () => S.set("mjskitchen.meals", MEALS), saveFrz = () => S.set("mjskitchen.freezer", FRZ);
@@ -816,10 +851,19 @@ function drawBook(){
   const cur = stageNow(), a = ageMonths();
   $("cbLead").textContent = a == null ? "Recipes by stage. Add MJ's birthday on the Today tab and the cookbook follows her age." : `MJ is in stage ${cur}: ${STAGES[cur].name.toLowerCase()}. Later stages open up as she grows; you can always peek ahead.`;
   const groups = Object.keys(GROUPS);
-  $("cbJump").innerHTML = groups.map(g => `<a class="chip${GROUPS[g].st > cur ? " later" : ""}" href="#grp-${g}" data-jumpto="grp-${g}">${esc(GROUPS[g].title)}</a>`).join("");
+  const STAGE_TAB = {1: "6 mo", 2: "7–8 mo", 3: "9–11 mo", 4: "1 yr", 5: "2–3 yrs", 6: "3–5 yrs"};
+  $("cbJump").innerHTML = groups.map(g => `<a class="cbtab${GROUPS[g].st > cur ? " later" : ""}" href="#grp-${g}" data-jumpto="grp-${g}"><span>${esc(GROUPS[g].tab)}</span><small>${STAGE_TAB[GROUPS[g].st]}</small></a>`).join("");
   let html = "", lastSt = 0;
   groups.forEach(g => {
     const G = GROUPS[g], list = R.filter(r => r.g === g), st = G.st, later = st > cur;
+    if(G.info){
+      if(st !== lastSt){ lastSt = st; const S2 = STAGES[st];
+        html += `<div class="stagehead${later ? " later" : ""}${st === cur ? " now" : ""}" id="stage-${st}"><span>Stage ${st} · ${esc(S2.ages)}</span><b>${esc(S2.name)}</b>${later && a != null ? `<em>Opens at ${atAge(S2.from)}${BDAY ? ` (${nice(addMonths(BDAY, S2.from))})` : ""}</em>` : st === cur && a != null ? `<em>Her stage now</em>` : ""}</div>`; }
+      html += `<section id="grp-${g}" class="${later ? "later" : ""}"><h2>${esc(G.title)}</h2><p class="lead">${esc(G.lead)}</p>
+        <div class="jobs">${JOBS.map(j => `<div class="job"><b>${esc(j.age)}</b><p>${esc(j.note)}</p><ul>${j.list.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>`).join("")}</div>
+        <div class="note warn"><b>Kitchen safety:</b> ${esc(JOB_RULES)}</div></section>`;
+      return;
+    }
     if(st !== lastSt){ lastSt = st; const S2 = STAGES[st];
       html += `<div class="stagehead${later ? " later" : ""}${st === cur ? " now" : ""}"><span>Stage ${st} · ${esc(S2.ages)}</span><b>${esc(S2.name)}</b>${later && a != null ? `<em>Opens at ${atAge(S2.from)}${BDAY ? ` (${nice(addMonths(BDAY, S2.from))})` : ""}</em>` : st === cur && a != null ? `<em>Her stage now</em>` : ""}</div>`; }
     const d = list.filter(r => tried(r.k)).length;
@@ -855,6 +899,15 @@ $("book").addEventListener("input", ev => {
   timers[k + f] = setTimeout(() => { setEntry(k, {[f]: v}); refreshCard(c); }, f === "notes" ? 500 : 0);
 });
 $("cbJump").addEventListener("click", e => { const a = e.target.closest("[data-jumpto]"); if(!a) return; e.preventDefault(); $(a.dataset.jumpto).scrollIntoView({behavior: "smooth", block: "start"}); });
+/* highlight the cookbook tab for the section in view, and keep it visible in the tab row */
+function markTab(){
+  if($("v-cookbook").hidden) return;
+  const tabs = [...document.querySelectorAll("#cbJump .cbtab")]; if(!tabs.length) return;
+  let cur = null; tabs.forEach(t => { const sec = $(t.dataset.jumpto); if(sec && sec.getBoundingClientRect().top < 120) cur = t; });
+  if(!cur) cur = tabs[0];
+  tabs.forEach(t => { const on = t === cur; if(on && !t.classList.contains("on")){ const bar = $("cbJump"); bar.scrollTo({left: Math.max(0, t.offsetLeft - 16), behavior: "smooth"}); } t.classList.toggle("on", on); });
+}
+window.addEventListener("scroll", () => requestAnimationFrame(markTab), {passive: true});
 function openRecipe(k){ const r = BYK[k]; if(!r) return; location.hash = "cookbook"; setTimeout(() => { const d = $(r.id); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); } }, 60); }
 document.addEventListener("click", e => { const a = e.target.closest("[data-go]"); if(a){ e.preventDefault(); openRecipe(a.dataset.go); } });
 
@@ -896,7 +949,7 @@ function formHints(){
   if(k){ const b = {k, made, loc, unit, inFridge: made}; $("bUseBy").textContent = `Use by ${nice(useBy(b))}${loc === "fridge" ? (isMeat(k) ? " (meat, egg and fish keep 1 day in the fridge)" : " (2 days in the fridge)") : " (1 month in the freezer)"}.`; }
 }
 ["bLoc", "bUnit"].forEach(i => $(i).addEventListener("change", formHints));
-$("bFood").addEventListener("change", () => { const r = BYK[$("bFood").value]; if(r){ $("bCubes").value = r.y || 8; const u = /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge/.test(r.u) ? "piece" : "cube"; document.querySelector(`input[name="bUnit"][value="${u}"]`).checked = true; } formHints(); });
+$("bFood").addEventListener("change", () => { const r = BYK[$("bFood").value]; if(r){ $("bCubes").value = r.y || 8; const u = /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge|patt|burrito|pop/.test(r.u) ? "piece" : "cube"; document.querySelector(`input[name="bUnit"][value="${u}"]`).checked = true; } formHints(); });
 $("bMade").addEventListener("change", formHints);
 function batchClick(e){
   const c = e.target.closest("[data-cube]"); if(c){ const b = FRZ.find(x => x.id === c.dataset.b); if(b){ b.left = Math.max(0, b.left + +c.dataset.cube); b.cubes = Math.max(b.cubes, b.left); saveFrz(); drawFreezer(); drawNext(); if(!b.left) toast(`${BYK[b.k] ? BYK[b.k].name : "Batch"} used up`); } return; }
@@ -945,7 +998,7 @@ function drawPlan(){
     </ol>
     <div class="row" style="margin-top:12px"><button type="button" class="go" id="planAdd">Add all to freezer (made today)</button><button type="button" class="mini" id="planClear">Clear</button></div>
     <p class="store">Yields are estimates: ${sel.map(r => `${r.name} about ${r.y} ${r.u}`).join(", ")}. Adjust counts on the freezer list if you get more or fewer.</p></div>`;
-  $("planAdd").onclick = () => { sel.forEach(r => FRZ.push({id: uid(), k: r.k, made: today(), cubes: r.y, left: r.y, loc: "freezer", unit: /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge/.test(r.u) ? "piece" : "cube"})); saveFrz(); PLAN = []; S.set("mjskitchen.plan", PLAN); drawFreezer(); drawPlan(); drawNext(); toast(`${sel.length} batch${sel.length === 1 ? "" : "es"} added to the freezer`); window.scrollTo({top: 0, behavior: "smooth"}); };
+  $("planAdd").onclick = () => { sel.forEach(r => FRZ.push({id: uid(), k: r.k, made: today(), cubes: r.y, left: r.y, loc: "freezer", unit: /pancake|muffin|meatball|piece|portion|cake|bite|stick|wedge|patt|burrito|pop/.test(r.u) ? "piece" : "cube"})); saveFrz(); PLAN = []; S.set("mjskitchen.plan", PLAN); drawFreezer(); drawPlan(); drawNext(); toast(`${sel.length} batch${sel.length === 1 ? "" : "es"} added to the freezer`); window.scrollTo({top: 0, behavior: "smooth"}); };
   $("planClear").onclick = () => { PLAN = []; S.set("mjskitchen.plan", PLAN); drawPlan(); };
 }
 $("planPick").addEventListener("change", e => { const v = e.target.value; if(!v) return; PLAN = e.target.checked ? [...new Set(PLAN.concat(v))] : PLAN.filter(k => k !== v); S.set("mjskitchen.plan", PLAN); drawPlan(); });
@@ -998,6 +1051,7 @@ function route(){
   else if(g){ setTimeout(() => $(g).scrollIntoView({behavior: "smooth", block: "start"}), 30); }
   else window.scrollTo(0, 0);
   document.body.dataset.tab = h;
+  setTimeout(markTab, 60);
   try{ localStorage.setItem("mjskitchen.tab", h); }catch(_){}
 }
 window.addEventListener("hashchange", route);
