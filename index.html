@@ -168,7 +168,7 @@ footer ul{padding-left:18px;margin:8px 0 0;display:grid;gap:4px;}
 @media (prefers-reduced-motion: reduce){ *{transition:none!important;} }
 /* app shell: five tabs at the bottom */
 body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px));}
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(5,1fr);background:var(--panel);border-top:1px solid var(--line);
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(6,1fr);background:var(--panel);border-top:1px solid var(--line);
   padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));}
 .tabbar a{display:grid;justify-items:center;gap:2px;text-decoration:none;color:var(--dim);font:600 12.5px var(--body);padding:4px 0;border-radius:10px;}
 .tabbar svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
@@ -189,7 +189,7 @@ body:not([data-tab="today"]) .hero h1{font-size:clamp(28px,7vw,40px);}
 .cbbody{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:start;margin-top:8px;}
 .cbrail{position:sticky;top:calc(8px + env(safe-area-inset-top,0px));display:grid;gap:6px;max-height:calc(100vh - 110px);overflow-y:auto;scrollbar-width:none;padding-bottom:8px;}
 .cbrail::-webkit-scrollbar{display:none;}
-.rail{display:grid;justify-items:center;gap:1px;padding:8px 3px;border-radius:14px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);font:600 10.5px/1.15 var(--body);text-align:center;cursor:pointer;}
+.rail{text-decoration:none;display:grid;justify-items:center;gap:1px;padding:8px 3px;border-radius:14px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);font:600 10.5px/1.15 var(--body);text-align:center;cursor:pointer;}
 .rail b{font:700 22px/1 var(--display);color:var(--pea);}
 .rail small{font:700 11px/1.2 var(--body);}
 .rail span{color:var(--dim);font-weight:500;}
@@ -203,6 +203,24 @@ body:not([data-tab="today"]) .hero h1{font-size:clamp(28px,7vw,40px);}
 .cbmain .stagehead:first-child{margin-top:0;}
 .cbmain .cards{grid-template-columns:minmax(0,1fr);}
 .nextst{margin-top:22px;width:100%;}
+input[type=search]::-webkit-search-cancel-button{display:none;} .fsearch > .store{font-size:.85em;}
+.srch{display:flex;gap:8px;align-items:center;} .srch input{flex:1;min-width:0;font-size:1.05em;}
+.fsearch{display:grid;gap:10px;padding:14px;border:1.5px solid var(--line);border-radius:18px;background:var(--panel);margin-top:18px;}
+.fsearch .chips{display:flex;flex-wrap:wrap;gap:6px;}
+.fchip{font:600 13.5px var(--body);padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;}
+.fchip small{color:var(--dim);font-weight:600;margin-left:3px;}
+.fchip.on{background:var(--pea);border-color:var(--pea);color:#fff;} .fchip.on small{color:#fff;opacity:.85;}
+.fchip.tog{border-style:dashed;} .fchip.tog.on{border-style:solid;}
+#famSum{margin:14px 0 0;font-weight:600;}
+.fres{display:grid;gap:6px;margin-bottom:12px;}
+.fres .hv{margin:0;font-size:.92em;line-height:1.45;color:var(--dim);}
+.fres .hv b{color:var(--leaf);} .fres .hv i{font-style:normal;color:var(--carrot);font-weight:600;}
+.fres .cards{margin:0;}
+#famList section{margin-top:6px;} .fbucket{margin:18px 0 10px;font:700 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--pea);}
+.kjobs{margin:0;padding:0;list-style:none;display:grid;gap:6px;}
+.kjobs li{line-height:1.45;}
+.fjobs{margin-top:26px;} .fjobs summary{cursor:pointer;}
+.protag{font-weight:700;color:var(--pea);}
 .minesub{margin:22px 0 8px;font:700 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--pea);}
 .sim{display:grid;gap:8px;}
 .sim:empty{display:none;}
@@ -215,7 +233,7 @@ body:not([data-tab="today"]) .hero h1{font-size:clamp(28px,7vw,40px);}
 .simlist .row{gap:8px;}
 .idea{padding:12px 14px;border:1.5px solid var(--line);border-radius:16px;background:var(--panel);margin-bottom:12px;display:grid;gap:8px;}
 .idea > b{font:600 1.15em var(--display);}
-#book section, #v-guide section{scroll-margin-top:72px;} #book .stagehead{scroll-margin-top:72px;}
+#book section, #v-guide section, #famList section{scroll-margin-top:72px;} #book .stagehead{scroll-margin-top:72px;}
 .jobs{display:grid;gap:10px;}
 .minehead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
 .meta .added{background:var(--pea);color:#fff;border-radius:999px;padding:1px 8px;font-size:.78em;font-weight:700;align-self:center;}
@@ -264,7 +282,7 @@ section{scroll-margin-top:16px;}
 .mnote{display:block;color:var(--dim);font-size:.85em;font-style:italic;}
 .x{border:0;background:none;color:var(--dim);font-size:16px;cursor:pointer;padding:6px;}
 .addf{display:grid;gap:12px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
-select,input[type=number],input[type=text]{font:400 16px var(--body);font-size:max(16px,.95em);color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;}
+select,input[type=number],input[type=text],input[type=search]{font:400 16px var(--body);font-size:max(16px,.95em);color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;}
 select:focus,input:focus{outline:none;border-color:var(--pea);}
 .amts{display:flex;flex-wrap:wrap;gap:6px;}
 .amts label{cursor:pointer;} .amts input{position:absolute;opacity:0;pointer-events:none;}
@@ -382,7 +400,7 @@ details.add summary::-webkit-details-marker{display:none;}
     <h2>Cookbook</h2>
     <p class="lead" id="cbLead">Recipes by stage. New stages open up as MJ grows; you can always peek ahead.</p>
     <div class="row"><button type="button" class="go" id="addRecipeBtn">+ Add a recipe</button></div>
-    <div id="importer"></div>
+    <div id="cbImpHost"><div id="importer"></div></div>
   </section>
   <div class="cbbody">
     <nav class="cbrail" id="cbRail" aria-label="Cookbook stages"></nav>
@@ -391,6 +409,26 @@ details.add summary::-webkit-details-marker{display:none;}
       <div id="book"></div>
     </div>
   </div>
+</div>
+
+<!-- ============ FAMILY TABLE (5+) ============ -->
+<div class="view" id="v-family" data-view="family" hidden>
+  <section>
+    <h2>Family table</h2>
+    <p class="lead" id="famLead">From age 5, MJ eats what everyone eats. Every recipe here has jobs she can help with and why it's good for the whole family.</p>
+    <div class="row"><button type="button" class="go" id="famAdd">+ Add a family recipe</button></div>
+    <div id="famImpHost"></div>
+  </section>
+  <section class="fsearch" aria-label="Search family recipes">
+    <label class="fld" for="famQ">What's in your kitchen?
+      <span class="srch"><input type="search" id="famQ" placeholder="e.g. chicken, rice, broccoli" autocomplete="off" enterkeyhint="search"><button type="button" class="mini" id="famClear" hidden>Clear</button></span></label>
+    <p class="store" style="margin:0">Type what you have, separated by commas, or a dish like "tacos". Salt, pepper, oil, butter, flour, garlic and dried spices count as already in the pantry.</p>
+    <div class="chips" id="famPro" role="group" aria-label="Protein"></div>
+    <div class="chips" id="famOpt" role="group" aria-label="More filters"></div>
+  </section>
+  <nav class="cbtabs" id="famTabs" aria-label="Family recipes by protein"><div class="cbtabs-in" id="famJump"></div></nav>
+  <div id="famList"></div>
+  <details class="note fjobs"><summary><b>Kitchen jobs by age</b></summary><div class="jobs" id="famJobs"></div><p class="store"><b>Kitchen safety:</b> <span id="famRules"></span></p></details>
 </div>
 
 <!-- ============ FRIDGE & FREEZER ============ -->
@@ -593,6 +631,7 @@ details.add summary::-webkit-details-marker{display:none;}
 <nav class="tabbar" aria-label="Sections">
   <a href="#today" data-tab="today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>Today</a>
   <a href="#cookbook" data-tab="cookbook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h7a2 2 0 0 1 2 2V20a1.5 1.5 0 0 0-1.5-1.5H4zM20 4.5h-5a2 2 0 0 0-2 2V20a1.5 1.5 0 0 1 1.5-1.5H20z"/></svg>Cookbook</a>
+  <a href="#family" data-tab="family"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="7.5" r="3"/><circle cx="17" cy="9.5" r="2.3"/><path d="M2.5 20c0-3.3 2.5-5.6 5.5-5.6s5.5 2.3 5.5 5.6M14.2 15.6c.8-.9 1.8-1.4 3-1.4 2.4 0 4.3 1.9 4.3 4.8"/></svg>Family</a>
   <a href="#freezer" data-tab="freezer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5v19M4 7l16 10M20 7L4 17M9.5 4 12 6.5 14.5 4M9.5 20l2.5-2.5 2.5 2.5"/></svg>Storage</a>
   <a href="#log" data-tab="log"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17H6zM9 8h6M9 12h6M9 16h3"/></svg>Log</a>
   <a href="#guide" data-tab="guide"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Guide</a>
@@ -718,6 +757,27 @@ const R = [
   {g: "family", name: "Minestrone soup", iron: true, c: "pea", m: 40, fz: true, y: 8, u: "portions", shop: ["1 onion, 2 carrots, 2 celery stalks", "1 zucchini", "1 can no-salt-added diced tomatoes", "1 can no-salt-added white beans", "6 cups low-sodium broth", "1 cup small whole-wheat pasta", "2 cups spinach"], steps: ["Soften the diced onion, carrots and celery in olive oil, 5 minutes.", "Add the tomatoes, broth, beans and zucchini; simmer 20 minutes. Add the pasta for the last 10.", "Kid job: tear the spinach and drop it in at the end; top bowls with grated Parmesan."], why: "Fiber, plant iron and a whole garden of vegetables in one bowl."},
   {g: "family", name: "Stuffed sweet potatoes", iron: true, allergen: "Dairy", c: "carrot", m: 50, fz: false, y: 0, u: "", shop: ["4 sweet potatoes", "1 can no-salt-added black beans", "1 cup corn", "1/2 cup shredded cheese", "Plain yogurt, salsa, avocado"], steps: ["Bake the sweet potatoes at 400°F for 45 minutes until soft (or microwave 8 to 10 minutes).", "Warm the beans and corn together.", "Kid job: split each potato and stuff it with beans, corn, cheese and toppings."], why: "Vitamin A, fiber, plant protein and iron; a filling meatless night."},
   {g: "family", name: "Turkey taco skillet", iron: true, meat: true, c: "carrot", m: 25, fz: true, y: 6, u: "portions", shop: ["1 lb ground turkey", "1 can no-salt-added black beans", "1 cup corn", "1 can no-salt-added diced tomatoes", "1 cup brown rice (uncooked)", "2 teaspoons mild taco seasoning", "Cheese, avocado for topping"], steps: ["Brown the turkey in a large skillet to 165°F.", "Add the rice, tomatoes, beans, corn, seasoning and 1 1/2 cups water; cover and simmer 25 to 30 minutes until the rice is tender.", "Kid job: scoop toppings into bowls and sprinkle cheese over the skillet."], why: "Protein, iron and fiber in one pan, with milder seasoning everyone can share."},
+  // ---- family table: more dinners for the whole household (5+), each with a kid job
+  {g: "family", name: "Honey garlic pork chops", iron: true, meat: true, allergen: "Soy", c: "carrot", m: 25, fz: false, y: 0, u: "", shop: ["4 boneless pork chops (about 1 inch thick)", "1 lb green beans", "2 tablespoons honey", "2 tablespoons low-sodium soy sauce", "3 cloves garlic, minced", "1 tablespoon olive oil"], steps: ["Kid job: whisk the honey, soy sauce and garlic into a glaze, and snap the ends off the green beans.", "Sear the chops in the oil over medium-high heat, 4 to 5 minutes a side, until they reach 145°F. Rest 3 minutes.", "Steam the green beans 5 minutes. Spoon the glaze into the pan, bubble 1 minute, and turn the chops in it."], why: "Protein, B vitamins and zinc from the pork, with fiber and vitamin K from the green beans."},
+  {g: "family", name: "Pork tenderloin with roasted apples & carrots", iron: true, meat: true, c: "pea", m: 35, fz: false, y: 0, u: "", shop: ["1 1/4 lb pork tenderloin", "3 apples", "1 lb carrots", "2 tablespoons olive oil", "1 teaspoon dried thyme"], steps: ["Heat the oven to 425°F. Cut the apples into wedges and the carrots into sticks.", "Kid job: toss the apples and carrots with the oil and thyme in a big bowl, then spread them on the sheet pan.", "Brown the tenderloin in a skillet, set it on the pan and roast 18 to 22 minutes, to 145°F. Rest 5 minutes and slice."], why: "Lean protein and zinc from the pork; vitamin A from the carrots and fiber from the apples."},
+  {g: "family", name: "Slow-cooker pulled pork sliders", iron: true, meat: true, allergen: "Wheat", c: "carrot", m: 20, fz: true, y: 12, u: "portions", shop: ["3 lb boneless pork shoulder", "1 onion", "1 cup low-sugar barbecue sauce", "12 whole-wheat slider buns", "1 bag coleslaw mix", "1/2 cup plain yogurt", "1 lemon"], steps: ["Slice the onion into the slow cooker, add the pork and 1/2 cup of the sauce. Cook on low 8 hours.", "Shred with two forks and stir in the rest of the sauce.", "Kid job: stir the coleslaw mix with the yogurt and a squeeze of lemon, and set out the buns."], why: "Protein, iron and zinc, with crunchy cabbage for vitamin C and fiber.", note: "Plus 8 hours on low. Leftover pork freezes well in portions."},
+  {g: "family", name: "Pork fried rice", iron: true, meat: true, allergen: "Egg", c: "pea", m: 20, fz: true, y: 6, u: "portions", shop: ["3 cups cooked rice (day-old is best)", "1/2 lb pork tenderloin or ham, diced", "2 eggs", "1 1/2 cups frozen peas and carrots", "2 green onions", "2 tablespoons low-sodium soy sauce", "1 tablespoon sesame oil"], steps: ["Kid job: crack the eggs into a bowl and whisk them, and snip the green onions with kid scissors.", "Cook the pork in the sesame oil until no pink remains (145°F), then push aside and scramble the eggs.", "Add the vegetables and rice, stir-fry 4 to 5 minutes, then add the soy sauce and green onions."], why: "Protein from the pork and eggs, with peas and carrots for vitamins A and C."},
+  {g: "family", name: "Lemon chicken & rice skillet", iron: true, meat: true, c: "pea", m: 40, fz: true, y: 6, u: "portions", shop: ["1 1/2 lb boneless chicken thighs", "1 cup long-grain rice", "2 cups low-sodium chicken broth", "1 onion, diced", "1 lemon", "2 cups baby spinach"], steps: ["Brown the chicken in a deep skillet, then set aside. Soften the onion in the same pan.", "Add the rice and broth, put the chicken back on top, cover and simmer 20 minutes until the chicken reaches 165°F.", "Kid job: squeeze the lemon over the pan and tear the spinach in; stir until it wilts."], why: "Protein, iron and zinc from the chicken; vitamin C from the lemon helps absorb the iron in the spinach."},
+  {g: "family", name: "Chicken enchilada bake", iron: true, meat: true, allergen: "Dairy", c: "carrot", m: 40, fz: true, y: 8, u: "portions", shop: ["3 cups cooked shredded chicken", "1 can no-salt-added black beans", "1 cup corn", "2 cups mild enchilada sauce", "8 corn tortillas", "1 1/2 cups shredded cheese"], steps: ["Heat the oven to 375°F. Mix the chicken, beans, corn and 1 cup of the sauce.", "Kid job: tear the tortillas into pieces and layer them in the dish with the filling, then sprinkle the cheese on top.", "Pour on the rest of the sauce and bake 25 minutes, until bubbling."], why: "Protein and iron from the chicken and beans, calcium from the cheese, and fiber from the corn tortillas."},
+  {g: "family", name: "Crispy chicken parmesan", iron: true, meat: true, allergen: "Egg", c: "berry", m: 40, fz: true, y: 4, u: "cutlets", shop: ["4 thin chicken cutlets", "2 eggs", "1 cup panko breadcrumbs", "1/2 cup grated Parmesan", "2 cups marinara sauce", "1 cup shredded mozzarella", "12 oz whole-wheat spaghetti"], steps: ["Heat the oven to 425°F and line a sheet pan.", "Kid job: run the breading station: dip each cutlet in the beaten egg, then press it into the panko mixed with Parmesan. Wash hands after.", "Bake 15 minutes, top with marinara and mozzarella, and bake 5 more, to 165°F. Serve over the spaghetti."], why: "Protein from the chicken and eggs, calcium from the cheese, and whole grains for steady energy."},
+  {g: "family", name: "Sheet-pan chicken fajitas", iron: true, meat: true, allergen: "Wheat", c: "carrot", m: 30, fz: false, y: 0, u: "", shop: ["1 1/2 lb chicken breast, sliced", "3 bell peppers", "1 onion", "2 tablespoons olive oil", "2 teaspoons chili powder", "1 teaspoon cumin", "8 small flour tortillas", "1 lime", "Plain yogurt or sour cream"], steps: ["Heat the oven to 425°F. Slice the peppers and onion.", "Kid job: stir the chili powder and cumin together, then toss the peppers with the oil and spice mix on the pan.", "Add the chicken, roast 18 to 20 minutes to 165°F, squeeze the lime over and wrap in warm tortillas."], why: "Protein and iron from the chicken, with lots of vitamin C from the peppers to help absorb it."},
+  {g: "family", name: "Beef & bean chili", iron: true, meat: true, c: "carrot", m: 45, fz: true, y: 8, u: "portions", shop: ["1 lb lean ground beef", "1 can no-salt-added kidney beans", "1 can no-salt-added black beans", "1 can (28 oz) crushed tomatoes", "1 onion, diced", "1 bell pepper, diced", "2 tablespoons mild chili powder", "Shredded cheddar for topping"], steps: ["Brown the beef with the onion and pepper until the beef reaches 160°F.", "Kid job: rinse the beans in a colander, then stir them in with the tomatoes and chili powder.", "Simmer 25 minutes. Kid job: sprinkle the cheddar on each bowl."], why: "Iron and zinc from the beef plus plant iron and fiber from the beans: one of the best iron meals there is."},
+  {g: "family", name: "Cheeseburger pasta", iron: true, meat: true, allergen: "Dairy", c: "carrot", m: 25, fz: true, y: 6, u: "portions", shop: ["1 lb lean ground beef", "12 oz whole-wheat macaroni", "3 cups low-sodium beef broth", "1 cup milk", "2 tablespoons tomato paste", "1 1/2 cups shredded cheddar"], steps: ["Brown the beef in a large pot to 160°F.", "Kid job: measure the macaroni and cheese into bowls.", "Add the pasta, broth, milk and tomato paste; simmer covered 10 to 12 minutes until tender. Off the heat, Kid job: stir in the cheese."], why: "A homemade boxed-mix favorite: iron and zinc from the beef, calcium from the cheese and milk, and whole grains."},
+  {g: "family", name: "Shepherd's pie", iron: true, meat: true, allergen: "Dairy", c: "pea", m: 60, fz: true, y: 6, u: "portions", shop: ["1 lb lean ground beef or lamb", "2 lb potatoes", "2 cups frozen peas and carrots", "1 onion, diced", "1 cup low-sodium beef broth", "2 tablespoons tomato paste", "1/2 cup milk", "2 tablespoons butter"], steps: ["Boil the potatoes until soft, about 15 minutes. Heat the oven to 400°F.", "Brown the meat and onion to 160°F; add the vegetables, broth and tomato paste and simmer 5 minutes.", "Kid job: mash the potatoes with the milk and butter, then spread them over the filling. Bake 20 minutes."], why: "Iron and zinc from the meat, vitamins from the vegetables, all in one comforting dish that freezes well."},
+  {g: "family", name: "Turkey zucchini meatballs", iron: true, meat: true, allergen: "Egg", c: "pea", m: 35, fz: true, y: 24, u: "meatballs", shop: ["1 lb ground turkey", "1 small zucchini, grated", "1/2 cup breadcrumbs", "1 egg", "1/4 cup grated Parmesan", "1 teaspoon Italian seasoning", "Marinara sauce for serving"], steps: ["Heat the oven to 400°F and line a sheet pan. Squeeze the grated zucchini dry in a towel.", "Kid job: mix everything with clean hands and roll into balls the size of a walnut. Wash hands after.", "Bake 18 to 20 minutes, to 165°F. Warm in the marinara and serve with pasta or in rolls."], why: "Lean protein and iron from the turkey, with a vegetable hidden inside."},
+  {g: "family", name: "Honey-lime shrimp tacos", meat: true, allergen: "Shellfish", c: "berry", m: 20, fz: false, y: 0, u: "", shop: ["1 lb peeled shrimp", "1 lime", "1 tablespoon honey", "1 teaspoon chili powder", "8 small corn or flour tortillas", "2 cups shredded cabbage", "1 avocado", "Plain yogurt"], steps: ["Toss the shrimp with the chili powder, honey and half the lime juice.", "Cook in a hot skillet 2 minutes a side, until pink and opaque all the way through.", "Kid job: mash the avocado with the rest of the lime, then build the tacos with cabbage and a spoon of yogurt."], why: "Lean protein, iodine and selenium from the shrimp, plus healthy fats from the avocado.", note: "Shellfish is a common allergen. If she hasn't had it before, offer it at home earlier in the day."},
+  {g: "family", name: "Crumb-topped baked cod & broccoli", iron: true, meat: true, allergen: "Fish", c: "pea", m: 25, fz: false, y: 0, u: "", shop: ["1 1/2 lb cod fillets", "1/2 cup panko breadcrumbs", "2 tablespoons melted butter", "1 lemon", "1 lb broccoli florets"], steps: ["Heat the oven to 425°F. Put the cod and broccoli on a lined sheet pan.", "Kid job: stir the panko, melted butter and lemon zest together and press it on top of the fish. Wash hands after.", "Bake 12 to 15 minutes, until the fish flakes and reaches 145°F. Squeeze the lemon over."], why: "Lean protein and iodine from the cod, with vitamin C and folate from the broccoli."},
+  {g: "family", name: "Teriyaki salmon rice bowls", iron: true, meat: true, allergen: "Fish", c: "carrot", m: 30, fz: false, y: 0, u: "", shop: ["1 lb salmon fillets", "2 cups rice", "2 tablespoons low-sodium soy sauce", "1 tablespoon honey", "1 cucumber", "1 cup shelled edamame", "1 cup shredded carrots"], steps: ["Cook the rice. Heat the oven to 400°F.", "Brush the salmon with the soy sauce and honey and bake 12 to 15 minutes, to 145°F.", "Kid job: slice the cucumber with a kid-safe knife and set out the edamame and carrots, then everyone builds a bowl."], why: "Omega-3s for brain development from the salmon, plus plant protein from the edamame."},
+  {g: "family", name: "Sheet-pan breakfast-for-dinner hash", iron: true, meat: true, allergen: "Egg", c: "carrot", m: 40, fz: false, y: 0, u: "", shop: ["1 1/2 lb potatoes, diced", "1 bell pepper", "1 onion", "2 tablespoons olive oil", "6 eggs", "1/2 cup shredded cheddar"], steps: ["Heat the oven to 425°F. Toss the potatoes, pepper and onion with the oil and roast 25 minutes.", "Make 6 wells in the vegetables. Kid job: crack an egg into each well and sprinkle the cheese over everything.", "Bake 8 to 10 minutes, until the whites are set and the yolks are cooked through."], why: "Protein and choline from the eggs for brain development, with vitamin C from the peppers."},
+  {g: "family", name: "Black bean & sweet potato quesadillas", iron: true, allergen: "Dairy", c: "carrot", m: 25, fz: true, y: 8, u: "quesadillas", shop: ["1 large sweet potato", "1 can no-salt-added black beans", "1 teaspoon cumin", "1 1/2 cups shredded cheese", "8 whole-wheat tortillas", "Mild salsa for dipping"], steps: ["Microwave the sweet potato 6 to 8 minutes until soft, and scoop out the flesh.", "Kid job: mash the sweet potato and beans with the cumin, spread it on half of each tortilla, sprinkle cheese and fold.", "Cook in a dry skillet 2 to 3 minutes a side, until golden and melty. Cut into wedges."], why: "Plant iron and fiber from the beans, vitamin A from the sweet potato and calcium from the cheese."},
+  {g: "family", name: "Coconut chickpea curry", iron: true, c: "carrot", m: 30, fz: true, y: 6, u: "portions", shop: ["2 cans no-salt-added chickpeas", "1 can light coconut milk", "1 can no-salt-added diced tomatoes", "1 onion, diced", "2 cloves garlic", "2 teaspoons mild curry powder", "3 cups baby spinach", "Rice for serving"], steps: ["Soften the onion and garlic in a little oil, then stir in the curry powder for 30 seconds.", "Kid job: rinse the chickpeas in a colander, then help pour in the chickpeas, tomatoes and coconut milk. Simmer 15 minutes.", "Kid job: tear the spinach and stir it in until wilted. Serve over rice."], why: "Plant protein, iron and fiber from the chickpeas, with vitamin C from the tomatoes to help absorb the iron."},
+  {g: "family", name: "Spinach lasagna roll-ups", allergen: "Dairy", c: "pea", m: 45, fz: true, y: 12, u: "roll-ups", shop: ["12 lasagna noodles", "15 oz ricotta", "2 cups chopped spinach", "1 egg", "1/4 cup grated Parmesan", "2 cups marinara sauce", "1 cup shredded mozzarella"], steps: ["Cook the noodles and lay them flat on a towel. Heat the oven to 375°F.", "Kid job: stir the ricotta, spinach, egg and Parmesan, spread it along each noodle and roll it up.", "Set the rolls in a dish on half the marinara, top with the rest and the mozzarella, and bake 25 minutes."], why: "Calcium and protein from the cheeses, folate from the spinach, and fun to make together."},
+  {g: "family", name: "Lentil sloppy joes", iron: true, allergen: "Wheat", c: "carrot", m: 35, fz: true, y: 8, u: "portions", shop: ["1 cup dry brown or green lentils", "1 onion, diced", "1 bell pepper, diced", "1 can (15 oz) no-salt-added tomato sauce", "2 tablespoons tomato paste", "1 teaspoon maple syrup", "8 whole-wheat buns"], steps: ["Kid job: measure and rinse the lentils in a strainer.", "Simmer the lentils in 3 cups water for 20 minutes until tender; drain.", "Soften the onion and pepper, then add the lentils, tomato sauce, paste and maple syrup; simmer 10 minutes. Kid job: set out the buns and scoop."], why: "Plant iron, protein and fiber from the lentils, with vitamin C from the pepper and tomato."},
   // ---- stage 6: kid favorites, made at home
   {g: "faves", name: "Baked chicken nuggets", iron: true, meat: true, allergen: "Egg", c: "carrot", m: 25, fz: true, y: 24, u: "pieces", shop: ["1 lb boneless chicken breast or thighs", "1 egg", "1 cup whole-wheat panko breadcrumbs", "2 tablespoons grated Parmesan", "1/2 teaspoon paprika"], steps: ["Heat the oven to 425°F and line a baking sheet. Cut the chicken into nugget-size pieces.", "Kid job: dip each piece in beaten egg, then roll it in the crumbs mixed with Parmesan and paprika (wash hands after).", "Bake 15 to 18 minutes, flipping halfway, until golden and 165°F inside. Serve with plain yogurt ranch or ketchup."], why: "Real chicken for iron, zinc and protein, and a crunchy coating without the fryer. Freeze cooked nuggets for quick lunches; reheat at 400°F for 8 minutes.", note: "Quick yogurt ranch: 1/2 cup plain yogurt, a pinch of garlic powder and dried dill."},
   {g: "faves", name: "Sweet potato fries", c: "carrot", m: 30, fz: false, y: 0, u: "", shop: ["2 medium sweet potatoes", "1 tablespoon olive oil", "Pinch of paprika"], steps: ["Heat the oven to 425°F. Cut the sweet potatoes into thin sticks.", "Kid job: toss the sticks with the oil and paprika in a big bowl, then lay them out on the pan in one layer.", "Bake 25 to 30 minutes, turning once, until crisp at the edges."], why: "Vitamin A for eyes and immunity, plus fiber. The perfect side for nuggets or sliders."},
@@ -914,15 +974,17 @@ $("week").addEventListener("click", e => { const b = e.target.closest("[data-day
 
 /* ---------- cookbook ---------- */
 function badges(k){ const e = entry(k); return e.date ? `<span class="done">Tried ${esc(nice(e.date))}</span>${stars(e.rating)}` : ""; }
-function card(r){
-  const e = entry(r.k), k = r.k;
-  return `<details class="card" id="${r.id}" data-k="${k}">
+function card(r, pre){
+  pre = typeof pre === "string" ? pre : "";
+  const e = entry(r.k), k = r.k, kid = pre + k, jobs = r.custom ? (r.jobs && r.jobs.length ? r.jobs : r.st >= 5 ? kidJobs(r) : []) : [];
+  return `<details class="card" id="${pre}${r.id}" data-k="${k}">
     <summary><span class="dot" style="background:var(--dot-${r.c})" aria-hidden="true">${esc(r.name[0])}</span>
-      <span><h3>${esc(r.name)}</h3><span class="meta"><span>${r.m ? r.m + " min" : "No cook"}</span><span>${r.fz ? "Freezes well" : "Best fresh"}</span>${r.custom ? `<span class="added">Added</span>` : ""}${r.allergen ? `<span class="al">${esc(r.allergen)}</span>` : ""}${r.iron ? `<span class="fe" title="Iron-rich">Fe</span>` : ""}</span><span class="badges">${badges(k)}</span></span>
+      <span><h3>${esc(r.name)}</h3><span class="meta">${pre === "f-" || r.st === 7 ? `<span class="protag">${esc(PRO_NAME[proteins(r)[0]])}</span>` : ""}<span>${r.m ? r.m + " min" : "No cook"}</span><span>${r.fz ? "Freezes well" : "Best fresh"}</span>${r.custom ? `<span class="added">Added</span>` : ""}${r.allergen ? `<span class="al">${esc(r.allergen)}</span>` : ""}${r.iron ? `<span class="fe" title="Iron-rich">Fe</span>` : ""}</span><span class="badges">${badges(k)}</span></span>
       <span class="chev" aria-hidden="true">&#9662;</span></summary>
     <div class="body">
       <div><h4>You'll need</h4><p class="store" style="margin:0">${r.shop.map(esc).join(" · ")}${r.y ? ` · makes about ${r.y} ${esc(r.u)}` : ""}</p></div>
-      <div><h4>How to make it</h4><ol>${r.steps.map(s => `<li>${esc(s).replace(/^Kid job:/, '<span class="kidjob">Kid job</span>')}</li>`).join("")}</ol></div>
+      <div><h4>How to make it</h4><ol>${r.steps.map(s => `<li>${esc(s).replace(/Kid job:/g, '<span class="kidjob">Kid job</span>')}</li>`).join("")}</ol></div>
+      ${jobs.length ? `<div><h4>How she can help</h4><ul class="kjobs">${jobs.map(j => `<li><span class="kidjob">Kid job</span> ${esc(j)}</li>`).join("")}</ul><p class="store" style="margin:6px 0 0">Kids are more likely to try a meal they helped make, and the jobs build hand strength, counting and kitchen words.</p></div>` : ""}
       <div class="why"><h4>Why it's good</h4><p>${esc(r.why)}</p></div>
       ${r.st < stageNow() && r.st === 1 ? `<p class="store" style="margin:0"><b>At her stage now:</b> ${esc(STAGES[stageNow()].how)}</p>` : ""}
       ${r.note ? `<p class="store" style="margin:0">${esc(r.note)}</p>` : ""}
@@ -930,21 +992,21 @@ function card(r){
       ${r.custom ? `${safetyHtml(r)}<p class="store" style="margin:0">For ${esc(STAGES[r.st].ages)}${r.src ? ` · <a href="${esc(r.src)}" target="_blank" rel="noopener">Original recipe ›</a>` : ""}</p>
         <div class="row"><button type="button" class="mini" data-edit="${esc(r.cid)}">Edit</button><button type="button" class="mini warnb" data-del-recipe="${esc(r.cid)}">Delete</button></div>` : ""}
       <div class="mj">
-        <label class="fld" for="d-${k}">First tried
-          <span class="row"><input type="date" id="d-${k}" data-f="date" value="${esc(e.date || "")}" max="${today()}"><button type="button" class="mini" data-today>Today</button></span></label>
-        <div class="fld"><span id="r-${k}">How much she liked it</span>
-          <span class="rate" role="radiogroup" aria-labelledby="r-${k}">${[1, 2, 3, 4, 5].map(n => `<button type="button" role="radio" aria-checked="${e.rating === n}" data-rate="${n}" title="${RATES[n]}" class="${e.rating >= n ? "on" : ""}">★</button>`).join("")}</span>
+        <label class="fld" for="d-${kid}">First tried
+          <span class="row"><input type="date" id="d-${kid}" data-f="date" value="${esc(e.date || "")}" max="${today()}"><button type="button" class="mini" data-today>Today</button></span></label>
+        <div class="fld"><span id="r-${kid}">How much she liked it</span>
+          <span class="rate" role="radiogroup" aria-labelledby="r-${kid}">${[1, 2, 3, 4, 5].map(n => `<button type="button" role="radio" aria-checked="${e.rating === n}" data-rate="${n}" title="${RATES[n]}" class="${e.rating >= n ? "on" : ""}">★</button>`).join("")}</span>
           <span class="rlabel">${e.rating ? RATES[e.rating] : "Tap a star"}</span></div>
         <div class="sim" data-sim="${esc(k)}">${simHtml(r)}</div>
-        <label class="fld" for="n-${k}">Reaction log
-          <textarea id="n-${k}" data-f="notes" rows="3" placeholder="Any reaction? Rash, hives, vomiting, fussiness, gas, constipation… or none. Plus how much she ate.">${esc(e.notes || "")}</textarea></label>
+        <label class="fld" for="n-${kid}">Reaction log
+          <textarea id="n-${kid}" data-f="notes" rows="3" placeholder="Any reaction? Rash, hives, vomiting, fussiness, gas, constipation… or none. Plus how much she ate.">${esc(e.notes || "")}</textarea></label>
         <div class="row">${r.fz ? `<button type="button" class="mini" data-tofreezer>Add a batch to the fridge or freezer</button>` : ""}<span class="saved" aria-live="polite"></span></div>
       </div>
     </div></details>`;
 }
 /* the cookbook shows one stage at a time; the rail on the left picks it, "My recipes" is the last stop */
 let CBSEL = S.get("mjskitchen.cbst", null);
-const cbSel = () => CBSEL === "mine" || (CBSEL >= 1 && CBSEL <= LAST) ? CBSEL : stageNow();
+const cbSel = () => CBSEL === "mine" || (CBSEL >= 1 && CBSEL <= 6) ? CBSEL : Math.min(stageNow(), 6);
 function setStage(v, top){ CBSEL = v; S.set("mjskitchen.cbst", v); drawBook(); if(top !== false){ const b = document.querySelector(".cbbody"); if(b && b.getBoundingClientRect().top < 0) b.scrollIntoView({block: "start"}); } setTimeout(markTab, 30); }
 const STAGE_TAB = {1: "6 mo", 2: "7–8 mo", 3: "9–11 mo", 4: "1 yr", 5: "2–3 yrs", 6: "3–5 yrs", 7: "5+ yrs"};
 const STAGE_SHORT = {1: "Purees", 2: "Combos", 3: "Finger foods", 4: "Family foods", 5: "Toddler", 6: "Kid meals", 7: "Family"};
@@ -956,15 +1018,16 @@ function drawBook(){
   const cur = stageNow(), a = ageMonths(), sel = cbSel();
   $("cbLead").textContent = a == null ? "Pick a stage on the left. Add MJ's birthday on the Today tab and the cookbook follows her age." : `MJ is in stage ${cur}: ${STAGES[cur].name.toLowerCase()}. Pick any stage on the left to peek ahead or look back.`;
   const mineN = R.filter(r => r.custom).length;
-  $("cbRail").innerHTML = [1, 2, 3, 4, 5, 6, 7].map(n => `<button type="button" class="rail${n === sel ? " on" : ""}${n > cur ? " later" : ""}" data-st="${n}" aria-pressed="${n === sel}"><b>${n}</b><small>${STAGE_TAB[n]}</small><span>${STAGE_SHORT[n]}</span>${n === cur && a != null ? "<em>Now</em>" : ""}</button>`).join("")
+  $("cbRail").innerHTML = [1, 2, 3, 4, 5, 6].map(n => `<button type="button" class="rail${n === sel ? " on" : ""}${n > cur ? " later" : ""}" data-st="${n}" aria-pressed="${n === sel}"><b>${n}</b><small>${STAGE_TAB[n]}</small><span>${STAGE_SHORT[n]}</span>${n === cur && a != null ? "<em>Now</em>" : ""}</button>`).join("")
+    + `<a class="rail${cur === 7 ? "" : " later"}" href="#family"><b>7</b><small>5+ yrs</small><span>Family tab ›</span>${cur === 7 && a != null ? "<em>Now</em>" : ""}</a>`
     + `<button type="button" class="rail mine${sel === "mine" ? " on" : ""}" data-st="mine" aria-pressed="${sel === "mine"}"><b>&#9829;</b><small>My recipes</small><span>${mineN ? mineN + " added" : "Add yours"}</span></button>`;
   let html = "";
   if(sel === "mine"){
     $("cbTabs").hidden = true;
-    const mine = R.filter(r => r.custom);
-    html += `<section id="grp-mine"><h2>My recipes</h2><p class="lead">${mine.length ? "Every recipe you've added. Each one also sits in its own stage of the cookbook." : "Recipes you add show up here, and in the right stage of the cookbook."}</p>`;
+    const mine = R.filter(r => r.custom && r.st < 7), famN = R.filter(r => r.custom && r.st === 7).length;
+    html += `<section id="grp-mine"><h2>My recipes</h2><p class="lead">${mine.length ? "Every recipe you've added. Each one also sits in its own stage of the cookbook." : "Recipes you add show up here, and in the right stage of the cookbook."}${famN ? ` ${famN} family recipe${famN === 1 ? "" : "s"} you added ${famN === 1 ? "is" : "are"} on the <a href="#family">Family tab</a>.` : ""}</p>`;
     if(!mine.length) html += `<button type="button" class="go" data-addnew>+ Add a recipe</button>`;
-    [1, 2, 3, 4, 5, 6, 7].forEach(st => { const list = mine.filter(r => r.st === st); if(!list.length) return;
+    [1, 2, 3, 4, 5, 6].forEach(st => { const list = mine.filter(r => r.st === st); if(!list.length) return;
       html += `<p class="minesub">Stage ${st} · ${esc(STAGES[st].ages)}</p><div class="cards">${list.map(card).join("")}</div>`; });
     html += `</section>`;
     const loved = R.filter(r => entry(r.k).rating >= 4 && shown(r)).sort((x, y) => entry(y.k).rating - entry(x.k).rating || (entry(y.k).date || "").localeCompare(entry(x.k).date || ""));
@@ -993,13 +1056,13 @@ function drawBook(){
     const hid = HIDDEN.map(k => BYK[k]).filter(r => r && r.st === st);
     if(hid.length) html += `<section id="grp-hidden"><h2>Hidden recipes</h2><p class="lead">Recipes you've hidden from this stage. Tap Show to put one back.</p>
       <ul class="frz">${hid.map(r => `<li><div><b>${esc(r.name)}</b><span class="rlabel">${esc(GROUPS[r.g].title)}</span></div><button type="button" class="mini" data-unhide="${esc(r.k)}">Show</button></li>`).join("")}</ul></section>`;
-    html += `<button type="button" class="go nextst" data-st="${st < LAST ? st + 1 : "mine"}">${st < LAST ? `Next: stage ${st + 1}, ${esc(STAGES[st + 1].name.toLowerCase())} ›` : "Next: My recipes ›"}</button>`;
+    html += st < 6 ? `<button type="button" class="go nextst" data-st="${st + 1}">Next: stage ${st + 1}, ${esc(STAGES[st + 1].name.toLowerCase())} ›</button>` : `<a class="go nextst" href="#family" style="text-align:center;text-decoration:none">Next: 5+ on the Family tab ›</a>`;
   }
   $("book").innerHTML = html;
   drawImporter();
 }
 $("cbRail").addEventListener("click", e => { const b = e.target.closest("[data-st]"); if(b) setStage(b.dataset.st === "mine" ? "mine" : +b.dataset.st); });
-$("book").addEventListener("click", e => { const b = e.target.closest(".nextst"); if(b) setStage(b.dataset.st === "mine" ? "mine" : +b.dataset.st); });
+$("book").addEventListener("click", e => { const b = e.target.closest("button.nextst"); if(b) setStage(b.dataset.st === "mine" ? "mine" : +b.dataset.st); });
 
 /* ---------- similar recipes from the web, for the ones she loves ---------- */
 let SIMC = S.get("mjskitchen.similar", {}) || {};
@@ -1072,8 +1135,8 @@ function simHtml(r, always){
 function drawSims(k){ document.querySelectorAll(`[data-sim="${CSS.escape(k)}"]`).forEach(el => { const r = BYK[k]; if(r) el.innerHTML = simHtml(r, !!el.closest(".idea")); }); }
 document.addEventListener("click", e => {
   const f = e.target.closest("[data-find]"); if(f){ e.preventDefault(); findSimilar(f.dataset.find, f.dataset.force === "1"); return; }
-  const ad = e.target.closest("[data-addsim]"); if(ad){ e.preventDefault(); IMP = {open: true, presetG: ad.dataset.g}; drawImporter(); const u = $("impUrl"); if(u){ u.value = ad.dataset.addsim; doImport(); $("importer").scrollIntoView({behavior: "smooth", block: "start"}); } return; }
-  if(e.target.closest("[data-addnew]")){ IMP = {open: true}; drawImporter(); $("importer").scrollIntoView({behavior: "smooth", block: "start"}); setTimeout(() => { const u = $("impUrl"); if(u) u.focus(); }, 300); return; }
+  const ad = e.target.closest("[data-addsim]"); if(ad){ e.preventDefault(); impHere(); IMP = {open: true, presetG: ad.dataset.g}; drawImporter(); const u = $("impUrl"); if(u){ u.value = ad.dataset.addsim; doImport(); $("importer").scrollIntoView({behavior: "smooth", block: "start"}); } return; }
+  if(e.target.closest("[data-addnew]")){ impHere("cookbook"); IMP = {open: true}; drawImporter(); $("importer").scrollIntoView({behavior: "smooth", block: "start"}); setTimeout(() => { const u = $("impUrl"); if(u) u.focus(); }, 300); return; }
   const cg = e.target.closest("[data-cbgo]"); if(cg){ e.preventDefault(); location.hash = "cookbook"; setTimeout(() => { setStage("mine"); const el = $("grp-" + cg.dataset.cbgo); if(el) el.scrollIntoView({behavior: "smooth", block: "start"}); }, 60); }
 });
 /* ---------- add a recipe from a web page (or pasted text) ---------- */
@@ -1142,7 +1205,7 @@ function parseText(text){
   return {name, shop, steps};
 }
 /* nutrients, allergens and age checks from the ingredient list */
-const NUTR = [[/\b(beef|steak|lamb)\b/i, "iron and zinc from the red meat", "iron"], [/\b(chicken|turkey)\b/i, "protein, iron and zinc from the poultry", "iron"],
+const NUTR = [[/\b(beef|steak|lamb)\b/i, "iron and zinc from the red meat", "iron"], [/\b(pork|ham)\b/i, "protein, B vitamins and zinc from the pork", "iron"], [/\b(chicken|turkey)\b/i, "protein, iron and zinc from the poultry", "iron"],
   [/\b(salmon|sardine|trout|tuna|cod|fish)\b/i, "protein and omega-3s for brain development", "iron"], [/\b(lentil|bean|chickpea|tofu)\b/i, "plant protein, iron and fiber", "iron"],
   [/\begg/i, "protein and choline for brain development", "iron"], [/\b(spinach|kale|broccoli)\b/i, "folate, vitamin K and some iron from the greens", ""],
   [/\b(sweet potato|carrot|squash|pumpkin|mango)\b/i, "vitamin A for eyes and immunity", ""], [/\b(berr|orange|kiwi|strawberr|pepper|tomato)/i, "vitamin C, which helps her absorb iron", ""],
@@ -1199,13 +1262,14 @@ function drawImporter(){
     <label class="chk"><input type="checkbox" id="dFz"${d.fz ? " checked" : ""}> Freezes well (shows in the freezer tools)</label>
     <label class="fld" for="dShop">Ingredients <span class="rlabel">one per line</span><textarea id="dShop" rows="6">${esc((d.shop || []).join("\n"))}</textarea></label>
     <label class="fld" for="dSteps">Steps <span class="rlabel">one per line</span><textarea id="dSteps" rows="7">${esc((d.steps || []).join("\n"))}</textarea></label>
+    <label class="fld" for="dJobs">Kid jobs: what she can help with <span class="rlabel">picked from the steps, one per line</span><textarea id="dJobs" rows="4">${esc((d.jobs || []).join("\n"))}</textarea></label>
     <label class="fld" for="dWhy">Why it's good <span class="rlabel">filled in from the ingredients</span><textarea id="dWhy" rows="2">${esc(d.why || "")}</textarea></label>
     <label class="fld" for="dNote">Notes <span class="rlabel">(optional)</span><input type="text" id="dNote" value="${esc(d.note || "")}" placeholder="e.g. cut into strips for MJ, skip the salt"></label>
     <div id="dSafe">${safetyHtml(d)}</div>
     <div class="row"><button type="submit" class="go">${IMP.editing ? "Save changes" : "Save to the cookbook"}</button><button type="button" class="mini" id="dCancel">Cancel</button></div></form>`;
   const sync = () => { d.name = $("dName").value; d.g = $("dGroup").value; d.st = GROUPS[d.g].st; d.m = +$("dMin").value || 0; d.fz = $("dFz").checked;
     d.shop = $("dShop").value.split("\n").map(x => x.trim()).filter(Boolean); d.steps = $("dSteps").value.split("\n").map(x => x.trim()).filter(Boolean);
-    d.why = $("dWhy").value.trim(); d.note = $("dNote").value.trim(); $("dSafe").innerHTML = safetyHtml(d); };
+    d.why = $("dWhy").value.trim(); d.jobs = $("dJobs").value.split("\n").map(x => x.trim()).filter(Boolean); d.note = $("dNote").value.trim(); $("dSafe").innerHTML = safetyHtml(d); };
   $("impForm").addEventListener("input", sync); $("impForm").addEventListener("change", sync);
   $("dCancel").onclick = () => { IMP = {open: false}; drawImporter(); };
   $("impForm").onsubmit = e => { e.preventDefault(); sync(); saveDraft(); };
@@ -1215,6 +1279,8 @@ function startDraft(p){
   IMP.draft = Object.assign({st: stageNow(), m: p.m || 0, fz: /freez/i.test((p.steps || []).join(" ")), why: a.why, note: p.yield ? `Makes ${p.yield}.` : ""}, p);
   if(IMP.presetG && GROUPS[IMP.presetG] && !IMP.draft.g) IMP.draft.g = IMP.presetG;
   if(!IMP.draft.g || !GROUPS[IMP.draft.g]) IMP.draft.g = guessGroup(IMP.draft); IMP.draft.st = GROUPS[IMP.draft.g].st;
+  if(!IMP.draft.jobs || !IMP.draft.jobs.length) IMP.draft.jobs = kidJobs(IMP.draft);
+  if(!IMP.draft.why) IMP.draft.why = "A home-cooked meal the whole family can share.";
   IMP.msg = ""; drawImporter(); $("importer").scrollIntoView({behavior: "smooth", block: "start"});
 }
 async function doImport(){
@@ -1232,20 +1298,23 @@ function saveDraft(){
   const a = analyze(d), pal = ["carrot", "pea", "berry"];
   const g = d.g && GROUPS[d.g] ? d.g : guessGroup(d);
   const rec = {cid: IMP.editing || ("m" + uid()), name: d.name.trim(), g, st: GROUPS[g].st, m: +d.m || 0, fz: !!d.fz, shop: d.shop.length ? d.shop : ["(no ingredients listed)"], steps: d.steps.length ? d.steps : ["(no steps listed)"],
-    why: d.why || "Your own recipe.", note: d.note || "", src: d.src || "", iron: a.iron, meat: a.meat, allergen: a.allergens[0] || "", c: pal[(d.name.length) % 3]};
+    why: d.why || "Your own recipe.", note: d.note || "", jobs: d.jobs || [], src: d.src || "", iron: a.iron, meat: a.meat, allergen: a.allergens[0] || "", c: pal[(d.name.length) % 3]};
   const i = MINE.findIndex(m => m.cid === rec.cid);
   if(i >= 0) MINE[i] = rec; else MINE.push(rec);
   try{ localStorage.setItem("mjskitchen.mine", JSON.stringify(MINE)); }catch(_){}
   const full = Object.assign({custom: true, y: 0, u: "", id: rec.cid, k: "mine:" + rec.cid}, rec);
   const j = R.findIndex(r => r.k === full.k); if(j >= 0) R[j] = full; else R.push(full); BYK[full.k] = full;
-  const was = IMP.editing; IMP = {open: false}; if(CBSEL !== "mine") CBSEL = rec.st, S.set("mjskitchen.cbst", rec.st); drawAll(); toast(was ? "Recipe updated" : `${rec.name} added to ${GROUPS[g].title}`);
-  setTimeout(() => { const el = $(rec.cid); if(el){ el.open = false; el.scrollIntoView({behavior: "smooth", block: "center"}); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 2400); } }, 80);
+  const was = IMP.editing; IMP = {open: false};
+  if(rec.st === 7){ if(document.body.dataset.tab !== "family") location.hash = "family"; FQ = ""; if($("famQ")) $("famQ").value = ""; }
+  else { if(CBSEL !== "mine") CBSEL = rec.st, S.set("mjskitchen.cbst", rec.st); if(document.body.dataset.tab !== "cookbook") location.hash = "cookbook"; }
+  drawAll(); toast(was ? "Recipe updated" : `${rec.name} added to ${GROUPS[g].title}`);
+  setTimeout(() => { const el = $(rec.cid) || $("f-" + rec.cid); if(el){ el.open = false; el.scrollIntoView({behavior: "smooth", block: "center"}); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 2400); } }, 80);
 }
 document.addEventListener("click", e => {
   const hd = e.target.closest("[data-hide]"); if(hd){ HIDDEN = [...new Set(HIDDEN.concat(hd.dataset.hide))]; try{ localStorage.setItem("mjskitchen.hidden", JSON.stringify(HIDDEN)); }catch(_){} const n = BYK[hd.dataset.hide]; drawAll(); toast(`${n ? n.name : "Recipe"} hidden · bring it back under Hidden recipes at the end of the Cookbook`); return; }
   const uh = e.target.closest("[data-unhide]"); if(uh){ HIDDEN = HIDDEN.filter(k => k !== uh.dataset.unhide); try{ localStorage.setItem("mjskitchen.hidden", JSON.stringify(HIDDEN)); }catch(_){} drawAll(); toast("Recipe is back"); return; }
-  if(e.target.closest("#addRecipeBtn")){ IMP = {open: true}; drawImporter(); setTimeout(() => { const u = $("impUrl"); if(u) u.focus(); }, 30); return; }
-  const ed = e.target.closest("[data-edit]"); if(ed){ const r = MINE.find(m => m.cid === ed.dataset.edit); if(r){ IMP = {open: true, editing: r.cid, draft: Object.assign(JSON.parse(JSON.stringify(r)), {g: (BYK["mine:" + r.cid] || {}).g || guessGroup(r)})}; drawImporter(); $("importer").scrollIntoView({behavior: "smooth"}); } return; }
+  if(e.target.closest("#addRecipeBtn")){ impHere("cookbook"); IMP = {open: true}; drawImporter(); setTimeout(() => { const u = $("impUrl"); if(u) u.focus(); }, 30); return; }
+  const ed = e.target.closest("[data-edit]"); if(ed){ const r = MINE.find(m => m.cid === ed.dataset.edit); if(r){ impHere(); IMP = {open: true, editing: r.cid, draft: Object.assign(JSON.parse(JSON.stringify(r)), {g: (BYK["mine:" + r.cid] || {}).g || guessGroup(r)})}; drawImporter(); $("importer").scrollIntoView({behavior: "smooth"}); } return; }
   const dl = e.target.closest("[data-del-recipe]"); if(dl){
     if(dl.dataset.sure !== "1"){ dl.dataset.sure = "1"; dl.textContent = "Tap again to delete"; setTimeout(() => { if(dl.isConnected){ dl.dataset.sure = ""; dl.textContent = "Delete"; } }, 4000); return; }
     const cid = dl.dataset.delRecipe; MINE = MINE.filter(m => m.cid !== cid); try{ localStorage.setItem("mjskitchen.mine", JSON.stringify(MINE)); }catch(_){}
@@ -1258,10 +1327,10 @@ function refreshCard(c){
   c.querySelector(".rlabel").textContent = e.rating ? RATES[e.rating] : "Tap a star";
   const s = c.querySelector(".saved"); s.textContent = "Saved"; clearTimeout(s._t); s._t = setTimeout(() => s.textContent = "", 1500);
   const sec = c.closest("section"), list = R.filter(r => r.g === BYK[k].g), d = list.filter(r => tried(r.k)).length;
-  if(sec.querySelector(".progress")) sec.querySelector(".progress").innerHTML = `<span>${d} of ${list.length} tried</span><span class="bar"><i style="width:${d / list.length * 100}%"></i></span>`;
+  if(sec && sec.querySelector(".progress")) sec.querySelector(".progress").innerHTML = `<span>${d} of ${list.length} tried</span><span class="bar"><i style="width:${d / list.length * 100}%"></i></span>`;
   drawLog(); drawNext();
 }
-$("book").addEventListener("click", ev => {
+["book", "famList"].forEach(id => $(id).addEventListener("click", ev => {
   const c = ev.target.closest("details.card"); if(!c) return;
   const k = c.dataset.k;
   const rb = ev.target.closest("[data-rate]");
@@ -1269,26 +1338,171 @@ $("book").addEventListener("click", ev => {
     drawSims(k); if(entry(k).rating === 5) findSimilar(k); return; }
   if(ev.target.closest("[data-today]")){ setEntry(k, {date: today()}); c.querySelector('[data-f="date"]').value = today(); refreshCard(c); return; }
   if(ev.target.closest("[data-tofreezer]")){ location.hash = "freezer"; $("addBatch").open = true; $("bFood").value = k; $("bFood").dispatchEvent(new Event("change")); $("bMade").value = today(); formHints(); setTimeout(() => $("addBatch").scrollIntoView({behavior: "smooth", block: "center"}), 60); }
-});
+}));
 const timers = {};
-$("book").addEventListener("input", ev => {
+["book", "famList"].forEach(id => $(id).addEventListener("input", ev => {
   const f = ev.target.dataset && ev.target.dataset.f; if(!f) return;
-  const c = ev.target.closest("details.card"), k = c.dataset.k, v = ev.target.value;
+  const c = ev.target.closest("details.card"); if(!c) return; const k = c.dataset.k, v = ev.target.value;
   clearTimeout(timers[k + f]);
   timers[k + f] = setTimeout(() => { setEntry(k, {[f]: v}); refreshCard(c); }, f === "notes" ? 500 : 0);
-});
+}));
 $("cbJump").addEventListener("click", e => { const a = e.target.closest("[data-jumpto]"); if(!a) return; e.preventDefault(); $(a.dataset.jumpto).scrollIntoView({behavior: "smooth", block: "start"}); });
 /* highlight the cookbook tab for the section in view, and keep it visible in the tab row */
 function markTab(){
-  const barId = !$("v-cookbook").hidden ? "cbJump" : !$("v-guide").hidden ? "gJump" : null; if(!barId) return;
+  const barId = !$("v-cookbook").hidden ? "cbJump" : !$("v-guide").hidden ? "gJump" : !$("v-family").hidden ? "famJump" : null; if(!barId) return;
   const tabs = [...document.querySelectorAll(`#${barId} .cbtab`)]; if(!tabs.length) return;
   let cur = null; tabs.forEach(t => { const sec = $(t.dataset.jumpto); if(sec && sec.getBoundingClientRect().top < 120) cur = t; });
   if(!cur) cur = tabs[0];
   tabs.forEach(t => { const on = t === cur; if(on && !t.classList.contains("on")){ const bar = $(barId); bar.scrollTo({left: Math.max(0, bar.scrollLeft + t.getBoundingClientRect().left - bar.getBoundingClientRect().left - 16), behavior: "smooth"}); } t.classList.toggle("on", on); });
 }
 window.addEventListener("scroll", () => requestAnimationFrame(markTab), {passive: true});
-function openRecipe(k){ const r = BYK[k]; if(!r) return; location.hash = "cookbook"; if(cbSel() !== r.st){ CBSEL = r.st; S.set("mjskitchen.cbst", r.st); drawBook(); } setTimeout(() => { const d = $(r.id); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); } }, 60); }
+function openRecipe(k){ const r = BYK[k]; if(!r) return;
+  if(r.st === 7){ if(FQ || FPRO !== "all"){ FQ = ""; FPRO = "all"; $("famQ").value = ""; } location.hash = "family"; drawFamily(); setTimeout(() => { const d = $(r.id); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); } }, 90); return; }
+  location.hash = "cookbook"; if(cbSel() !== r.st){ CBSEL = r.st; S.set("mjskitchen.cbst", r.st); drawBook(); } setTimeout(() => { const d = $(r.id); if(d){ d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); } }, 60); }
 document.addEventListener("click", e => { const a = e.target.closest("[data-go]"); if(a){ e.preventDefault(); openRecipe(a.dataset.go); } });
+
+
+/* ---------- family table (5+): kid jobs, proteins, and "what can I make with what I have" ---------- */
+function impHere(where){
+  where = where || (document.body.dataset.tab === "family" ? "family" : "cookbook");
+  const host = $(where === "family" ? "famImpHost" : "cbImpHost"), imp = $("importer");
+  if(imp.parentNode !== host) host.appendChild(imp);
+  if(document.body.dataset.tab !== where) location.hash = where;
+}
+const KJ = [   // [pattern over ingredients + steps, youngest age, the job]
+  [/\b(rinse|wash|colander|strainer)\b|\bcans? .*beans|chickpeas|lentils/, 3, "Rinse the beans or wash the produce in a colander"],
+  [/\bsnap\b|green beans/, 3, "Snap the ends off the green beans"],
+  [/\btear\b|lettuce|spinach|kale|\bbasil\b|cilantro|\bherbs?\b/, 3, "Tear the lettuce, spinach or herbs"],
+  [/\bmash|avocado|potatoes|sweet potato/, 3, "Mash with a fork or potato masher"],
+  [/\b(sprinkle|top with|garnish|toppings?)\b|shredded cheese|cheddar|mozzarella|parmesan/i, 3, "Sprinkle the cheese or toppings"],
+  [/\b(taco|tacos|tortillas?|pizza|bowls?|wraps?|sandwich|sliders?|buns?|layer|assemble|build)\b/, 3, "Help build it: fill tortillas, layer the dish or set up the topping bar"],
+  [/\b(toss|stir|mix|combine)\b/, 3, "Stir or toss it together in a big bowl, away from the stove"],
+  [/\beggs?\b/, 4, "Crack the eggs into a bowl and whisk them"],
+  [/\b(measure|cups?|tablespoons?|teaspoons?)\b/, 4, "Measure and pour the ingredients"],
+  [/\b(lemon|lime|orange)s?\b|\bsqueeze/, 4, "Squeeze the lemon or lime"],
+  [/\b(spread|brush|drizzle|glaze|marinade|sauce)\b/, 4, "Whisk the sauce, or brush it on with a pastry brush"],
+  [/\b(knead|dough|shape|meatballs?|patt(y|ies)|roll (it |them )?(up|into))\b/, 5, "Shape the dough, meatballs or patties with clean hands (wash after raw meat)"],
+  [/\b(dip|dredge|bread(ed|ing)|crumbs?|panko|coat)\b/, 5, "Run the breading station: dip, then coat (wash hands after)"],
+  [/\b(slice|chop|dice|cut)\b[^.;]{0,40}\b(cucumbers?|mushrooms?|zucchini|bananas?|strawberr\w*|peppers?|tomato\w*|potato\w*|cheese|bread|tortillas?|melon|avocados?|quesadillas?|pizza|wedges)\b/, 5, "Cut soft foods (cucumber, mushrooms, cooked potato) with a kid-safe knife"],
+  [/\bpeel(ed)?\b|carrots?|cucumbers?/, 5, "Peel carrots or cucumbers with a Y-peeler, stroking away from the body"]];
+function kidJobs(r){
+  const txt = ((r.shop || []).join(" ") + " " + (r.steps || []).join(" ") + " " + (r.name || "")).toLowerCase(), out = [];
+  KJ.forEach(([re, age, job]) => { if(out.length < 4 && re.test(txt)) out.push(`Age ${age}+: ${job}.`); });
+  if(out.length < 3) out.push("Age 3+: Set the table and count out the plates, cups and forks.");
+  return out;
+}
+const PRO = [["chicken", "Chicken", /\bchicken\b/], ["beef", "Beef", /\b(beef|steak|brisket|chuck|lamb)\b/], ["pork", "Pork", /\b(pork|ham|bacon|sausage|prosciutto)\b/],
+  ["turkey", "Turkey", /\bturkey\b/], ["sea", "Fish & seafood", /\b(salmon|cod|tilapia|tuna|halibut|trout|fish|shrimp|scallops?|crab|sardines?)\b/],
+  ["eggs", "Eggs", null], ["plant", "Beans & lentils", /\b(beans?|lentils?|chickpeas?|tofu|edamame|hummus)\b/]];
+const PRO_NAME = Object.assign({veg: "Vegetarian"}, Object.fromEntries(PRO.map(([k, n]) => [k, n])));
+function proteins(r){
+  if(r._pro) return r._pro;
+  const nm = r.name.toLowerCase(), shop = (r.shop || []).join(" ; ").toLowerCase(), out = [];
+  const eggN = (shop.match(/(\d+)\s+(large\s+)?eggs?\b/) || [])[1];
+  PRO.forEach(([k, , re]) => {
+    const hit = k === "eggs" ? /\b(egg|eggs|frittata|omelet|quiche|hash)\b/.test(nm) || +eggN >= 4
+      : k === "plant" ? re.test(nm) || re.test(shop.replace(/green beans?/g, "")) : re.test(nm + " " + shop);
+    if(hit) out.push(k); });
+  const named = out.filter(k => k !== "eggs" && PRO.find(p => p[0] === k)[2].test(nm));   // the protein in the name leads
+  const list = [...new Set([...named, ...out])];
+  r._pro = list.length ? list : ["veg"]; return r._pro;
+}
+let FQ = "", FPRO = "all", FOPT = S.get("mjskitchen.fopt", {kids: true}) || {kids: true};
+const famPool = () => R.filter(r => shown(r) && (r.st === 7 || (FOPT.kids && (r.g === "kids" || r.g === "faves" || r.g === "little"))));
+const famPre = r => r.st === 7 ? "" : "f-";
+/* ---- ingredient search ---- */
+const sing = w => w.length > 3 && /ies$/.test(w) ? w.slice(0, -3) + "y" : w.length > 4 && /(oes|ches|shes|xes)$/.test(w) ? w.slice(0, -2) : w.length > 3 && /[^s]s$/.test(w) ? w.slice(0, -1) : w;
+const normTxt = t => " " + String(t).toLowerCase().replace(/[^a-z\s]/g, " ").split(/\s+/).filter(Boolean).map(sing).join(" ") + " ";
+const SYN = {pasta: ["pasta", "penne", "spaghetti", "macaroni", "noodle", "rotini", "ziti", "lasagna", "fettuccine", "linguine", "orzo"], noodle: ["noodle", "pasta", "spaghetti", "penne", "macaroni"],
+  beef: ["beef", "steak", "chuck"], "ground beef": ["ground beef", "lean ground beef"], fish: ["fish", "salmon", "cod", "tilapia", "tuna", "halibut", "trout"], seafood: ["shrimp", "salmon", "cod", "fish", "tuna", "crab"],
+  cheese: ["cheese", "cheddar", "mozzarella", "parmesan", "ricotta", "feta"], tortilla: ["tortilla", "wrap"], wrap: ["wrap", "tortilla"], bun: ["bun", "roll"], bread: ["bread", "bun", "roll", "toast", "breadcrumb", "panko"],
+  bean: ["bean", "black bean", "kidney bean", "pinto bean", "chickpea"], lentil: ["lentil"], greens: ["spinach", "kale", "lettuce"], pepper: ["bell pepper", "pepper"], "bell pepper": ["bell pepper", "pepper"],
+  yogurt: ["yogurt"], "sour cream": ["sour cream", "yogurt"], rice: ["rice"], potato: ["potato"], tomato: ["tomato", "marinara", "tomato sauce", "crushed tomato", "tomato paste"], sauce: ["sauce", "marinara"],
+  egg: ["egg"], chicken: ["chicken"], pork: ["pork", "ham"], ham: ["ham", "pork"], turkey: ["turkey"], shrimp: ["shrimp"], salmon: ["salmon"]};
+const MULTI = ["ground beef", "ground turkey", "sweet potato", "green bean", "black bean", "kidney bean", "bell pepper", "soy sauce", "olive oil", "sour cream", "cream cheese", "brown rice", "green onion", "coconut milk", "tomato sauce", "tomato paste", "pork chop", "chicken breast", "chicken thigh", "baby spinach", "frozen pea", "peanut butter", "lasagna noodle"];
+function parseQ(q){
+  q = q.toLowerCase().replace(/\b(and|with|i have|have|some|a|an|the|plus|or)\b/g, ",");
+  let parts = q.split(/[,;\n&+\/]+/).map(x => x.trim()).filter(Boolean);
+  if(parts.length === 1 && /\s/.test(parts[0])){   // "chicken rice broccoli": keep known two-word items together
+    let t = " " + normTxt(parts[0]).trim() + " "; const found = [];
+    MULTI.forEach(m => { if(t.includes(" " + m + " ")){ found.push(m); t = t.replace(" " + m + " ", " "); } });
+    parts = [...found, ...t.split(/\s+/).filter(Boolean)];
+  }
+  return [...new Set(parts.map(p => normTxt(p).trim()).filter(p => p.length > 1))];
+}
+const alts = t => SYN[t] || (t.includes(" ") && SYN[t.split(" ").pop()] && !MULTI.includes(t) ? [t] : [t]);
+const NEG = {potato: ["sweet potato"], bean: ["green bean", "jelly bean"], rice: ["rice vinegar"], cream: ["ice cream", "sour cream"], egg: ["eggplant"], pepper: ["black pepper", "red pepper flake"], cheese: ["cream cheese"], milk: ["coconut milk"], butter: ["peanut butter"], oil: ["boil"]};
+const hasTerm = (txt, t) => { (NEG[t] || []).forEach(n => { if(!t.includes(" ")) txt = txt.split(" " + n + " ").join(" "); }); return alts(t).some(a => txt.includes(" " + a + " ")); };
+const QTY = /^[\s\d\/½¼¾⅓⅔⅛.,-]*(\(.*?\)\s*)?(cups?|c\.|tablespoons?|tbsp|teaspoons?|tsp|pounds?|lbs?|ounces?|oz|cans?|cloves?|pinch(es)?|dash(es)?|packages?|pkgs?|bunch(es)?|heads?|stalks?|slices?|pieces?|quarts?|pints?|grams?|g|kg|ml|liters?|sticks?|jars?|bags?|box(es)?|containers?|fillets?)?\b\.?\s*(of\s+)?/i;
+const PREP = /^(cut|diced|chopped|minced|sliced|peeled|divided|optional|to taste|softened|melted|drained|rinsed|thawed|at room|patted|trimmed|halved|quartered|plus more|or to taste|for serving|for topping|for dipping|about|squeezed|seeded|cubed|beaten)\b/;
+const STAPLE = /^(kosher |sea |fine |black |ground |dried |fresh |unsalted |salted |extra[- ]virgin |all[- ]purpose |granulated |light |dark |smoked |mild |low[- ]sodium )*(salt|pepper|salt and pepper|water|ice|garlic|cloves? garlic|garlic cloves?|oil|olive oil|vegetable oil|canola oil|avocado oil|sesame oil|cooking spray|butter|flour|sugar|brown sugar|baking soda|baking powder|vanilla|vanilla extract|garlic powder|onion powder|paprika|chili powder|cumin|cinnamon|oregano|thyme|basil|italian seasoning|dill|curry powder|nutmeg|ginger|red pepper flakes|bay leaves?|spices?|seasoning|taco seasoning|herbs?)$/;
+function needs(r){
+  if(r._needs) return r._needs;
+  const out = [];
+  (r.shop || []).forEach(line => {
+    const parts = line.replace(/\(.*?\)/g, " ").split(/,|;/).map(x => x.trim()).filter(Boolean);
+    parts.forEach((p, i) => { if(i > 0 && PREP.test(p.toLowerCase())) return;
+      const label = p.replace(QTY, "").replace(/\b(for (serving|topping|dipping)|to serve|optional)\b.*$/i, "").trim(); if(!label) return;
+      const items = label.toLowerCase().split(/\s+and\s+(?!pepper)/);
+      const staple = items.every(x => STAPLE.test(x.replace(/^(\d+\s*)/, "").trim()));
+      out.push({label: label.replace(/^./, c => c.toLowerCase()), n: normTxt(label), staple}); });
+  });
+  r._needs = out; return out;
+}
+function matchRecipe(r, terms){
+  const ns = needs(r), name = normTxt(r.name);
+  const had = terms.filter(t => ns.some(x => !x.staple && hasTerm(x.n, t))), named = terms.filter(t => !had.includes(t) && (hasTerm(name, t) || ns.some(x => hasTerm(x.n, t))));
+  if(!had.length && !named.length) return null;
+  const missing = ns.filter(x => !x.staple && !terms.some(t => hasTerm(x.n, t)));
+  return {r, had, named, score: had.length + named.length, missing, total: ns.filter(x => !x.staple).length};
+}
+function famFilter(list){
+  return list.filter(r => (FPRO === "all" || proteins(r).includes(FPRO)) && (!FOPT.quick || (r.m && r.m <= 30)) && (!FOPT.fz || r.fz));
+}
+function drawFamily(){
+  const pool = famPool();
+  $("famJobs").innerHTML = JOBS.map(j => `<div class="job"><b>${esc(j.age)}</b><p>${esc(j.note)}</p><ul>${j.list.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>`).join("");
+  $("famRules").textContent = JOB_RULES;
+  const counts = {}; pool.forEach(r => proteins(r).forEach(p => counts[p] = (counts[p] || 0) + 1));
+  $("famPro").innerHTML = [["all", "All"], ...PRO.map(([k, n]) => [k, n]), ["veg", "Vegetarian"]].filter(([k]) => k === "all" || counts[k])
+    .map(([k, n]) => `<button type="button" class="fchip${FPRO === k ? " on" : ""}" data-fpro="${k}" aria-pressed="${FPRO === k}">${esc(n)}<small>${k === "all" ? pool.length : counts[k]}</small></button>`).join("");
+  $("famOpt").innerHTML = [["quick", "30 min or less"], ["fz", "Freezes well"], ["kids", "Include kid meals (3–5)"]]
+    .map(([k, n]) => `<button type="button" class="fchip tog${FOPT[k] ? " on" : ""}" data-fopt="${k}" aria-pressed="${!!FOPT[k]}">${esc(n)}</button>`).join("");
+  drawFamList();
+}
+function drawFamList(){
+  const pool = famFilter(famPool()), terms = parseQ(FQ);
+  $("famClear").hidden = !FQ;
+  let html = "";
+  if(terms.length){
+    $("famTabs").hidden = true;
+    const res = pool.map(r => matchRecipe(r, terms)).filter(Boolean).sort((a, b) => b.score - a.score || a.missing.length - b.missing.length || a.r.name.localeCompare(b.r.name));
+    const ready = res.filter(x => !x.missing.length && x.had.length), most = res.filter(x => !ready.includes(x) && x.score === terms.length), rest = res.filter(x => !ready.includes(x) && x.score < terms.length);
+    const row = x => `<div class="fres"><p class="hv">${x.had.length ? `<b>✓ Have:</b> ${esc(x.had.join(", "))}` : ""}${x.named.length ? `${x.had.length ? " · " : ""}<b>✓ Matches:</b> ${esc(x.named.join(", "))}` : ""}${x.missing.length ? ` · <i>Need:</i> ${esc(x.missing.map(m => m.label).join(", "))}` : " · <b>nothing else to buy</b>"}</p><div class="cards">${card(x.r, famPre(x.r))}</div></div>`;
+    html += `<p id="famSum">${res.length ? `${res.length} recipe${res.length === 1 ? "" : "s"} use ${esc(terms.join(", "))}${ready.length ? `; ${ready.length} you can make now` : ""}.` : `No recipes use ${esc(terms.join(", "))}${FPRO !== "all" || FOPT.quick || FOPT.fz ? " with these filters" : ""}. Try fewer or different ingredients.`}</p>`;
+    if(ready.length) html += `<section id="fam-ready"><p class="fbucket">You can make these now</p>${ready.map(row).join("")}</section>`;
+    if(most.length) html += `<section id="fam-most"><p class="fbucket">${terms.length > 1 ? "Uses everything you listed" : "Best matches"}</p>${most.map(row).join("")}</section>`;
+    if(rest.length) html += `<section id="fam-rest"><p class="fbucket">Uses some of what you have</p>${rest.map(row).join("")}</section>`;
+  } else {
+    const order = [...PRO.map(p => p[0]), "veg"], by = {};
+    pool.forEach(r => { const p = FPRO !== "all" ? FPRO : proteins(r)[0]; (by[p] = by[p] || []).push(r); });
+    const secs = order.filter(p => by[p]);
+    $("famTabs").hidden = secs.length < 2;
+    $("famJump").innerHTML = secs.map(p => `<a class="cbtab" href="#fp-${p}" data-jumpto="fp-${p}"><span>${esc(PRO_NAME[p])}</span><small>${by[p].length} recipes</small></a>`).join("");
+    html += `<p id="famSum">${pool.length} recipes${FPRO !== "all" ? ` with ${esc(PRO_NAME[FPRO].toLowerCase())}` : ""}. ${FOPT.kids ? "Kid meals from the 3 to 5 stage are included." : ""}</p>`;
+    html += secs.map(p => `<section id="fp-${p}"><h2>${esc(PRO_NAME[p])}</h2><div class="cards">${by[p].sort((a, b) => (a.st === 7 ? 0 : 1) - (b.st === 7 ? 0 : 1)).map(r => card(r, famPre(r))).join("")}</div></section>`).join("");
+    if(!pool.length) html += `<div class="note">Nothing matches these filters.</div>`;
+  }
+  $("famList").innerHTML = html;
+}
+let fqT = null;
+$("famQ").addEventListener("input", () => { clearTimeout(fqT); fqT = setTimeout(() => { FQ = $("famQ").value; drawFamList(); }, 180); });
+$("famQ").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); $("famQ").blur(); } });
+$("famClear").addEventListener("click", () => { $("famQ").value = ""; FQ = ""; drawFamList(); $("famQ").focus(); });
+$("famPro").addEventListener("click", e => { const b = e.target.closest("[data-fpro]"); if(!b) return; FPRO = FPRO === b.dataset.fpro ? "all" : b.dataset.fpro; drawFamily(); });
+$("famOpt").addEventListener("click", e => { const b = e.target.closest("[data-fopt]"); if(!b) return; FOPT[b.dataset.fopt] = !FOPT[b.dataset.fopt]; S.set("mjskitchen.fopt", FOPT); drawFamily(); });
+$("famJump").addEventListener("click", e => { const a = e.target.closest("[data-jumpto]"); if(!a) return; e.preventDefault(); $(a.dataset.jumpto).scrollIntoView({behavior: "smooth", block: "start"}); });
+$("famAdd").addEventListener("click", () => { impHere("family"); IMP = {open: true, presetG: "family"}; drawImporter(); setTimeout(() => { const u = $("impUrl"); if(u) u.focus(); }, 30); });
 
 /* ---------- fridge & freezer ---------- */
 function batchItem(b, onToday){
@@ -1416,16 +1630,19 @@ function drawStages(){
 }
 
 /* ---------- tabs ---------- */
-const TABS = ["today", "cookbook", "freezer", "log", "guide"];
+const TABS = ["today", "cookbook", "family", "freezer", "log", "guide"];
 function route(){
   let h = location.hash.slice(1);
   const g = h.startsWith("g-") ? h : null;
   if(g) h = "guide";
   const recipe = !TABS.includes(h) && R.find(r => r.id === h);
-  if(recipe){ h = "cookbook"; if(cbSel() !== recipe.st && !(cbSel() === "mine" && recipe.custom)){ CBSEL = recipe.st; S.set("mjskitchen.cbst", recipe.st); drawBook(); } }
+  if(recipe && recipe.st === 7){ h = "family"; if(FQ || FPRO !== "all"){ FQ = ""; FPRO = "all"; $("famQ").value = ""; } drawFamily(); }
+  else if(recipe){ h = "cookbook"; if(cbSel() !== recipe.st && !(cbSel() === "mine" && recipe.custom)){ CBSEL = recipe.st; S.set("mjskitchen.cbst", recipe.st); drawBook(); } }
   if(!TABS.includes(h)) h = "today";
   document.querySelectorAll(".view").forEach(v => v.hidden = v.dataset.view !== h);
   document.querySelectorAll(".tabbar a").forEach(a => a.classList.toggle("on", a.dataset.tab === h));
+  if(!recipe && h === "family" && document.body.dataset.tab !== "family") drawFamily();
+  if(!recipe && h === "cookbook" && document.body.dataset.tab !== "cookbook") drawBook();
   if(recipe){ const d = $(recipe.id); d.open = true; setTimeout(() => d.scrollIntoView({block: "start"}), 30); }
   else if(g){ setTimeout(() => $(g).scrollIntoView({behavior: "smooth", block: "start"}), 30); }
   else window.scrollTo(0, 0);
@@ -1442,7 +1659,7 @@ let size = +S.get("mjskitchen.size", 0) || 0;
 const setSize = n => { size = n % 3; document.documentElement.dataset.size = size; $("sizeLbl").textContent = SIZES[size]; S.set("mjskitchen.size", size); };
 setSize(size); $("size").addEventListener("click", () => setSize(size + 1));
 
-function drawAll(){ drawAge(); drawNext(); drawMeals(); drawBook(); drawFreezer(); drawPlan(); drawLog(); drawStages(); }
+function drawAll(){ drawAge(); drawNext(); drawMeals(); drawBook(); drawFamily(); drawFreezer(); drawPlan(); drawLog(); drawStages(); }
 drawAll();
 if(!location.hash){ let t = null; try{ t = localStorage.getItem("mjskitchen.tab"); }catch(_){} if(t && TABS.includes(t) && t !== "today") history.replaceState(null, "", "#" + t); }
 route();
